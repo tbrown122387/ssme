@@ -11,6 +11,7 @@
 #include <chrono> //std::chrono::system_clock::now()
 #include <typeinfo> // typeid()
 
+#include "rv_eval.h"
 #include "rv_samp.h"
 #include "utils.h" // readInData
 #include "param_pack.h"
@@ -48,7 +49,7 @@ public:
     ada_pmmh_mvn(const psv &start_trans_theta, 
                  const std::vector<TransType>& tts,
                  const unsigned int &num_mcmc_iters,
-                 const std::string &data_file, 
+                 const std::string &data_file, // TODO: describe formatting rules (e.g. column orders, column names, etc.)
                  const std::string &sample_file_base_name,
                  const std::string &message_file_base_name,
                  const bool &mc,
@@ -76,16 +77,6 @@ public:
      * @return the log of the prior density.
      */
     virtual double logPriorEvaluate(const paramPack& theta) = 0;
-
-
-    /** 
-     * @brief Evaluates the logarithm of the proposal density. It is a density for the non-transformed parameters,
-     * but you are evaluating this density at the transformed parameters. This is to avoid unnecessary function calls.
-     * @param oldTransParams the old parameters transformed.
-     * @param newTransParams the new parameters transformed. 
-     * @return the log of the proposal density (a density in the un-transformed parameters, so Jacobians included).
-     */
-    virtual double logQEvaluate(const paramPack& oldParams, const paramPack& newParams) = 0; 
 
 
     /**
@@ -124,7 +115,7 @@ private:
     
     void update_moments_and_Ct(const paramPack& newTheta);
     psv qSample(const paramPack& oldTheta);
-
+    double logQEvaluate(const paramPack& oldParams, const paramPack& newParams);
 };
 
 
@@ -221,6 +212,17 @@ auto ada_pmmh_mvn<numparams,dimobs,numparts>::qSample(const paramPack& oldParams
     m_mvn_gen.setMean(oldTransParams);
     m_mvn_gen.setCovar(m_Ct);
     return m_mvn_gen.sample();
+}
+
+
+template<size_t numparams, size_t dimobs, size_t numparts>
+double ada_pmmh_mvn<numparams, dimobs, numparts>::logQEvaluate(const paramPack& oldParams, const paramPack& newParams)
+{
+    return rveval::evalMultivNorm<numparams>(
+            newParams.getTransParams(),
+            oldParams.getTransParams(),
+            get_ct(),
+            true) + newParams.getLogJacobian();
 }
 
 
