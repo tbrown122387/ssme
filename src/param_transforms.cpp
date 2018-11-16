@@ -7,18 +7,28 @@
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-std::unique_ptr<paramInvTransform> paramInvTransform::create(TransType tt)
+std::unique_ptr<paramTransform> paramTransform::create(TransType tt)
 {
     if(tt == TransType::TT_null){
-        return std::unique_ptr<paramInvTransform>(new nullTrans);
+        
+        return std::unique_ptr<paramTransform>(new nullTrans);
+    
     }else if(tt == TransType::TT_twice_fisher){
-        return std::unique_ptr<paramInvTransform>(new twiceFisherTrans);
+        
+        return std::unique_ptr<paramTransform>(new twiceFisherTrans);
+    
     }else if(tt == TransType::TT_logit){
-        return std::unique_ptr<paramInvTransform>(new logitTrans);
+        
+        return std::unique_ptr<paramTransform>(new logitTrans);
+    
     }else if(tt == TransType::TT_log){
-        return std::unique_ptr<paramInvTransform>(new logTrans);
+
+        return std::unique_ptr<paramTransform>(new logTrans);
+    
     }else{
+
         throw std::invalid_argument("that transform type was not accounted for");
+    
     }
 }
 
@@ -54,7 +64,7 @@ double twiceFisherTrans::trans(const double& p)
 
 double twiceFisherTrans::invTrans(const double &trans_p){
     
-    double ans = (1.0 - std::exp(trans_p)) / ( -1.0 - std::exp(trans_p) );
+    double ans = 1.0 - 2.0/(1.0 + std::exp(trans_p));
     if ( (ans <= -1.0) || (ans >= 1.0) )
         throw std::invalid_argument("error: there was probably overflow for exp(trans_p) \n");
     return ans;    
@@ -62,8 +72,9 @@ double twiceFisherTrans::invTrans(const double &trans_p){
 
 
 double twiceFisherTrans::logJacobian(const double &trans_p){
-    double un_trans_p = invTrans(trans_p);
-    return std::log(2.0) - std::log(1.0 + un_trans_p) - std::log(1.0 - un_trans_p);
+    //double un_trans_p = invTrans(trans_p);
+    //return std::log(2.0) - std::log(1.0 + un_trans_p) - std::log(1.0 - un_trans_p);
+    return std::log(2.0) + trans_p - 2.0*std::log(1.0 + std::exp(trans_p));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -87,8 +98,9 @@ double logitTrans::invTrans(const double &trans_p){
 
 
 double logitTrans::logJacobian(const double &trans_p){
-    double un_trans_p = invTrans(trans_p);
-    return -std::log(1.0-un_trans_p) - std::log(un_trans_p);
+    //double un_trans_p = invTrans(trans_p);
+    //return -std::log(1.0-un_trans_p) - std::log(un_trans_p);
+    return -trans_p - 2.0*std::log(1.0 + std::exp(-trans_p));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -107,8 +119,9 @@ double logTrans::invTrans(const double &trans_p){
 
 
 double logTrans::logJacobian(const double &trans_p){
-    double un_trans_p = invTrans(trans_p);
-    return -std::log(un_trans_p);
+    //double un_trans_p = invTrans(trans_p);
+    //return -std::log(un_trans_p);
+    return trans_p;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,15 @@
 #ifndef ADA_PMMH_H
 #define ADA_PMMH_H
 
+
+// WARNING: this file is currently not functioning. One strategy for sampling on a transformed space is 
+// where you are really sampling on the nontransformed/constrained space, and you use the jacobians in the evaluation of q.
+// The other strategy is to just sample on the transformed space. The only place to use the Jacobian in the second strategy
+// is if the user is specifying priors in terms of the original/nontransfroemd/constrained parameterization. Originally we were
+// following the first strategy; however, now we are following the second. So much of this is in the process of being changed.
+
+
+
 #include <vector>
 #include <Eigen/Dense>
 #include <iostream> // ofstream
@@ -42,7 +51,8 @@ public:
              const unsigned int &t1,
              const psm &C0);
              
-    
+    // TODO: constructor that utilizes a paramPAck
+
     /**
      * @brief Get the current proposal distribution's covariance matrix.
      * @return the covariance matrix of q(theta' | theta)

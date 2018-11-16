@@ -11,15 +11,15 @@
 /**
  * @class paramPack
  * @author t
- * @date 22/05/18
  * @file param_pack.h
- * @brief Stores transformed parameters, as well as the functions that can change them to the untransformed parametres.
+ * @brief Stores transformed parameters, as well as the functions 
+ * that can change them to the untransformed parameters and back.
  */
 class paramPack{
 public:
 
     // type aliases
-    using vecptrs = std::vector<std::unique_ptr<paramInvTransform>>;
+    using vecptrs = std::vector<std::unique_ptr<paramTransform>>;
 
     // ctors
     paramPack(const paramPack& pp) = delete; // disallow copy constructor

@@ -18,7 +18,7 @@ paramPack::paramPack(const Eigen::VectorXd &params, const std::vector<TransType>
     }
     
     for(auto & tt : vec_trans_types){
-        m_transform_functors.push_back(paramInvTransform::create(tt));
+        m_transform_functors.push_back(paramTransform::create(tt));
     }
     
     if(start_w_trans_params){

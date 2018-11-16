@@ -24,7 +24,7 @@
  * @file ada_pmmh2.h
  * @brief Performs adaptive particle marginal metropolis-hastings sampling, using a 
  * multivariate normal distribution as the proposal. This proposal distribution samples on the transformed space. 
- * Jacobians, and transforming them back and forth is handled automatically.
+ * The priors are requested in the non-transformed space. Jacobians for these priors are handled automatically.
  */
 template<size_t numparams, size_t dimobs, size_t numparts>
 class ada_pmmh_mvn{
@@ -72,11 +72,11 @@ public:
     void commenceSampling();
     
     /**
-     * @brief Evaluates the log of the model's prior distribution.
-     * @param theta the parameters argument. In the either the constrained/un-transformed space or the unconstrained/transformed space..
+     * @brief Evaluates the log of the model's prior distribution assuming the original/nontransformed/contrained parameterization
+     * @param theta the parameters argument (nontransformed/constrained parameterization). 
      * @return the log of the prior density.
      */
-    virtual double logPriorEvaluate(const paramPack& theta) = 0;
+    virtual double logPriorEvaluate(const psv& theta) = 0;
 
 
     /**
@@ -104,7 +104,6 @@ private:
     std::ofstream m_message_stream;
     unsigned int m_num_mcmc_iters;
     unsigned int m_num_extra_threads;
-//    std::mutex m_outFileMutex;
     bool m_multicore;
     unsigned int m_iter; // current iter
     double m_sd; // perhaps there's a better name for this
@@ -207,22 +206,11 @@ template<size_t numparams, size_t dimobs, size_t numparts>
 auto ada_pmmh_mvn<numparams,dimobs,numparts>::qSample(const paramPack& oldParams) -> psv
 {
     // assumes that Ct has already been updated
-    // assumes parameters are in transformed space    
+    // recall that we are sampling on the transformed/unconstrained space    
     psv oldTransParams = oldParams.getTransParams();
     m_mvn_gen.setMean(oldTransParams);
     m_mvn_gen.setCovar(m_Ct);
     return m_mvn_gen.sample();
-}
-
-
-template<size_t numparams, size_t dimobs, size_t numparts>
-double ada_pmmh_mvn<numparams, dimobs, numparts>::logQEvaluate(const paramPack& oldParams, const paramPack& newParams)
-{
-    return rveval::evalMultivNorm<numparams>(
-            newParams.getTransParams(),
-            oldParams.getTransParams(),
-            get_ct(),
-            true) + newParams.getLogJacobian();
 }
 
 
@@ -268,7 +256,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
             }
             
             // store prior for next round
-            oldLogPrior = logPriorEvaluate(m_current_theta);
+            oldLogPrior = logPriorEvaluate(m_current_theta.getUnTransParams()) + m_current_theta.getLogJacobian(); ///!!!!!
             if( std::isinf(oldLogPrior) || std::isnan(oldLogPrior)){
                 std::cerr << "oldLogPrior must be a real number. returning.\n";
                 return;
@@ -289,9 +277,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
             paramPack proposed_theta(proposed_trans_theta, m_tts);
             
             // store some densities                        
-            double newLogPrior = logPriorEvaluate(proposed_theta);
-            double logQOldToNew = logQEvaluate(m_current_theta, proposed_theta);
-            double logQNewToOld = logQEvaluate(proposed_theta, m_current_theta);
+            double newLogPrior = logPriorEvaluate(proposed_theta.getUnTransParams()) + proposed_theta.getLogJacobian();
     
             // get the likelihood
             double newLL(0.0);
@@ -312,8 +298,8 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
                 newLL /= m_num_extra_threads;
             }
 
-            // accept or reject proposal
-            double logAR = newLogPrior + logQNewToOld + newLL - oldLogPrior - logQOldToNew - oldLogLike;                
+            // accept or reject proposal (assumes multivariate normal proposal which means it's symmetric)
+            double logAR = newLogPrior + newLL - oldLogPrior - oldLogLike;                
                 
             // output some stuff
             m_message_stream << "***Iter number: " << m_iter+1 << " out of " << m_num_mcmc_iters << "\n";
