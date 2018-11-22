@@ -21,10 +21,13 @@
  * @class ada_pmmh_mvn
  * @author t
  * @date 24/05/18
- * @file ada_pmmh2.h
+ * @file ada_pmmh_mvn.h
  * @brief Performs adaptive particle marginal metropolis-hastings sampling, using a 
- * multivariate normal distribution as the proposal. This proposal distribution samples on the transformed space. 
- * The priors are requested in the non-transformed space. Jacobians for these priors are handled automatically.
+ * multivariate normal distribution as the proposal. This samples on the transformed 
+ * space, but it writes the the untransformed/constrained samples to the output. The   
+ * priors requested by the user are for the (hopefully more convenient) un-transformed 
+ * or constrainedspace. This means that the user never has to worry about handling any 
+ * kind of Jacobian.
  */
 template<size_t numparams, size_t dimobs, size_t numparts>
 class ada_pmmh_mvn{

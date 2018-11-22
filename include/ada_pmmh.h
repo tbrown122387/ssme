@@ -2,14 +2,6 @@
 #define ADA_PMMH_H
 
 
-// WARNING: this file is currently not functioning. One strategy for sampling on a transformed space is 
-// where you are really sampling on the nontransformed/constrained space, and you use the jacobians in the evaluation of q.
-// The other strategy is to just sample on the transformed space. The only place to use the Jacobian in the second strategy
-// is if the user is specifying priors in terms of the original/nontransfroemd/constrained parameterization. Originally we were
-// following the first strategy; however, now we are following the second. So much of this is in the process of being changed.
-
-
-
 #include <vector>
 #include <Eigen/Dense>
 #include <iostream> // ofstream
@@ -21,25 +13,44 @@
 #include "rv_samp.h"
 #include "utils.h" // readInData
 
+
+/**
+ * @class ada_pmmh
+ * @author t
+ * @file ada_pmmh.h
+ * @brief Performs an adaptive version of the particle marginal Metropilis-Hastings
+ * algorithm. The user is asked to design his/her own proposal density and prior 
+ * distribution. The sampling is handled on an "as-is" basis, which means that it is
+ * entirely the user's own responsibility to handle Jacobians that might pop up if 
+ * the prior and proposal density are specified for two different parameterizations.
+ * These parameters will be written in an "as-is" fashion, as well. These calculations 
+ * can be facilitates using the `paramPack` class, however using this class is not 
+ * absolutely necessary. Also, for convenience, a moving average covariance matrix 
+ * estimate is performed. This can be ignored, but it can be handy for use in the
+ * proposal density on a transformed space.
+ */
 template<size_t numparams, size_t dimobs, size_t numparts>
 class ada_pmmh{
 public:
+// TODO: optional logging!
 
     using osv = Eigen::Matrix<double,dimobs,1>;
     using psv = Eigen::Matrix<double,numparams,1>;
     using psm = Eigen::Matrix<double,numparams,numparams>;
     
+
     /**
-     * @brief The constructor
-     * @param start_trans_theta the initial transformed parameters you want to start sampling from.
+     * @brief The constructor.
+     * @param start_trans_theta the initial (possibly transformed) parameters 
+     * you want to start sampling from.
      * @param num_mcmc_iters the number of MCMC iterations you want to do.
-     * @param data_file the location of the observed time series data (input).
-     * @param samples_file the location where you want to store the theta samples (output).
-     * @param messages_file the location where you want to store the messages (output).
+     * @param data_file the location of the observed time series data.
+     * @param samples_file the location where you want to store the samples.
+     * @param messages_file the location where you want to store the messages.
      * @param mc stands for multicore. true or false if you want to use extra cores.
-     * @param t0 time you start adapting
-     * @param t1 time you stop adapting
-     * @param C0 initial covariance matrix for proposal distribution.
+     * @param t0 iteration at which you start adapting the posterior covariance matrix.
+     * @param t1 time you stop adapting the posterior covariance matrix.
+     * @param C0 initial covariance matrix to be used in the moving ave. calculation.
      */
     ada_pmmh(const psv &start_trans_theta, 
              const unsigned int &num_mcmc_iters,
@@ -51,7 +62,6 @@ public:
              const unsigned int &t1,
              const psm &C0);
              
-    // TODO: constructor that utilizes a paramPAck
 
     /**
      * @brief Get the current proposal distribution's covariance matrix.
@@ -65,33 +75,33 @@ public:
      */
     void commenceSampling();
     
+
     /**
      * @brief Evaluates the log of the model's prior distribution.
-     * @param transTheta the parameters argument.
+     * @param transTheta the transformed parameters argument.
      * @return the log of the prior density.
      */
     virtual double logPriorEvaluate(const psv &transTheta) = 0;
 
 
     /** 
-     * @brief Evaluates the logarithm of the proposal density. It is a density for the non-transformed parameters,
-     * but you are evaluating this density at the transformed parameters. This is to avoid unnecessary function calls.
-     * @param oldTransParams the old parameters transformed.
-     * @param newTransParams the new parameters transformed. 
-     * @return the log of the proposal density (a density in the un-transformed parameters, so Jacobians included).
+     * @brief Evaluates the logarithm of the proposal density.
+     * @param oldTransParams the old parameters that are (probably) transformed.
+     * @param newTransParams the new parameters that are (probably) transformed. 
+     * @return the log of the proposal density.
      */
     virtual double logQEvaluate(const psv &oldTransParams, const psv &newTransParams) = 0; 
 
 
     /**
-     * @brief Evaluates (approximates) the log-likelihood with a particle filter.
+     * @brief Approximates the log likelihood with a particle filter.
      * @param theta the parameters with which to run the particle filter.
      * @param data the observed data with which to run the particle filter.
-     * @param cancelled is a token you need to provide if doing multithreaded likelihood evals. This allows the function to terminate prematurely.
+     * @param cancelled is a token you need to provide if doing multithreaded likelihood evals. This allows the function to terminate prematurely. 
      * @return the evaluation (as a double) of the log likelihood approximation.
      */
     virtual double logLikeEvaluate(const psv &transTheta, const std::vector<osv> &data, std::atomic_bool& cancelled) = 0;
-
+//TODO: remove cancellation token
     
              
 private:
@@ -115,12 +125,8 @@ private:
     double m_eps;
     
     
-    
     void update_moments_and_Ct(const psv &newTransTheta);
     psv qSample(const psv &oldTransTheta);
-
-
-    
 };
 
 
@@ -193,7 +199,6 @@ void ada_pmmh<numparams,dimobs,numparts>::update_moments_and_Ct(const psv &newTr
 }
 
 
-
 template<size_t numparams, size_t dimobs, size_t numparts>
 auto ada_pmmh<numparams,dimobs,numparts>::get_ct() const -> psm
 {
@@ -234,7 +239,6 @@ void ada_pmmh<numparams,dimobs,numparts>::commenceSampling()
             utils::logParams<numparams>(m_current_trans_theta, m_samples_file_stream);
             
             // get logLike (we use cancel token but it never changes) 
-            // TODO: make this parallel
             std::atomic_bool cancel_token(false);
             if (!m_multicore){
                 oldLogLike = logLikeEvaluate(m_current_trans_theta, m_data, cancel_token);
