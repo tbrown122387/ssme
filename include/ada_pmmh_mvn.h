@@ -79,7 +79,7 @@ public:
      * @param theta the parameters argument (nontransformed/constrained parameterization). 
      * @return the log of the prior density.
      */
-    virtual double logPriorEvaluate(const psv& theta) = 0;
+    virtual double logPriorEvaluate(const paramPack& theta) = 0;
 
 
     /**
@@ -259,7 +259,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
             }
             
             // store prior for next round
-            oldLogPrior = logPriorEvaluate(m_current_theta.getUnTransParams()) + m_current_theta.getLogJacobian(); ///!!!!!
+            oldLogPrior = logPriorEvaluate(m_current_theta) + m_current_theta.getLogJacobian(); ///!!!!!
             if( std::isinf(oldLogPrior) || std::isnan(oldLogPrior)){
                 std::cerr << "oldLogPrior must be a real number. returning.\n";
                 return;
@@ -280,7 +280,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
             paramPack proposed_theta(proposed_trans_theta, m_tts);
             
             // store some densities                        
-            double newLogPrior = logPriorEvaluate(proposed_theta.getUnTransParams()) + proposed_theta.getLogJacobian();
+            double newLogPrior = logPriorEvaluate(proposed_theta) + proposed_theta.getLogJacobian();
     
             // get the likelihood
             double newLL(0.0);
