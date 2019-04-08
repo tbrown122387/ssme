@@ -1,5 +1,7 @@
 # SSME: a c++ static library for the estimation of state space models
 
+[![DOI](https://zenodo.org/badge/154373836.svg)](https://zenodo.org/badge/latestdoi/154373836)
+
 The current availability includes:
 
 1. particle marginal Metropolis-Hastings with generic parameter proposal distributions.
