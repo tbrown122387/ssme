@@ -1,0 +1,300 @@
+\hypertarget{classmsl1__rbbpf}{}\section{msl1\+\_\+rbbpf$<$ nparts, dimnss, dimss, dimy, resampT $>$ Class Template Reference}
+\label{classmsl1__rbbpf}\index{msl1\+\_\+rbbpf$<$ nparts, dimnss, dimss, dimy, resamp\+T $>$@{msl1\+\_\+rbbpf$<$ nparts, dimnss, dimss, dimy, resamp\+T $>$}}
+
+
+Inheritance diagram for msl1\+\_\+rbbpf$<$ nparts, dimnss, dimss, dimy, resampT $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=195pt]{classmsl1__rbbpf__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for msl1\+\_\+rbbpf$<$ nparts, dimnss, dimss, dimy, resampT $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=195pt]{classmsl1__rbbpf__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} = Eigen\+::\+Matrix$<$ double, dimss, 1 $>$
+\item 
+using \hyperlink{classmsl1__rbbpf_a7a938d1eb0d1db350b2f2f6804d58999}{nsssv} = Eigen\+::\+Matrix$<$ double, dimnss, 1 $>$
+\item 
+using \hyperlink{classmsl1__rbbpf_a23daf10ba0f0b6fead88bc83b4fa27a3}{osv} = Eigen\+::\+Matrix$<$ double, dimy, 1 $>$
+\item 
+using \hyperlink{classmsl1__rbbpf_a1282d71d4d1fc83fd5139ad51c549ecc}{osm} = Eigen\+::\+Matrix$<$ double, dimy, dimy $>$
+\item 
+using \hyperlink{classmsl1__rbbpf_a8dd96568dc27eddb553e9ff8bf4b3c64}{nsss\+Mat} = Eigen\+::\+Matrix$<$ double, dimnss, dimnss $>$
+\item 
+using \hyperlink{classmsl1__rbbpf_a6b6f080289374270272071e2e3175cd5}{sss\+Mat} = Eigen\+::\+Matrix$<$ double, dimss, dimss $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classmsl1__rbbpf_a1b22c0d59ea9e2992c45ab7c2a7d79a3}{msl1\+\_\+rbbpf} (const unsigned int \&K, const \hyperlink{classparamPack}{param\+Pack} \&pp, bool calc\+\_\+d\+\_\+aves=false)
+\begin{DoxyCompactList}\small\item\em alternative constructor \end{DoxyCompactList}\item 
+\hyperlink{classmsl1__rbbpf_a23daf10ba0f0b6fead88bc83b4fa27a3}{osv} \hyperlink{classmsl1__rbbpf_af17379667c366be4faaf0241b64d00e6}{get\+\_\+forecast\+\_\+mean} () const
+\begin{DoxyCompactList}\small\item\em returns E\mbox{[}y\+\_\+\{t+1\} $\vert$ y\+\_\+\{1\+:t\}\mbox{]} =  B +  Dbar B \end{DoxyCompactList}\item 
+\hyperlink{classmsl1__rbbpf_a1282d71d4d1fc83fd5139ad51c549ecc}{osm} \hyperlink{classmsl1__rbbpf_ad9ae963432618014085777d34f73040d}{get\+\_\+conditional\+\_\+var} (const \hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \&x2t) const
+\begin{DoxyCompactList}\small\item\em returns V\mbox{[}y\+\_\+\{t+1\} $\vert$ x\+\_\+\{2,t\}, theta\mbox{]}, which is used in the rbpf\textquotesingle{}s averaging scheme inside filter() \end{DoxyCompactList}\item 
+\hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \hyperlink{classmsl1__rbbpf_acb7bb10daafe487b94f2158e4753c360}{mu\+Samp} ()
+\begin{DoxyCompactList}\small\item\em Sample from the first sampler. \end{DoxyCompactList}\item 
+\hyperlink{classmsl1__rbbpf_a7a938d1eb0d1db350b2f2f6804d58999}{nsssv} \hyperlink{classmsl1__rbbpf_a3555cc4b6c307e4e8d2300c0514ce5dd}{init\+H\+M\+M\+Prob\+Vec} (const \hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \&x21)
+\begin{DoxyCompactList}\small\item\em Provides the initial mean vector for each H\+MM filter object. \end{DoxyCompactList}\item 
+\hyperlink{classmsl1__rbbpf_a8dd96568dc27eddb553e9ff8bf4b3c64}{nsss\+Mat} \hyperlink{classmsl1__rbbpf_a811836dd2d71e3c46e688b9280aae108}{init\+H\+M\+M\+Trans\+Mat} (const \hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \&x21)
+\begin{DoxyCompactList}\small\item\em Provides the transition matrix for each H\+MM filter object. \end{DoxyCompactList}\item 
+\hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \hyperlink{classmsl1__rbbpf_a45c6dc4e6b66b091245000e5a59605f5}{f\+Samp} (const \hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \&x2tm1)
+\begin{DoxyCompactList}\small\item\em Samples the time t second component. \end{DoxyCompactList}\item 
+void \hyperlink{classmsl1__rbbpf_aa22847dfe35723fa3623385d1b534989}{update\+H\+MM} (hmm$<$ dimnss, dimy $>$ \&a\+Model, const \hyperlink{classmsl1__rbbpf_a23daf10ba0f0b6fead88bc83b4fa27a3}{osv} \&yt, const \hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \&x2t)
+\begin{DoxyCompactList}\small\item\em How to update your inner H\+MM filter object at each time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_a1d0b942c3817a5c6c861d53e66f3aa76}\label{classmsl1__rbbpf_a1d0b942c3817a5c6c861d53e66f3aa76}} 
+rvsamp\+::\+M\+V\+N\+Sampler$<$ dimss $>$ {\bfseries m\+\_\+time\+One\+Sampler}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_addecc8b0c7c9d6532c0961a9c778d0c1}\label{classmsl1__rbbpf_addecc8b0c7c9d6532c0961a9c778d0c1}} 
+rvsamp\+::\+M\+V\+N\+Sampler$<$ dimss $>$ {\bfseries m\+\_\+trans\+Jump\+Sampler}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_a128534877e559381b435b488422cb6bc}\label{classmsl1__rbbpf_a128534877e559381b435b488422cb6bc}} 
+\hyperlink{classmsl1__rbbpf_a23daf10ba0f0b6fead88bc83b4fa27a3}{osv} {\bfseries m\+\_\+beta\+\_\+1}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_aef3e3a7e949c640045659a6e813f43e0}\label{classmsl1__rbbpf_aef3e3a7e949c640045659a6e813f43e0}} 
+\hyperlink{classmsl1__rbbpf_a23daf10ba0f0b6fead88bc83b4fa27a3}{osv} {\bfseries m\+\_\+\+R\+\_\+sigmas}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_a45f4f995c0f91f9b30088616eff11df4}\label{classmsl1__rbbpf_a45f4f995c0f91f9b30088616eff11df4}} 
+\hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} {\bfseries m\+\_\+mus}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_a72053c3c72df5bef10b9c6c2036c8703}\label{classmsl1__rbbpf_a72053c3c72df5bef10b9c6c2036c8703}} 
+\hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} {\bfseries m\+\_\+phis}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_a1f785c123596b75c70d0b3387913c908}\label{classmsl1__rbbpf_a1f785c123596b75c70d0b3387913c908}} 
+\hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} {\bfseries m\+\_\+sigmas}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_add75fb272d7770dc065d15b88b0d17f3}\label{classmsl1__rbbpf_add75fb272d7770dc065d15b88b0d17f3}} 
+double {\bfseries m\+\_\+lambda}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_aaea7cf02f6d06a6fbd75416a350e8dce}\label{classmsl1__rbbpf_aaea7cf02f6d06a6fbd75416a350e8dce}} 
+double {\bfseries m\+\_\+p}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_addbd751848a1ec1db50c74b99fc7e1e6}\label{classmsl1__rbbpf_addbd751848a1ec1db50c74b99fc7e1e6}} 
+unsigned int {\bfseries m\+\_\+K}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_ab1f11268f20bd920625d274c8cd3cc86}\label{classmsl1__rbbpf_ab1f11268f20bd920625d274c8cd3cc86}} 
+std\+::array$<$ \hyperlink{classmsl1__rbbpf_a23daf10ba0f0b6fead88bc83b4fa27a3}{osv}, dimnss $>$ {\bfseries m\+\_\+all\+\_\+indic\+\_\+vecs}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_adae156ecd2755f7dbf227f6b3b31512d}\label{classmsl1__rbbpf_adae156ecd2755f7dbf227f6b3b31512d}} 
+bool {\bfseries m\+\_\+store\+\_\+dbar\+\_\+aves}
+\item 
+\mbox{\Hypertarget{classmsl1__rbbpf_a4f758bb182963a08d62ad6a276641a4b}\label{classmsl1__rbbpf_a4f758bb182963a08d62ad6a276641a4b}} 
+\hyperlink{classmsl1__rbbpf_a1282d71d4d1fc83fd5139ad51c549ecc}{osm} {\bfseries m\+\_\+dbbdbar}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classmsl1__rbbpf_a8dd96568dc27eddb553e9ff8bf4b3c64}\label{classmsl1__rbbpf_a8dd96568dc27eddb553e9ff8bf4b3c64}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!nsss\+Mat@{nsss\+Mat}}
+\index{nsss\+Mat@{nsss\+Mat}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{nsss\+Mat}{nsssMat}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT$>$ \\
+using \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::\hyperlink{classmsl1__rbbpf_a8dd96568dc27eddb553e9ff8bf4b3c64}{nsss\+Mat} =  Eigen\+::\+Matrix$<$double,dimnss,dimnss$>$}
+
+\char`\"{}not sampled state size matrix\char`\"{} \mbox{\Hypertarget{classmsl1__rbbpf_a7a938d1eb0d1db350b2f2f6804d58999}\label{classmsl1__rbbpf_a7a938d1eb0d1db350b2f2f6804d58999}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!nsssv@{nsssv}}
+\index{nsssv@{nsssv}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{nsssv}{nsssv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT$>$ \\
+using \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::\hyperlink{classmsl1__rbbpf_a7a938d1eb0d1db350b2f2f6804d58999}{nsssv} =  Eigen\+::\+Matrix$<$double,dimnss,1$>$}
+
+\char`\"{}not sampled state size vector\char`\"{} \mbox{\Hypertarget{classmsl1__rbbpf_a1282d71d4d1fc83fd5139ad51c549ecc}\label{classmsl1__rbbpf_a1282d71d4d1fc83fd5139ad51c549ecc}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!osm@{osm}}
+\index{osm@{osm}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{osm}{osm}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT$>$ \\
+using \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::\hyperlink{classmsl1__rbbpf_a1282d71d4d1fc83fd5139ad51c549ecc}{osm} =  Eigen\+::\+Matrix$<$double,dimy,dimy$>$}
+
+\char`\"{}observation sized matrix\char`\"{} \mbox{\Hypertarget{classmsl1__rbbpf_a23daf10ba0f0b6fead88bc83b4fa27a3}\label{classmsl1__rbbpf_a23daf10ba0f0b6fead88bc83b4fa27a3}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!osv@{osv}}
+\index{osv@{osv}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{osv}{osv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT$>$ \\
+using \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::\hyperlink{classmsl1__rbbpf_a23daf10ba0f0b6fead88bc83b4fa27a3}{osv} =  Eigen\+::\+Matrix$<$double,dimy,1$>$}
+
+\char`\"{}observation size vector\char`\"{} \mbox{\Hypertarget{classmsl1__rbbpf_a6b6f080289374270272071e2e3175cd5}\label{classmsl1__rbbpf_a6b6f080289374270272071e2e3175cd5}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!sss\+Mat@{sss\+Mat}}
+\index{sss\+Mat@{sss\+Mat}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{sss\+Mat}{sssMat}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT$>$ \\
+using \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::\hyperlink{classmsl1__rbbpf_a6b6f080289374270272071e2e3175cd5}{sss\+Mat} =  Eigen\+::\+Matrix$<$double,dimss,dimss$>$}
+
+\char`\"{} sampled state size matrix\char`\"{} \mbox{\Hypertarget{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}\label{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!sssv@{sssv}}
+\index{sssv@{sssv}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{sssv}{sssv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT$>$ \\
+using \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::\hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} =  Eigen\+::\+Matrix$<$double,dimss,1$>$}
+
+\char`\"{}sampled state size vector\char`\"{} 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classmsl1__rbbpf_a1b22c0d59ea9e2992c45ab7c2a7d79a3}\label{classmsl1__rbbpf_a1b22c0d59ea9e2992c45ab7c2a7d79a3}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{msl1\+\_\+rbbpf()}{msl1\_rbbpf()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT $>$ \\
+\hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::\hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf} (\begin{DoxyParamCaption}\item[{const unsigned int \&}]{K,  }\item[{const \hyperlink{classparamPack}{param\+Pack} \&}]{pp,  }\item[{bool}]{calc\+\_\+d\+\_\+aves = {\ttfamily false} }\end{DoxyParamCaption})}
+
+
+
+alternative constructor 
+
+sets everything up. 
+\begin{DoxyParams}{Parameters}
+{\em K} & the max number of stocks in a contained panic \\
+\hline
+{\em pp} & the parameters in the form of a \hyperlink{classparamPack}{param\+Pack} \\
+\hline
+{\em calc\+\_\+d\+\_\+aves} & whether or not to calculate dbar and dbbdbar \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classmsl1__rbbpf_a45c6dc4e6b66b091245000e5a59605f5}\label{classmsl1__rbbpf_a45c6dc4e6b66b091245000e5a59605f5}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!f\+Samp@{f\+Samp}}
+\index{f\+Samp@{f\+Samp}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{f\+Samp()}{fSamp()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT $>$ \\
+auto \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::f\+Samp (\begin{DoxyParamCaption}\item[{const \hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \&}]{x2tm1 }\end{DoxyParamCaption})}
+
+
+
+Samples the time t second component. 
+
+Samples the time t second component. 
+\begin{DoxyParams}{Parameters}
+{\em x2tm1} & the previous time\textquotesingle{}s second state component. \\
+\hline
+{\em yt} & the current observation. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a Vec sample of the second state component at the current time. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classmsl1__rbbpf_ad9ae963432618014085777d34f73040d}\label{classmsl1__rbbpf_ad9ae963432618014085777d34f73040d}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!get\+\_\+conditional\+\_\+var@{get\+\_\+conditional\+\_\+var}}
+\index{get\+\_\+conditional\+\_\+var@{get\+\_\+conditional\+\_\+var}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{get\+\_\+conditional\+\_\+var()}{get\_conditional\_var()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT $>$ \\
+auto \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::get\+\_\+conditional\+\_\+var (\begin{DoxyParamCaption}\item[{const \hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \&}]{x2t }\end{DoxyParamCaption}) const}
+
+
+
+returns V\mbox{[}y\+\_\+\{t+1\} $\vert$ x\+\_\+\{2,t\}, theta\mbox{]}, which is used in the rbpf\textquotesingle{}s averaging scheme inside filter() 
+
+\begin{DoxyReturn}{Returns}
+the conditional covariance matrix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classmsl1__rbbpf_af17379667c366be4faaf0241b64d00e6}\label{classmsl1__rbbpf_af17379667c366be4faaf0241b64d00e6}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!get\+\_\+forecast\+\_\+mean@{get\+\_\+forecast\+\_\+mean}}
+\index{get\+\_\+forecast\+\_\+mean@{get\+\_\+forecast\+\_\+mean}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{get\+\_\+forecast\+\_\+mean()}{get\_forecast\_mean()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT $>$ \\
+auto \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::get\+\_\+forecast\+\_\+mean (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+returns E\mbox{[}y\+\_\+\{t+1\} $\vert$ y\+\_\+\{1\+:t\}\mbox{]} =  B +  Dbar B 
+
+\begin{DoxyReturn}{Returns}
+the vector of size dimy 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classmsl1__rbbpf_a3555cc4b6c307e4e8d2300c0514ce5dd}\label{classmsl1__rbbpf_a3555cc4b6c307e4e8d2300c0514ce5dd}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!init\+H\+M\+M\+Prob\+Vec@{init\+H\+M\+M\+Prob\+Vec}}
+\index{init\+H\+M\+M\+Prob\+Vec@{init\+H\+M\+M\+Prob\+Vec}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{init\+H\+M\+M\+Prob\+Vec()}{initHMMProbVec()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT $>$ \\
+auto \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::init\+H\+M\+M\+Prob\+Vec (\begin{DoxyParamCaption}\item[{const \hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \&}]{x21 }\end{DoxyParamCaption})}
+
+
+
+Provides the initial mean vector for each H\+MM filter object. 
+
+provides the initial probability vector for each H\+MM filter object. 
+\begin{DoxyParams}{Parameters}
+{\em x21} & the second state componenent at time 1. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a Vec representing the probability of each state element. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classmsl1__rbbpf_a811836dd2d71e3c46e688b9280aae108}\label{classmsl1__rbbpf_a811836dd2d71e3c46e688b9280aae108}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!init\+H\+M\+M\+Trans\+Mat@{init\+H\+M\+M\+Trans\+Mat}}
+\index{init\+H\+M\+M\+Trans\+Mat@{init\+H\+M\+M\+Trans\+Mat}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{init\+H\+M\+M\+Trans\+Mat()}{initHMMTransMat()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT $>$ \\
+auto \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::init\+H\+M\+M\+Trans\+Mat (\begin{DoxyParamCaption}\item[{const \hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \&}]{x21 }\end{DoxyParamCaption})}
+
+
+
+Provides the transition matrix for each H\+MM filter object. 
+
+provides the transition matrix for each H\+MM filter object. 
+\begin{DoxyParams}{Parameters}
+{\em x21} & the second state component at time 1. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a transition matrix where element (ij) is the probability of transitioning from state i to state j. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classmsl1__rbbpf_acb7bb10daafe487b94f2158e4753c360}\label{classmsl1__rbbpf_acb7bb10daafe487b94f2158e4753c360}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!mu\+Samp@{mu\+Samp}}
+\index{mu\+Samp@{mu\+Samp}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{mu\+Samp()}{muSamp()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT $>$ \\
+auto \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::mu\+Samp (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Sample from the first sampler. 
+
+samples the second component of the state at time 1. 
+\begin{DoxyParams}{Parameters}
+{\em y1} & most recent datum. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a Vec sample for x21. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classmsl1__rbbpf_aa22847dfe35723fa3623385d1b534989}\label{classmsl1__rbbpf_aa22847dfe35723fa3623385d1b534989}} 
+\index{msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}!update\+H\+MM@{update\+H\+MM}}
+\index{update\+H\+MM@{update\+H\+MM}!msl1\+\_\+rbbpf@{msl1\+\_\+rbbpf}}
+\subsubsection{\texorpdfstring{update\+H\+M\+M()}{updateHMM()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimy, typename resampT $>$ \\
+void \hyperlink{classmsl1__rbbpf}{msl1\+\_\+rbbpf}$<$ nparts, dimnss, dimss, dimy, resampT $>$\+::update\+H\+MM (\begin{DoxyParamCaption}\item[{hmm$<$ dimnss, dimy $>$ \&}]{a\+Model,  }\item[{const \hyperlink{classmsl1__rbbpf_a23daf10ba0f0b6fead88bc83b4fa27a3}{osv} \&}]{yt,  }\item[{const \hyperlink{classmsl1__rbbpf_a6703c548bb85bbe8e5a6baa723e8f0bb}{sssv} \&}]{x2t }\end{DoxyParamCaption})}
+
+
+
+How to update your inner H\+MM filter object at each time. 
+
+How to update your inner H\+MM filter object at each time. 
+\begin{DoxyParams}{Parameters}
+{\em a\+Model} & a H\+MM filter object describing the conditional closed-\/form model. \\
+\hline
+{\em yt} & the current time series observation. \\
+\hline
+{\em x2t} & the current second state component. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+example/mod\+\_\+msl1.\+h\end{DoxyCompactItemize}

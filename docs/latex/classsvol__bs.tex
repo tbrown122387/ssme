@@ -1,0 +1,72 @@
+\hypertarget{classsvol__bs}{}\section{svol\+\_\+bs$<$ nparts, dimx, dimy, resampT $>$ Class Template Reference}
+\label{classsvol__bs}\index{svol\+\_\+bs$<$ nparts, dimx, dimy, resamp\+T $>$@{svol\+\_\+bs$<$ nparts, dimx, dimy, resamp\+T $>$}}
+
+
+Inheritance diagram for svol\+\_\+bs$<$ nparts, dimx, dimy, resampT $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=198pt]{classsvol__bs__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for svol\+\_\+bs$<$ nparts, dimx, dimy, resampT $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=198pt]{classsvol__bs__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsvol__bs_a4901395fcf0f3c64f90d05c66339fe0e}\label{classsvol__bs_a4901395fcf0f3c64f90d05c66339fe0e}} 
+using {\bfseries ssv} = Eigen\+::\+Matrix$<$ double, dimx, 1 $>$
+\item 
+\mbox{\Hypertarget{classsvol__bs_ada43d30435c238bad4e7affffc316db7}\label{classsvol__bs_ada43d30435c238bad4e7affffc316db7}} 
+using {\bfseries osv} = Eigen\+::\+Matrix$<$ double, dimy, 1 $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsvol__bs_a732fd48dc72387fa792c969bd4a7318d}\label{classsvol__bs_a732fd48dc72387fa792c969bd4a7318d}} 
+{\bfseries svol\+\_\+bs} (const double \&phi, const double \&beta, const double \&sigma)
+\item 
+\mbox{\Hypertarget{classsvol__bs_aae36729af9543e86cfca34b6a4c901a1}\label{classsvol__bs_aae36729af9543e86cfca34b6a4c901a1}} 
+double {\bfseries log\+Q1\+Ev} (const ssv \&x1, const osv \&y1)
+\item 
+\mbox{\Hypertarget{classsvol__bs_a08e5fc3ae6560fe5d5ebf1498e972234}\label{classsvol__bs_a08e5fc3ae6560fe5d5ebf1498e972234}} 
+double {\bfseries log\+Mu\+Ev} (const ssv \&x1)
+\item 
+\mbox{\Hypertarget{classsvol__bs_ab92198d54517c9dca2f0028440f140be}\label{classsvol__bs_ab92198d54517c9dca2f0028440f140be}} 
+double {\bfseries log\+G\+Ev} (const osv \&yt, const ssv \&xt)
+\item 
+\mbox{\Hypertarget{classsvol__bs_a4546fb765228621313fc5ad8834e4cdf}\label{classsvol__bs_a4546fb765228621313fc5ad8834e4cdf}} 
+auto {\bfseries f\+Samp} (const ssv \&xtm1) -\/$>$ ssv
+\item 
+\mbox{\Hypertarget{classsvol__bs_ac4e7a7ec8738284184be1649eaf084f1}\label{classsvol__bs_ac4e7a7ec8738284184be1649eaf084f1}} 
+auto {\bfseries q1\+Samp} (const osv \&y1) -\/$>$ ssv
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsvol__bs_a7f69d783f885e301c80e7d166c3a5610}\label{classsvol__bs_a7f69d783f885e301c80e7d166c3a5610}} 
+double {\bfseries m\+\_\+phi}
+\item 
+\mbox{\Hypertarget{classsvol__bs_a9dba552e4de89bc488c7780866776129}\label{classsvol__bs_a9dba552e4de89bc488c7780866776129}} 
+double {\bfseries m\+\_\+beta}
+\item 
+\mbox{\Hypertarget{classsvol__bs_a594300257a3784ba41114f74d1c1e37d}\label{classsvol__bs_a594300257a3784ba41114f74d1c1e37d}} 
+double {\bfseries m\+\_\+sigma}
+\item 
+\mbox{\Hypertarget{classsvol__bs_adb58cc515aec2185434ae6b4639a1e02}\label{classsvol__bs_adb58cc515aec2185434ae6b4639a1e02}} 
+rvsamp\+::\+Univ\+Norm\+Sampler {\bfseries m\+\_\+std\+Norm\+Sampler}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+example/univ\+\_\+svol\+\_\+bootsrap\+\_\+filter.\+h\end{DoxyCompactItemize}

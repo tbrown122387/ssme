@@ -1,0 +1,34 @@
+\hypertarget{ada__pmmh_8h}{}\section{include/ada\+\_\+pmmh.h File Reference}
+\label{ada__pmmh_8h}\index{include/ada\+\_\+pmmh.\+h@{include/ada\+\_\+pmmh.\+h}}
+
+
+Performs an adaptive version of the particle marginal Metropilis-\/\+Hastings algorithm. The user is asked to design his/her own proposal density and prior distribution. The sampling is handled on an \char`\"{}as-\/is\char`\"{} basis, which means that it is entirely the user\textquotesingle{}s own responsibility to handle Jacobians that might pop up if the prior and proposal density are specified for two different parameterizations. These parameters will be written in an \char`\"{}as-\/is\char`\"{} fashion, as well. These calculations can be facilitates using the {\ttfamily \hyperlink{classparamPack}{param\+Pack}} class, however using this class is not absolutely necessary. Also, for convenience, a moving average covariance matrix estimate is performed. This can be ignored, but it can be handy for use in the proposal density on a transformed space.  
+
+
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$thread$>$}\newline
+{\ttfamily \#include $<$atomic$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$future$>$}\newline
+{\ttfamily \#include \char`\"{}rv\+\_\+samp.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}utils.\+h\char`\"{}}\newline
+Include dependency graph for ada\+\_\+pmmh.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{ada__pmmh_8h__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classada__pmmh}{ada\+\_\+pmmh$<$ numparams, dimobs, numparts $>$}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Performs an adaptive version of the particle marginal Metropilis-\/\+Hastings algorithm. The user is asked to design his/her own proposal density and prior distribution. The sampling is handled on an \char`\"{}as-\/is\char`\"{} basis, which means that it is entirely the user\textquotesingle{}s own responsibility to handle Jacobians that might pop up if the prior and proposal density are specified for two different parameterizations. These parameters will be written in an \char`\"{}as-\/is\char`\"{} fashion, as well. These calculations can be facilitates using the {\ttfamily \hyperlink{classparamPack}{param\+Pack}} class, however using this class is not absolutely necessary. Also, for convenience, a moving average covariance matrix estimate is performed. This can be ignored, but it can be handy for use in the proposal density on a transformed space. 
+

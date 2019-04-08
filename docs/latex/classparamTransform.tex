@@ -1,0 +1,38 @@
+\hypertarget{classparamTransform}{}\section{param\+Transform Class Reference}
+\label{classparamTransform}\index{param\+Transform@{param\+Transform}}
+
+
+Inheritance diagram for param\+Transform\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classparamTransform__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classparamTransform_a7eaa549e2a14fe05080378a5967d9c97}\label{classparamTransform_a7eaa549e2a14fe05080378a5967d9c97}} 
+virtual \hyperlink{classparamTransform_a7eaa549e2a14fe05080378a5967d9c97}{$\sim$param\+Transform} ()
+\begin{DoxyCompactList}\small\item\em a virtual destructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparamTransform_a0f380ca288488f76f15819704920bf27}\label{classparamTransform_a0f380ca288488f76f15819704920bf27}} 
+virtual double \hyperlink{classparamTransform_a0f380ca288488f76f15819704920bf27}{trans} (const double \&p)=0
+\begin{DoxyCompactList}\small\item\em from the constrained/nontransformed to the transformed/unconstrained space \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparamTransform_a183baf22182cddc645567ee202a895fc}\label{classparamTransform_a183baf22182cddc645567ee202a895fc}} 
+virtual double \hyperlink{classparamTransform_a183baf22182cddc645567ee202a895fc}{inv\+Trans} (const double \&trans\+\_\+p)=0
+\begin{DoxyCompactList}\small\item\em from the unconstrained/transformed to the constrained/untransformed space; \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparamTransform_a0b30b6b43073c589a1f48a61b2c0d77f}\label{classparamTransform_a0b30b6b43073c589a1f48a61b2c0d77f}} 
+virtual double \hyperlink{classparamTransform_a0b30b6b43073c589a1f48a61b2c0d77f}{log\+Jacobian} (const double \&p)=0
+\begin{DoxyCompactList}\small\item\em get the log jacobian (from untransformed to transformed). For use with adjusting priors to the transformed space. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classparamTransform_a3cef2dd407ed30c66ff9a5cab8516a3c}\label{classparamTransform_a3cef2dd407ed30c66ff9a5cab8516a3c}} 
+static std\+::unique\+\_\+ptr$<$ \hyperlink{classparamTransform}{param\+Transform} $>$ \hyperlink{classparamTransform_a3cef2dd407ed30c66ff9a5cab8516a3c}{create} (Trans\+Type tt)
+\begin{DoxyCompactList}\small\item\em a static method to create unique pointers \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/param\+\_\+transforms.\+h\end{DoxyCompactItemize}

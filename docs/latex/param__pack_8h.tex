@@ -1,0 +1,46 @@
+\hypertarget{param__pack_8h}{}\section{include/param\+\_\+pack.h File Reference}
+\label{param__pack_8h}\index{include/param\+\_\+pack.\+h@{include/param\+\_\+pack.\+h}}
+
+
+Stores transformed parameters, as well as the functions that can change them to the untransformed parameters and back.  
+
+
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include \char`\"{}param\+\_\+transforms.\+h\char`\"{}}\newline
+Include dependency graph for param\+\_\+pack.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{param__pack_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{param__pack_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classparamPack}{param\+Pack}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Stores transformed parameters, as well as the functions that can change them to the untransformed parameters and back. 
+
+trans\+\_\+p = log(orig\+\_\+p).
+
+trans\+\_\+p = logit(orig\+\_\+p).
+
+trans\+\_\+p = log(1+orig\+\_\+p) -\/ log(1-\/orig\+\_\+p) = logit((orig\+\_\+p+1)/2).
+
+trans\+\_\+p = orig\+\_\+p.
+
+a pure virtual base class. cts params only.

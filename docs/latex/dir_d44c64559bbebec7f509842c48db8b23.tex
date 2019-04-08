@@ -1,0 +1,11 @@
+\hypertarget{dir_d44c64559bbebec7f509842c48db8b23}{}\section{include Directory Reference}
+\label{dir_d44c64559bbebec7f509842c48db8b23}\index{include Directory Reference@{include Directory Reference}}
+\subsection*{Files}
+\begin{DoxyCompactItemize}
+\item 
+file \hyperlink{ada__pmmh_8h}{ada\+\_\+pmmh.\+h}
+\begin{DoxyCompactList}\small\item\em Performs an adaptive version of the particle marginal Metropilis-\/\+Hastings algorithm. The user is asked to design his/her own proposal density and prior distribution. The sampling is handled on an \char`\"{}as-\/is\char`\"{} basis, which means that it is entirely the user\textquotesingle{}s own responsibility to handle Jacobians that might pop up if the prior and proposal density are specified for two different parameterizations. These parameters will be written in an \char`\"{}as-\/is\char`\"{} fashion, as well. These calculations can be facilitates using the {\ttfamily \hyperlink{classparamPack}{param\+Pack}} class, however using this class is not absolutely necessary. Also, for convenience, a moving average covariance matrix estimate is performed. This can be ignored, but it can be handy for use in the proposal density on a transformed space. \end{DoxyCompactList}\item 
+file \hyperlink{ada__pmmh__mvn_8h}{ada\+\_\+pmmh\+\_\+mvn.\+h}
+\begin{DoxyCompactList}\small\item\em Performs adaptive particle marginal metropolis-\/hastings sampling, using a multivariate normal distribution as the proposal. This samples on the transformed space, but it writes the the untransformed/constrained samples to the output. The priors requested by the user are for the (hopefully more convenient) un-\/transformed or constrainedspace. This means that the user never has to worry about handling any kind of Jacobian. \end{DoxyCompactList}\item 
+file \hyperlink{param__pack_8h}{param\+\_\+pack.\+h}
+\begin{DoxyCompactList}\small\item\em Stores transformed parameters, as well as the functions that can change them to the untransformed parameters and back. \end{DoxyCompactList}\end{DoxyCompactItemize}

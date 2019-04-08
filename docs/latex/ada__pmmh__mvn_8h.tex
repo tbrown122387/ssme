@@ -1,0 +1,46 @@
+\hypertarget{ada__pmmh__mvn_8h}{}\section{include/ada\+\_\+pmmh\+\_\+mvn.h File Reference}
+\label{ada__pmmh__mvn_8h}\index{include/ada\+\_\+pmmh\+\_\+mvn.\+h@{include/ada\+\_\+pmmh\+\_\+mvn.\+h}}
+
+
+Performs adaptive particle marginal metropolis-\/hastings sampling, using a multivariate normal distribution as the proposal. This samples on the transformed space, but it writes the the untransformed/constrained samples to the output. The priors requested by the user are for the (hopefully more convenient) un-\/transformed or constrainedspace. This means that the user never has to worry about handling any kind of Jacobian.  
+
+
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$thread$>$}\newline
+{\ttfamily \#include $<$atomic$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$future$>$}\newline
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$typeinfo$>$}\newline
+{\ttfamily \#include \char`\"{}rv\+\_\+eval.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rv\+\_\+samp.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}utils.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}param\+\_\+pack.\+h\char`\"{}}\newline
+Include dependency graph for ada\+\_\+pmmh\+\_\+mvn.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{ada__pmmh__mvn_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=211pt]{ada__pmmh__mvn_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classada__pmmh__mvn}{ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts $>$}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Performs adaptive particle marginal metropolis-\/hastings sampling, using a multivariate normal distribution as the proposal. This samples on the transformed space, but it writes the the untransformed/constrained samples to the output. The priors requested by the user are for the (hopefully more convenient) un-\/transformed or constrainedspace. This means that the user never has to worry about handling any kind of Jacobian. 
+

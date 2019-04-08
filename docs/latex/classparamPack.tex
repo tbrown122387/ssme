@@ -1,0 +1,174 @@
+\hypertarget{classparamPack}{}\section{param\+Pack Class Reference}
+\label{classparamPack}\index{param\+Pack@{param\+Pack}}
+
+
+{\ttfamily \#include $<$param\+\_\+pack.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classparamPack_a669db12cf2e7908255bf95bc1c46aafe}\label{classparamPack_a669db12cf2e7908255bf95bc1c46aafe}} 
+using {\bfseries vecptrs} = std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \hyperlink{classparamTransform}{param\+Transform} $>$ $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classparamPack_a404c1db9bb4ebc258ac79200e1b92cf9}\label{classparamPack_a404c1db9bb4ebc258ac79200e1b92cf9}} 
+{\bfseries param\+Pack} (const \hyperlink{classparamPack}{param\+Pack} \&pp)=delete
+\item 
+\mbox{\Hypertarget{classparamPack_a132baf34915216cae985ddcbff40cf75}\label{classparamPack_a132baf34915216cae985ddcbff40cf75}} 
+{\bfseries param\+Pack} (const Eigen\+::\+Vector\+Xd \&trans\+\_\+params, vecptrs \&\&t\+\_\+functors)
+\item 
+\mbox{\Hypertarget{classparamPack_adc1cb981efe75da7e64fa279cd9ec467}\label{classparamPack_adc1cb981efe75da7e64fa279cd9ec467}} 
+{\bfseries param\+Pack} (const Eigen\+::\+Vector\+Xd \&params, const std\+::vector$<$ Trans\+Type $>$ \&vec\+\_\+trans\+\_\+types, bool start\+\_\+w\+\_\+trans\+\_\+params=true)
+\item 
+\mbox{\Hypertarget{classparamPack_a14b86328a0a82a7d00b631fd79884e94}\label{classparamPack_a14b86328a0a82a7d00b631fd79884e94}} 
+\hyperlink{classparamPack}{param\+Pack} \& {\bfseries operator=} (const \hyperlink{classparamPack}{param\+Pack} \&other)=delete
+\item 
+\mbox{\Hypertarget{classparamPack_a7374a7e3ea39a54d020fc91a3d971ffd}\label{classparamPack_a7374a7e3ea39a54d020fc91a3d971ffd}} 
+\hyperlink{classparamPack}{param\+Pack} \& {\bfseries operator=} (\hyperlink{classparamPack}{param\+Pack} \&\&other)=delete
+\item 
+unsigned int \hyperlink{classparamPack_a69fc36c50f73e6b827d2e339e2e8b806}{get\+Num\+Params} () const
+\begin{DoxyCompactList}\small\item\em get number of parameters \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \hyperlink{classparamPack_a384545f4e43c572c236b2535514830e3}{get\+Trans\+Params} () const
+\begin{DoxyCompactList}\small\item\em get the transformed parameters in the unrestricted space \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \hyperlink{classparamPack_afd45bfe2c0c9d157df3f146d57bc492d}{get\+Un\+Trans\+Params} () const
+\begin{DoxyCompactList}\small\item\em get the untransformed parameters in the possibly-\/restricted space \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \hyperlink{classparamPack_aab8d550dbd4f28fce067197ba96f80fa}{get\+Trans\+Params} (const unsigned int \&start, const unsigned int \&end) const
+\begin{DoxyCompactList}\small\item\em get a subset of the transformed parameters in the unrestricted space \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \hyperlink{classparamPack_a0a2a21e73e3c8371e91db1b056317c46}{get\+Un\+Trans\+Params} (const unsigned int \&start, const unsigned int \&end) const
+\begin{DoxyCompactList}\small\item\em get a subset of the untransformed parameters in the possibly-\/restricted space \end{DoxyCompactList}\item 
+double \hyperlink{classparamPack_adb44adbc09eb281022984461fc2050f2}{get\+Log\+Jacobian} () const
+\begin{DoxyCompactList}\small\item\em get the log of the Jacobian determinant you need for the density of transformed parameters. \end{DoxyCompactList}\item 
+void \hyperlink{classparamPack_ac179e7541c993e05e5e435d5f20c558a}{take\+Values} (const \hyperlink{classparamPack}{param\+Pack} \&other)
+\begin{DoxyCompactList}\small\item\em copy values from another \hyperlink{classparamPack}{param\+Pack} \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classparamPack_a3b341549b133b3f0ac47d6c600b7bcff}\label{classparamPack_a3b341549b133b3f0ac47d6c600b7bcff}} 
+Eigen\+::\+Vector\+Xd {\bfseries m\+\_\+trans\+\_\+params}
+\item 
+\mbox{\Hypertarget{classparamPack_a8f9043bb2a179abb7ea707e36de2cfc1}\label{classparamPack_a8f9043bb2a179abb7ea707e36de2cfc1}} 
+vecptrs {\bfseries m\+\_\+transform\+\_\+functors}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+t 
+\end{DoxyAuthor}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classparamPack_adb44adbc09eb281022984461fc2050f2}\label{classparamPack_adb44adbc09eb281022984461fc2050f2}} 
+\index{param\+Pack@{param\+Pack}!get\+Log\+Jacobian@{get\+Log\+Jacobian}}
+\index{get\+Log\+Jacobian@{get\+Log\+Jacobian}!param\+Pack@{param\+Pack}}
+\subsubsection{\texorpdfstring{get\+Log\+Jacobian()}{getLogJacobian()}}
+{\footnotesize\ttfamily double param\+Pack\+::get\+Log\+Jacobian (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+get the log of the Jacobian determinant you need for the density of transformed parameters. 
+
+get the log of the Jacobian determinant you need for the density of transformed params \begin{DoxyReturn}{Returns}
+a double 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classparamPack_a69fc36c50f73e6b827d2e339e2e8b806}\label{classparamPack_a69fc36c50f73e6b827d2e339e2e8b806}} 
+\index{param\+Pack@{param\+Pack}!get\+Num\+Params@{get\+Num\+Params}}
+\index{get\+Num\+Params@{get\+Num\+Params}!param\+Pack@{param\+Pack}}
+\subsubsection{\texorpdfstring{get\+Num\+Params()}{getNumParams()}}
+{\footnotesize\ttfamily unsigned int param\+Pack\+::get\+Num\+Params (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+get number of parameters 
+
+gets the number of parameters in your pack \begin{DoxyReturn}{Returns}
+an unsigned integer 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classparamPack_a384545f4e43c572c236b2535514830e3}\label{classparamPack_a384545f4e43c572c236b2535514830e3}} 
+\index{param\+Pack@{param\+Pack}!get\+Trans\+Params@{get\+Trans\+Params}}
+\index{get\+Trans\+Params@{get\+Trans\+Params}!param\+Pack@{param\+Pack}}
+\subsubsection{\texorpdfstring{get\+Trans\+Params()}{getTransParams()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd param\+Pack\+::get\+Trans\+Params (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+get the transformed parameters in the unrestricted space 
+
+get the transformed parameters on the unrestricted space \begin{DoxyReturn}{Returns}
+an Eigen\+::\+Vector of transformed parameters 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classparamPack_aab8d550dbd4f28fce067197ba96f80fa}\label{classparamPack_aab8d550dbd4f28fce067197ba96f80fa}} 
+\index{param\+Pack@{param\+Pack}!get\+Trans\+Params@{get\+Trans\+Params}}
+\index{get\+Trans\+Params@{get\+Trans\+Params}!param\+Pack@{param\+Pack}}
+\subsubsection{\texorpdfstring{get\+Trans\+Params()}{getTransParams()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd param\+Pack\+::get\+Trans\+Params (\begin{DoxyParamCaption}\item[{const unsigned int \&}]{start,  }\item[{const unsigned int \&}]{end }\end{DoxyParamCaption}) const}
+
+
+
+get a subset of the transformed parameters in the unrestricted space 
+
+get a subset of the transformed parameters on the unrestricted space 
+\begin{DoxyParams}{Parameters}
+{\em index} & of first element (starts counting at zero) \\
+\hline
+{\em index} & of last element (not like python indexing!) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+an Eigen\+::\+Vector of transformed parameters 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classparamPack_afd45bfe2c0c9d157df3f146d57bc492d}\label{classparamPack_afd45bfe2c0c9d157df3f146d57bc492d}} 
+\index{param\+Pack@{param\+Pack}!get\+Un\+Trans\+Params@{get\+Un\+Trans\+Params}}
+\index{get\+Un\+Trans\+Params@{get\+Un\+Trans\+Params}!param\+Pack@{param\+Pack}}
+\subsubsection{\texorpdfstring{get\+Un\+Trans\+Params()}{getUnTransParams()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd param\+Pack\+::get\+Un\+Trans\+Params (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+get the untransformed parameters in the possibly-\/restricted space 
+
+get the untransformed parameters on the possibly-\/restricted space \begin{DoxyReturn}{Returns}
+an Eigen\+::\+Vector of transformed parameters 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classparamPack_a0a2a21e73e3c8371e91db1b056317c46}\label{classparamPack_a0a2a21e73e3c8371e91db1b056317c46}} 
+\index{param\+Pack@{param\+Pack}!get\+Un\+Trans\+Params@{get\+Un\+Trans\+Params}}
+\index{get\+Un\+Trans\+Params@{get\+Un\+Trans\+Params}!param\+Pack@{param\+Pack}}
+\subsubsection{\texorpdfstring{get\+Un\+Trans\+Params()}{getUnTransParams()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd param\+Pack\+::get\+Un\+Trans\+Params (\begin{DoxyParamCaption}\item[{const unsigned int \&}]{start,  }\item[{const unsigned int \&}]{end }\end{DoxyParamCaption}) const}
+
+
+
+get a subset of the untransformed parameters in the possibly-\/restricted space 
+
+get a subset of the transformed parameters on the unrestricted space 
+\begin{DoxyParams}{Parameters}
+{\em index} & of first element (starts counting at zero) \\
+\hline
+{\em index} & of last element (not like python indexing!) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+an Eigen\+::\+Vector of transformed parameters 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classparamPack_ac179e7541c993e05e5e435d5f20c558a}\label{classparamPack_ac179e7541c993e05e5e435d5f20c558a}} 
+\index{param\+Pack@{param\+Pack}!take\+Values@{take\+Values}}
+\index{take\+Values@{take\+Values}!param\+Pack@{param\+Pack}}
+\subsubsection{\texorpdfstring{take\+Values()}{takeValues()}}
+{\footnotesize\ttfamily void param\+Pack\+::take\+Values (\begin{DoxyParamCaption}\item[{const \hyperlink{classparamPack}{param\+Pack} \&}]{other }\end{DoxyParamCaption})}
+
+
+
+copy values from another \hyperlink{classparamPack}{param\+Pack} 
+
+copy the values of another \hyperlink{classparamPack}{param\+Pack} 
+\begin{DoxyParams}{Parameters}
+{\em the} & other parameter pack whose values you want to take as your own \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\hyperlink{param__pack_8h}{param\+\_\+pack.\+h}\end{DoxyCompactItemize}
