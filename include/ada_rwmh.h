@@ -1,15 +1,15 @@
-#ifndef ADA_PMMH_MVN_H
-#define ADA_PMMH_MVN_H
+#ifndef ADA_RWMH_H
+#define ADA_RWMH_H
 
 #include <vector>
 #include <Eigen/Dense>
 #include <iostream> // ofstream
-#include <thread> // hardware_concurrency
-#include <atomic> // atomic_bool
+//#include <thread> // hardware_concurrency
+//#include <atomic> // atomic_bool
 #include <fstream> // ofstream
-#include <future> // std::future
+//#include <future> // std::future
 #include <chrono> //std::chrono::system_clock::now()
-#include <typeinfo> // typeid()
+//#include <typeinfo> // typeid()
 
 #include "rv_eval.h"
 #include "rv_samp.h"
@@ -17,26 +17,30 @@
 #include "param_pack.h"
 
 
+//TODO: m_data
+
+
 /**
- * @class ada_pmmh_mvn
+ * @class ada_rwmh
  * @author t
- * @date 24/05/18
- * @file ada_pmmh_mvn.h
- * @brief Performs adaptive particle marginal metropolis-hastings sampling, using a 
- * multivariate normal distribution as the proposal. This samples on the transformed 
- * space, but it writes the the untransformed/constrained samples to the output. The   
- * priors requested by the user are for the (hopefully more convenient) un-transformed 
- * or constrainedspace. This means that the user never has to worry about handling any 
+ * @file ada_rwmh.h
+ * @brief Performs adaptive random walk metropolis-hastings sampling (uses a 
+ * multivariate normal distribution as the proposal). This samples on the transformed 
+ * space, but it writes the untransformed/constrained samples to the output. The   
+ * priors requested by the user are for the (more convenient) un-transformed 
+ * aka constrained space. This means that the user never has to worry about handling any 
  * kind of Jacobian.
  */
-template<size_t numparams, size_t dimobs, size_t numparts>
-class ada_pmmh_mvn{
+template<size_t numparams, size_t dimobs>
+class ada_rwmh{
 public:
 
+    /* type aliases */
     using osv = Eigen::Matrix<double,dimobs,1>;
     using psv = Eigen::Matrix<double,numparams,1>;
     using psm = Eigen::Matrix<double,numparams,numparams>;
     
+
     /**
      * @brief The constructor
      * @param start_trans_theta the initial transformed parameters you want to start sampling from.
@@ -44,18 +48,17 @@ public:
      * @param data_file the location of the observed time series data (input).
      * @param samples_file the location where you want to store the theta samples (output).
      * @param messages_file the location where you want to store the messages (output).
-     * @param mc stands for multicore. true or false if you want to use extra cores.
      * @param t0 time you start adapting
      * @param t1 time you stop adapting
      * @param C0 initial covariance matrix for proposal distribution.
      */
-    ada_pmmh_mvn(const psv &start_trans_theta, 
+    ada_rwmh(
+                 const psv &start_trans_theta, 
                  const std::vector<TransType>& tts,
                  const unsigned int &num_mcmc_iters,
                  const std::string &data_file, // TODO: describe formatting rules (e.g. column orders, column names, etc.)
                  const std::string &sample_file_base_name,
                  const std::string &message_file_base_name,
-                 const bool &mc,
                  const unsigned int &t0,
                  const unsigned int &t1,
                  const psm &C0,
@@ -83,16 +86,17 @@ public:
 
 
     /**
-     * @brief Evaluates (approximates) the log-likelihood with a particle filter.
-     * @param theta the parameters with which to run the particle filter.
-     * @param data the observed data with which to run the particle filter.
-     * @return the evaluation (as a double) of the log likelihood approximation.
+     * @brief Evaluates the log-likelihood.
+     * @param theta the parameters of your likelihood.
+     * @param data the observed data you're modeling.
+     * @return the evaluation (as a double) of the log likelihood.
      */
     virtual double logLikeEvaluate(const paramPack& theta, const std::vector<osv> &data) = 0;
     
              
 private:
-    std::vector<osv> m_data;
+    
+    //std::vector<osv> m_data;
     paramPack m_current_theta;
     std::vector<TransType> m_tts;
     psm m_sigma_hat; // for transformed parameters; n-1 in the denominator.
@@ -105,8 +109,8 @@ private:
     std::ofstream m_samples_file_stream; 
     std::ofstream m_message_stream;
     unsigned int m_num_mcmc_iters;
-    unsigned int m_num_extra_threads;
-    bool m_multicore;
+    //unsigned int m_num_extra_threads;
+    //bool m_multicore;
     unsigned int m_iter; // current iter
     double m_sd; // perhaps there's a better name for this
     double m_eps;
@@ -120,15 +124,14 @@ private:
 };
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-ada_pmmh_mvn<numparams,dimobs,numparts>::ada_pmmh_mvn(
+template<size_t numparams, size_t dimobs>
+ada_rwmh<numparams,dimobs>::ada_rwmh(
                                             const psv &start_trans_theta, 
                                             const std::vector<TransType>& tts,
                                             const unsigned int &num_mcmc_iters,
                                             const std::string &data_file, 
                                             const std::string &sample_file_base_name,
                                             const std::string &message_file_base_name,
-                                            const bool &mc,
                                             const unsigned int &t0,
                                             const unsigned int &t1,
                                             const psm &C0,
@@ -141,23 +144,21 @@ ada_pmmh_mvn<numparams,dimobs,numparts>::ada_pmmh_mvn(
  , m_t0(t0), m_t1(t1)
  , m_Ct(C0)
  , m_num_mcmc_iters(num_mcmc_iters)
- , m_multicore(mc)
  , m_iter(0)
  , m_sd(2.4*2.4/numparams)
  , m_eps(.01)
  , m_print_to_console(print_to_console)
 {
-    m_data = utils::readInData<dimobs>(data_file);
+    //m_data = utils::readInData<dimobs>(data_file);
     std::string samples_file = utils::genStringWithTime(sample_file_base_name);
     m_samples_file_stream.open(samples_file); 
     std::string messages_file = utils::genStringWithTime(message_file_base_name);
     m_message_stream.open(messages_file);  
-    m_num_extra_threads = std::thread::hardware_concurrency() - 1;
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-void ada_pmmh_mvn<numparams,dimobs,numparts>::update_moments_and_Ct(const paramPack& newTheta)  
+template<size_t numparams, size_t dimobs>
+void ada_rwmh<numparams,dimobs>::update_moments_and_Ct(const paramPack& newTheta)  
 {
     // if m_iter = 1, that means we're on iteration 2, 
     // but we're calling this based on the previous iteration, 
@@ -197,15 +198,15 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::update_moments_and_Ct(const paramP
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-auto ada_pmmh_mvn<numparams,dimobs,numparts>::get_ct() const -> psm
+template<size_t numparams, size_t dimobs>
+auto ada_rwmh<numparams,dimobs>::get_ct() const -> psm
 {
     return m_Ct;
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-auto ada_pmmh_mvn<numparams,dimobs,numparts>::qSample(const paramPack& oldParams) -> psv
+template<size_t numparams, size_t dimobs>
+auto ada_rwmh<numparams,dimobs>::qSample(const paramPack& oldParams) -> psv
 {
     // assumes that Ct has already been updated
     // recall that we are sampling on the transformed/unconstrained space    
@@ -216,8 +217,8 @@ auto ada_pmmh_mvn<numparams,dimobs,numparts>::qSample(const paramPack& oldParams
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
+template<size_t numparams, size_t dimobs>
+void ada_rwmh<numparams,dimobs>::commenceSampling()
 {
 
     // random number stuff to decide on whether to accept or reject
@@ -235,27 +236,13 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
             if(m_print_to_console)
                 std::cout << "***Iter number: " << 1 << " out of " << m_num_mcmc_iters << "\n";        
         
-            // write accepted (initial) parameters to file (initial guesses are always "accepted")
+            // write initial parameters to file (initial guesses are always "accepted")
             // notice that they are the untransformed/constrained versions!
+            // this makes analysis easier when the time comes
             utils::logParams<numparams>(m_current_theta.getUnTransParams(), m_samples_file_stream);
             
             // get logLike 
-            if (!m_multicore){
-                oldLogLike = logLikeEvaluate(m_current_theta, m_data);
-            }else{
-                std::vector<std::future<double> > newLogLikes;
-                for(size_t i = 0; i < m_num_extra_threads; ++i){
-                    newLogLikes.push_back(std::async(std::launch::async,
-                                                     &ada_pmmh_mvn::logLikeEvaluate,
-                                                     this,
-                                                     std::cref(m_current_theta), 
-                                                     std::cref(m_data)));               
-                }
-                for(size_t i = 0; i < m_num_extra_threads; ++i){
-                    oldLogLike += newLogLikes[i].get();
-                }
-                oldLogLike /= m_num_extra_threads;
-            }
+            oldLogLike = logLikeEvaluate(m_current_theta, m_data);
             
             // store prior for next round
             oldLogPrior = logPriorEvaluate(m_current_theta) + m_current_theta.getLogJacobian(); ///!!!!!
@@ -282,55 +269,30 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
             double newLogPrior = logPriorEvaluate(proposed_theta) + proposed_theta.getLogJacobian();
     
             // get the likelihood
-            double newLL(0.0);
-            if (!m_multicore){
-                newLL = logLikeEvaluate(proposed_theta, m_data);
-            }else{
-                std::vector<std::future<double> > newLogLikes;
-                for(size_t i = 0; i < m_num_extra_threads; ++i){
-                    newLogLikes.push_back(std::async(std::launch::async,
-                                                     &ada_pmmh_mvn::logLikeEvaluate,
-                                                     this,
-                                                     std::cref(proposed_theta), 
-                                                     std::cref(m_data)));               
-                }
-                for(size_t i = 0; i < m_num_extra_threads; ++i){
-                    newLL += newLogLikes[i].get();
-                }
-                newLL /= m_num_extra_threads;
-            }
+            double newLL = logLikeEvaluate(proposed_theta, m_data);
 
             // accept or reject proposal (assumes multivariate normal proposal which means it's symmetric)
             double logAR = newLogPrior + newLL - oldLogPrior - oldLogLike;                
                 
             // output some stuff
-            m_message_stream << "***Iter number: " << m_iter+1 << " out of " << m_num_mcmc_iters << "\n";
-            if(m_print_to_console)
-                std::cout << "***Iter number: " << m_iter+1 << " out of " << m_num_mcmc_iters << "\n";        
-
-            m_message_stream << "acceptance rate: " << m_ma_accept_rate << " \n";
-            if(m_print_to_console)
-                std::cout << "acceptance rate: " << m_ma_accept_rate << " \n";            
-
-            m_message_stream << "oldLogLike: " << oldLogLike << "\n";
-            if(m_print_to_console)
-                std::cout << "oldLogLike: " << oldLogLike << "\n";
+            m_message_stream << "***Iter number: "  << m_iter+1                            << " out of " << m_num_mcmc_iters << "\n"
+                             << "acceptance rate: " << m_ma_accept_rate                    << " \n"
+                             << "oldLogLike: "      << oldLogLike                          << "\n"
+                             << "newLogLike: "      << newLL                               << "\n"
+                             << "PriorRatio: "      << std::exp(newLogPrior - oldLogPrior) << "\n"
+                             << "LikeRatio: "       << std::exp(newLL - oldLogLike)        << "\n"
+                             << "AR: "              << std::exp(logAR)                     << "\n";
             
-            m_message_stream << "newLogLike: " << newLL << "\n";
-            if(m_print_to_console)
-                std::cout << "newLogLike: " << newLL << "\n";
-
-            m_message_stream << "PriorRatio: " << std::exp(newLogPrior - oldLogPrior) << "\n";
-            if(m_print_to_console)
-                std::cout << "PriorRatio: " << std::exp(newLogPrior - oldLogPrior) << "\n";
-            
-            m_message_stream << "LikeRatio: " << std::exp(newLL - oldLogLike) << "\n";
-            if(m_print_to_console)
-                std::cout << "LikeRatio: " << std::exp(newLL - oldLogLike) << "\n";
-            
-            m_message_stream << "AR: " << std::exp(logAR) << "\n";
-            if(m_print_to_console)
-                std::cout << "AR: " << std::exp(logAR) << "\n";
+            if(m_print_to_console){
+                std::cout << "***Iter number: "  << m_iter+1                            << " out of " << m_num_mcmc_iters << "\n"
+                          << "acceptance rate: " << m_ma_accept_rate                    << " \n"
+                          << "oldLogLike: "      << oldLogLike                          << "\n"
+                          << "newLogLike: "      << newLL                               << "\n"
+                          << "PriorRatio: "      << std::exp(newLogPrior - oldLogPrior) << "\n"
+                          << "LikeRatio: "       << std::exp(newLL - oldLogLike)        << "\n"
+                          << "AR: "              << std::exp(logAR)                     << "\n";
+ 
+            }
 
             // decide whether to accept or reject
             double draw = runif.sample();
@@ -404,4 +366,4 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
 }
 
 
-#endif //ADA_PMMH_MVN_H
+#endif //ADA_RWMH_H
