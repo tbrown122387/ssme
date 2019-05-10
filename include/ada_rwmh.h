@@ -4,10 +4,7 @@
 #include <vector>
 #include <Eigen/Dense>
 #include <iostream> // ofstream
-//#include <thread> // hardware_concurrency
-//#include <atomic> // atomic_bool
 #include <fstream> // ofstream
-//#include <future> // std::future
 #include <chrono> //std::chrono::system_clock::now()
 //#include <typeinfo> // typeid()
 
@@ -15,9 +12,6 @@
 #include "rv_samp.h"
 #include "utils.h" // readInData
 #include "param_pack.h"
-
-
-//TODO: m_data
 
 
 /**
@@ -75,7 +69,7 @@ public:
     /**
      * @brief starts the sampling
      */
-    void commenceSampling();
+    void commenceSampling(const std::vector<Eigen::Matrix<double,dimobs,1>> &data);
     
     /**
      * @brief Evaluates the log of the model's prior distribution assuming the original/nontransformed/contrained parameterization
@@ -96,7 +90,6 @@ public:
              
 private:
     
-    //std::vector<osv> m_data;
     paramPack m_current_theta;
     std::vector<TransType> m_tts;
     psm m_sigma_hat; // for transformed parameters; n-1 in the denominator.
@@ -149,7 +142,6 @@ ada_rwmh<numparams,dimobs>::ada_rwmh(
  , m_eps(.01)
  , m_print_to_console(print_to_console)
 {
-    //m_data = utils::readInData<dimobs>(data_file);
     std::string samples_file = utils::genStringWithTime(sample_file_base_name);
     m_samples_file_stream.open(samples_file); 
     std::string messages_file = utils::genStringWithTime(message_file_base_name);
@@ -218,7 +210,7 @@ auto ada_rwmh<numparams,dimobs>::qSample(const paramPack& oldParams) -> psv
 
 
 template<size_t numparams, size_t dimobs>
-void ada_rwmh<numparams,dimobs>::commenceSampling()
+void ada_rwmh<numparams,dimobs>::commenceSampling(const std::vector<Eigen::Matrix<double,dimobs,1>> &data)
 {
 
     // random number stuff to decide on whether to accept or reject
@@ -242,7 +234,7 @@ void ada_rwmh<numparams,dimobs>::commenceSampling()
             utils::logParams<numparams>(m_current_theta.getUnTransParams(), m_samples_file_stream);
             
             // get logLike 
-            oldLogLike = logLikeEvaluate(m_current_theta, m_data);
+            oldLogLike = logLikeEvaluate(m_current_theta, data);
             
             // store prior for next round
             oldLogPrior = logPriorEvaluate(m_current_theta) + m_current_theta.getLogJacobian(); ///!!!!!
@@ -269,7 +261,7 @@ void ada_rwmh<numparams,dimobs>::commenceSampling()
             double newLogPrior = logPriorEvaluate(proposed_theta) + proposed_theta.getLogJacobian();
     
             // get the likelihood
-            double newLL = logLikeEvaluate(proposed_theta, m_data);
+            double newLL = logLikeEvaluate(proposed_theta, data);
 
             // accept or reject proposal (assumes multivariate normal proposal which means it's symmetric)
             double logAR = newLogPrior + newLL - oldLogPrior - oldLogLike;                
