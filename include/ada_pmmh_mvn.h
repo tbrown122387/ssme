@@ -29,13 +29,13 @@
  * or constrainedspace. This means that the user never has to worry about handling any 
  * kind of Jacobian.
  */
-template<size_t numparams, size_t dimobs, size_t numparts>
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t = double>
 class ada_pmmh_mvn{
 public:
 
-    using osv = Eigen::Matrix<double,dimobs,1>;
-    using psv = Eigen::Matrix<double,numparams,1>;
-    using psm = Eigen::Matrix<double,numparams,numparams>;
+    using osv = Eigen::Matrix<float_t,dimobs,1>;
+    using psv = Eigen::Matrix<float_t,numparams,1>;
+    using psm = Eigen::Matrix<float_t,numparams,numparams>;
     
     /**
      * @brief The constructor
@@ -79,25 +79,25 @@ public:
      * @param theta the parameters argument (nontransformed/constrained parameterization). 
      * @return the log of the prior density.
      */
-    virtual double logPriorEvaluate(const paramPack& theta) = 0;
+    virtual float_t logPriorEvaluate(const paramPack<float_t>& theta) = 0;
 
 
     /**
      * @brief Evaluates (approximates) the log-likelihood with a particle filter.
      * @param theta the parameters with which to run the particle filter.
      * @param data the observed data with which to run the particle filter.
-     * @return the evaluation (as a double) of the log likelihood approximation.
+     * @return the evaluation (as a float_t) of the log likelihood approximation.
      */
-    virtual double logLikeEvaluate(const paramPack& theta, const std::vector<osv> &data) = 0;
+    virtual float_t logLikeEvaluate(const paramPack<float_t>& theta, const std::vector<osv> &data) = 0;
     
              
 private:
     std::vector<osv> m_data;
-    paramPack m_current_theta;
+    paramPack<float_t> m_current_theta;
     std::vector<TransType> m_tts;
     psm m_sigma_hat; // for transformed parameters; n-1 in the denominator.
     psv m_mean_trans_theta;
-    double m_ma_accept_rate;
+    float_t m_ma_accept_rate;
     unsigned int m_t0;  // the time it starts adapting
     unsigned int m_t1; // the time it stops adapting
     psm m_Ct;
@@ -108,20 +108,20 @@ private:
     unsigned int m_num_extra_threads;
     bool m_multicore;
     unsigned int m_iter; // current iter
-    double m_sd; // perhaps there's a better name for this
-    double m_eps;
+    float_t m_sd; // perhaps there's a better name for this
+    float_t m_eps;
     bool m_print_to_console;
     
     
     
-    void update_moments_and_Ct(const paramPack& newTheta);
-    psv qSample(const paramPack& oldTheta);
-    double logQEvaluate(const paramPack& oldParams, const paramPack& newParams);
+    void update_moments_and_Ct(const paramPack<float_t>& newTheta);
+    psv qSample(const paramPack<float_t>& oldTheta);
+    float_t logQEvaluate(const paramPack<float_t>& oldParams, const paramPack<float_t>& newParams);
 };
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-ada_pmmh_mvn<numparams,dimobs,numparts>::ada_pmmh_mvn(
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
+ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
                                             const psv &start_trans_theta, 
                                             const std::vector<TransType>& tts,
                                             const unsigned int &num_mcmc_iters,
@@ -156,8 +156,8 @@ ada_pmmh_mvn<numparams,dimobs,numparts>::ada_pmmh_mvn(
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-void ada_pmmh_mvn<numparams,dimobs,numparts>::update_moments_and_Ct(const paramPack& newTheta)  
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
+void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::update_moments_and_Ct(const paramPack<float_t>& newTheta)  
 {
     // if m_iter = 1, that means we're on iteration 2, 
     // but we're calling this based on the previous iteration, 
@@ -197,15 +197,15 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::update_moments_and_Ct(const paramP
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-auto ada_pmmh_mvn<numparams,dimobs,numparts>::get_ct() const -> psm
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
+auto ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::get_ct() const -> psm
 {
     return m_Ct;
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-auto ada_pmmh_mvn<numparams,dimobs,numparts>::qSample(const paramPack& oldParams) -> psv
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
+auto ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::qSample(const paramPack<float_t>& oldParams) -> psv
 {
     // assumes that Ct has already been updated
     // recall that we are sampling on the transformed/unconstrained space    
@@ -216,15 +216,15 @@ auto ada_pmmh_mvn<numparams,dimobs,numparts>::qSample(const paramPack& oldParams
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
+void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commenceSampling()
 {
 
     // random number stuff to decide on whether to accept or reject
     rvsamp::UniformSampler runif; 
     
-    double oldLogLike (0.0);
-    double oldLogPrior(0.0);
+    float_t oldLogLike (0.0);
+    float_t oldLogPrior(0.0);
     while(m_iter < m_num_mcmc_iters) // every iteration
     {        
 
@@ -243,7 +243,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
             if (!m_multicore){
                 oldLogLike = logLikeEvaluate(m_current_theta, m_data);
             }else{
-                std::vector<std::future<double> > newLogLikes;
+                std::vector<std::future<float_t> > newLogLikes;
                 for(size_t i = 0; i < m_num_extra_threads; ++i){
                     newLogLikes.push_back(std::async(std::launch::async,
                                                      &ada_pmmh_mvn::logLikeEvaluate,
@@ -276,17 +276,17 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
             
             // propose a new theta
             psv proposed_trans_theta = qSample(m_current_theta);
-            paramPack proposed_theta(proposed_trans_theta, m_tts);
+            paramPack<float_t> proposed_theta(proposed_trans_theta, m_tts);
             
             // store some densities                        
-            double newLogPrior = logPriorEvaluate(proposed_theta) + proposed_theta.getLogJacobian();
+            float_t newLogPrior = logPriorEvaluate(proposed_theta) + proposed_theta.getLogJacobian();
     
             // get the likelihood
-            double newLL(0.0);
+            float_t newLL(0.0);
             if (!m_multicore){
                 newLL = logLikeEvaluate(proposed_theta, m_data);
             }else{
-                std::vector<std::future<double> > newLogLikes;
+                std::vector<std::future<float_t> > newLogLikes;
                 for(size_t i = 0; i < m_num_extra_threads; ++i){
                     newLogLikes.push_back(std::async(std::launch::async,
                                                      &ada_pmmh_mvn::logLikeEvaluate,
@@ -301,7 +301,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
             }
 
             // accept or reject proposal (assumes multivariate normal proposal which means it's symmetric)
-            double logAR = newLogPrior + newLL - oldLogPrior - oldLogLike;                
+            float_t logAR = newLogPrior + newLL - oldLogPrior - oldLogLike;                
                 
             // output some stuff
             m_message_stream << "***Iter number: " << m_iter+1 << " out of " << m_num_mcmc_iters << "\n";
@@ -333,7 +333,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts>::commenceSampling()
                 std::cout << "AR: " << std::exp(logAR) << "\n";
 
             // decide whether to accept or reject
-            double draw = runif.sample();
+            float_t draw = runif.sample();
             if ( std::isinf(-logAR)){
                 // 0 acceptance rate
                 if(m_print_to_console)

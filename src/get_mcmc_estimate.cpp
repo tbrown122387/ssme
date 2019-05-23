@@ -47,9 +47,9 @@ Eigen::VectorXd ave_mcmc_samps(const std::string& file_loc, int burn_in, const s
     
 
     if(to_trans){
-        return paramPack(ave_sample, tts, from_trans).getTransParams();
+        return paramPack<double>(ave_sample, tts, from_trans).getTransParams();
     }else{
-        return paramPack(ave_sample, tts, from_trans).getUnTransParams();
+        return paramPack<double>(ave_sample, tts, from_trans).getUnTransParams();
     }
 
 } 

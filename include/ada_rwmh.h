@@ -25,14 +25,14 @@
  * aka constrained space. This means that the user never has to worry about handling any 
  * kind of Jacobian.
  */
-template<size_t numparams, size_t dimobs>
+template<size_t numparams, size_t dimobs, typename float_t>
 class ada_rwmh{
 public:
 
     /* type aliases */
-    using osv = Eigen::Matrix<double,dimobs,1>;
-    using psv = Eigen::Matrix<double,numparams,1>;
-    using psm = Eigen::Matrix<double,numparams,numparams>;
+    using osv = Eigen::Matrix<float_t,dimobs,1>;
+    using psv = Eigen::Matrix<float_t,numparams,1>;
+    using psm = Eigen::Matrix<float_t,numparams,numparams>;
     
 
     /**
@@ -69,32 +69,32 @@ public:
     /**
      * @brief starts the sampling
      */
-    void commenceSampling(const std::vector<Eigen::Matrix<double,dimobs,1>> &data);
+    void commenceSampling(const std::vector<Eigen::Matrix<float_t,dimobs,1>> &data);
     
     /**
      * @brief Evaluates the log of the model's prior distribution assuming the original/nontransformed/contrained parameterization
      * @param theta the parameters argument (nontransformed/constrained parameterization). 
      * @return the log of the prior density.
      */
-    virtual double logPriorEvaluate(const paramPack& theta) = 0;
+    virtual float_t logPriorEvaluate(const paramPack<float_t>& theta) = 0;
 
 
     /**
      * @brief Evaluates the log-likelihood.
      * @param theta the parameters of your likelihood.
      * @param data the observed data you're modeling.
-     * @return the evaluation (as a double) of the log likelihood.
+     * @return the evaluation (as a float_t) of the log likelihood.
      */
-    virtual double logLikeEvaluate(const paramPack& theta, const std::vector<osv> &data) = 0;
+    virtual float_t logLikeEvaluate(const paramPack<float_t>& theta, const std::vector<osv> &data) = 0;
     
              
 private:
     
-    paramPack m_current_theta;
+    paramPack<float_t> m_current_theta;
     std::vector<TransType> m_tts;
     psm m_sigma_hat; // for transformed parameters; n-1 in the denominator.
     psv m_mean_trans_theta;
-    double m_ma_accept_rate;
+    float_t m_ma_accept_rate;
     unsigned int m_t0;  // the time it starts adapting
     unsigned int m_t1; // the time it stops adapting
     psm m_Ct;
@@ -105,20 +105,20 @@ private:
     //unsigned int m_num_extra_threads;
     //bool m_multicore;
     unsigned int m_iter; // current iter
-    double m_sd; // perhaps there's a better name for this
-    double m_eps;
+    float_t m_sd; // perhaps there's a better name for this
+    float_t m_eps;
     bool m_print_to_console;
     
     
     
-    void update_moments_and_Ct(const paramPack& newTheta);
-    psv qSample(const paramPack& oldTheta);
-    double logQEvaluate(const paramPack& oldParams, const paramPack& newParams);
+    void update_moments_and_Ct(const paramPack<float_t>& newTheta);
+    psv qSample(const paramPack<float_t>& oldTheta);
+    float_t logQEvaluate(const paramPack<float_t>& oldParams, const paramPack<float_t>& newParams);
 };
 
 
-template<size_t numparams, size_t dimobs>
-ada_rwmh<numparams,dimobs>::ada_rwmh(
+template<size_t numparams, size_t dimobs, typename float_t>
+ada_rwmh<numparams,dimobs,float_t>::ada_rwmh(
                                             const psv &start_trans_theta, 
                                             const std::vector<TransType>& tts,
                                             const unsigned int &num_mcmc_iters,
@@ -149,8 +149,8 @@ ada_rwmh<numparams,dimobs>::ada_rwmh(
 }
 
 
-template<size_t numparams, size_t dimobs>
-void ada_rwmh<numparams,dimobs>::update_moments_and_Ct(const paramPack& newTheta)  
+template<size_t numparams, size_t dimobs, typename float_t>
+void ada_rwmh<numparams,dimobs,float_t>::update_moments_and_Ct(const paramPack<float_t>& newTheta)  
 {
     // if m_iter = 1, that means we're on iteration 2, 
     // but we're calling this based on the previous iteration, 
@@ -190,15 +190,15 @@ void ada_rwmh<numparams,dimobs>::update_moments_and_Ct(const paramPack& newTheta
 }
 
 
-template<size_t numparams, size_t dimobs>
-auto ada_rwmh<numparams,dimobs>::get_ct() const -> psm
+template<size_t numparams, size_t dimobs, typename float_t>
+auto ada_rwmh<numparams,dimobs,float_t>::get_ct() const -> psm
 {
     return m_Ct;
 }
 
 
-template<size_t numparams, size_t dimobs>
-auto ada_rwmh<numparams,dimobs>::qSample(const paramPack& oldParams) -> psv
+template<size_t numparams, size_t dimobs, typename float_t>
+auto ada_rwmh<numparams,dimobs,float_t>::qSample(const paramPack<float_t>& oldParams) -> psv
 {
     // assumes that Ct has already been updated
     // recall that we are sampling on the transformed/unconstrained space    
@@ -209,15 +209,15 @@ auto ada_rwmh<numparams,dimobs>::qSample(const paramPack& oldParams) -> psv
 }
 
 
-template<size_t numparams, size_t dimobs>
-void ada_rwmh<numparams,dimobs>::commenceSampling(const std::vector<Eigen::Matrix<double,dimobs,1>> &data)
+template<size_t numparams, size_t dimobs, typename float_t>
+void ada_rwmh<numparams,dimobs,float_t>::commenceSampling(const std::vector<Eigen::Matrix<float_t,dimobs,1>> &data)
 {
 
     // random number stuff to decide on whether to accept or reject
     rvsamp::UniformSampler runif; 
     
-    double oldLogLike (0.0);
-    double oldLogPrior(0.0);
+    float_t oldLogLike (0.0);
+    float_t oldLogPrior(0.0);
     while(m_iter < m_num_mcmc_iters) // every iteration
     {        
 
@@ -255,16 +255,16 @@ void ada_rwmh<numparams,dimobs>::commenceSampling(const std::vector<Eigen::Matri
             
             // propose a new theta
             psv proposed_trans_theta = qSample(m_current_theta);
-            paramPack proposed_theta(proposed_trans_theta, m_tts);
+            paramPack<float_t> proposed_theta(proposed_trans_theta, m_tts);
             
             // store some densities                        
-            double newLogPrior = logPriorEvaluate(proposed_theta) + proposed_theta.getLogJacobian();
+            float_t newLogPrior = logPriorEvaluate(proposed_theta) + proposed_theta.getLogJacobian();
     
             // get the likelihood
-            double newLL = logLikeEvaluate(proposed_theta, data);
+            float_t newLL = logLikeEvaluate(proposed_theta, data);
 
             // accept or reject proposal (assumes multivariate normal proposal which means it's symmetric)
-            double logAR = newLogPrior + newLL - oldLogPrior - oldLogLike;                
+            float_t logAR = newLogPrior + newLL - oldLogPrior - oldLogLike;                
                 
             // output some stuff
             m_message_stream << "***Iter number: "  << m_iter+1                            << " out of " << m_num_mcmc_iters << "\n"
@@ -287,7 +287,7 @@ void ada_rwmh<numparams,dimobs>::commenceSampling(const std::vector<Eigen::Matri
             }
 
             // decide whether to accept or reject
-            double draw = runif.sample();
+            float_t draw = runif.sample();
             if ( std::isinf(-logAR)){
                 // 0 acceptance rate
                 if(m_print_to_console)

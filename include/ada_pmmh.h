@@ -29,14 +29,14 @@
  * estimate is performed. This can be ignored, but it can be handy for use in the
  * proposal density on a transformed space.
  */
-template<size_t numparams, size_t dimobs, size_t numparts>
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t = double>
 class ada_pmmh{
 public:
 // TODO: optional logging!
 
-    using osv = Eigen::Matrix<double,dimobs,1>;
-    using psv = Eigen::Matrix<double,numparams,1>;
-    using psm = Eigen::Matrix<double,numparams,numparams>;
+    using osv = Eigen::Matrix<float_t,dimobs,1>;
+    using psv = Eigen::Matrix<float_t,numparams,1>;
+    using psm = Eigen::Matrix<float_t,numparams,numparams>;
     
 
     /**
@@ -81,7 +81,7 @@ public:
      * @param transTheta the transformed parameters argument.
      * @return the log of the prior density.
      */
-    virtual double logPriorEvaluate(const psv &transTheta) = 0;
+    virtual float_t logPriorEvaluate(const psv &transTheta) = 0;
 
 
     /** 
@@ -90,7 +90,7 @@ public:
      * @param newTransParams the new parameters that are (probably) transformed. 
      * @return the log of the proposal density.
      */
-    virtual double logQEvaluate(const psv &oldTransParams, const psv &newTransParams) = 0; 
+    virtual float_t logQEvaluate(const psv &oldTransParams, const psv &newTransParams) = 0; 
 
 
     /**
@@ -98,9 +98,9 @@ public:
      * @param theta the parameters with which to run the particle filter.
      * @param data the observed data with which to run the particle filter.
      * @param cancelled is a token you need to provide if doing multithreaded likelihood evals. This allows the function to terminate prematurely. 
-     * @return the evaluation (as a double) of the log likelihood approximation.
+     * @return the evaluation of the log likelihood approximation.
      */
-    virtual double logLikeEvaluate(const psv &transTheta, const std::vector<osv> &data, std::atomic_bool& cancelled) = 0;
+    virtual float_t logLikeEvaluate(const psv &transTheta, const std::vector<osv> &data, std::atomic_bool& cancelled) = 0;
 //TODO: remove cancellation token
     
              
@@ -109,7 +109,7 @@ private:
     psv m_current_trans_theta;
     psm m_sigma_hat; // for transformed parameters; n-1 in the denominator.
     psv m_mean_trans_theta;
-    double m_ma_accept_rate;
+    float_t m_ma_accept_rate;
     unsigned int m_t0;  // the time it starts adapting
     unsigned int m_t1; // the time it stops adapting
     psm m_Ct;
@@ -121,8 +121,8 @@ private:
 //    std::mutex m_outFileMutex;
     bool m_multicore;
     unsigned int m_iter; // current iter
-    double m_sd; // perhaps there's a better name for this
-    double m_eps;
+    float_t m_sd; // perhaps there's a better name for this
+    float_t m_eps;
     
     
     void update_moments_and_Ct(const psv &newTransTheta);
@@ -130,8 +130,8 @@ private:
 };
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-ada_pmmh<numparams,dimobs,numparts>::ada_pmmh(const psv &start_trans_theta, 
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
+ada_pmmh<numparams,dimobs,numparts,float_t>::ada_pmmh(const psv &start_trans_theta, 
                                               const unsigned int &num_mcmc_iters,
                                               const std::string &data_file, 
                                               const std::string &samples_file, 
@@ -159,8 +159,8 @@ ada_pmmh<numparams,dimobs,numparts>::ada_pmmh(const psv &start_trans_theta,
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-void ada_pmmh<numparams,dimobs,numparts>::update_moments_and_Ct(const psv &newTransTheta)  
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
+void ada_pmmh<numparams,dimobs,numparts,float_t>::update_moments_and_Ct(const psv &newTransTheta)  
 {
     // if m_iter = 1, that means we're on iteration 2, 
     // but we're calling this based on the previous iteration, 
@@ -199,15 +199,15 @@ void ada_pmmh<numparams,dimobs,numparts>::update_moments_and_Ct(const psv &newTr
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-auto ada_pmmh<numparams,dimobs,numparts>::get_ct() const -> psm
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
+auto ada_pmmh<numparams,dimobs,numparts,float_t>::get_ct() const -> psm
 {
     return m_Ct;
 }
 
 
 template<size_t numparams, size_t dimobs, size_t numparts>
-auto ada_pmmh<numparams,dimobs,numparts>::qSample(const psv &oldTransParams) -> psv
+auto ada_pmmh<numparams,dimobs,numparts,float_t>::qSample(const psv &oldTransParams) -> psv
 {
     // assumes that Ct has already been updated
     // assumes parameters are in transformed space    
@@ -217,15 +217,15 @@ auto ada_pmmh<numparams,dimobs,numparts>::qSample(const psv &oldTransParams) -> 
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts>
-void ada_pmmh<numparams,dimobs,numparts>::commenceSampling()
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
+void ada_pmmh<numparams,dimobs,numparts,float_t>::commenceSampling()
 {
 
     // random number stuff to decide on whether to accept or reject
     rvsamp::UniformSampler runif; 
     
-    double oldLogLike (0.0);
-    double oldLogPrior(0.0);
+    float_t oldLogLike (0.0);
+    float_t oldLogPrior(0.0);
     while(m_iter < m_num_mcmc_iters) // every iteration
     {        
 
@@ -243,7 +243,7 @@ void ada_pmmh<numparams,dimobs,numparts>::commenceSampling()
             if (!m_multicore){
                 oldLogLike = logLikeEvaluate(m_current_trans_theta, m_data, cancel_token);
             }else{
-                std::vector<std::future<double> > newLogLikes;
+                std::vector<std::future<float_t> > newLogLikes;
                 for(size_t i = 0; i < m_num_extra_threads; ++i){
                     newLogLikes.push_back(std::async(std::launch::async,
                                                      &ada_pmmh::logLikeEvaluate,
@@ -279,17 +279,17 @@ void ada_pmmh<numparams,dimobs,numparts>::commenceSampling()
             psv proposed_trans_theta = qSample(m_current_trans_theta);
             
             // store some densities                        
-            double newLogPrior = logPriorEvaluate(proposed_trans_theta);
-            double logQOldToNew = logQEvaluate(m_current_trans_theta, proposed_trans_theta);
-            double logQNewToOld = logQEvaluate(proposed_trans_theta, m_current_trans_theta);
+            float_t newLogPrior = logPriorEvaluate(proposed_trans_theta);
+            float_t logQOldToNew = logQEvaluate(m_current_trans_theta, proposed_trans_theta);
+            float_t logQNewToOld = logQEvaluate(proposed_trans_theta, m_current_trans_theta);
     
             // get the likelihood
-            double newLL(0.0);
+            float_t newLL(0.0);
             std::atomic_bool cancel_token(false);
             if (!m_multicore){
                 newLL = logLikeEvaluate(proposed_trans_theta, m_data, cancel_token);
             }else{
-                std::vector<std::future<double> > newLogLikes;
+                std::vector<std::future<float_t> > newLogLikes;
                 for(size_t i = 0; i < m_num_extra_threads; ++i){
                     newLogLikes.push_back(std::async(std::launch::async,
                                                      &ada_pmmh::logLikeEvaluate,
@@ -305,7 +305,7 @@ void ada_pmmh<numparams,dimobs,numparts>::commenceSampling()
             }
 
             // accept or reject proposal
-            double logAR = newLogPrior + logQNewToOld + newLL - oldLogPrior - logQOldToNew - oldLogLike;                
+            float_t logAR = newLogPrior + logQNewToOld + newLL - oldLogPrior - logQOldToNew - oldLogLike;                
                 
             // output some stuff
             m_message_stream << "***Iter number: " << m_iter+1 << " out of " << m_num_mcmc_iters << "\n";
@@ -330,7 +330,7 @@ void ada_pmmh<numparams,dimobs,numparts>::commenceSampling()
             std::cout << "AR: " << std::exp(logAR) << "\n";
 
             // decide whether to accept or reject
-            double draw = runif.sample();
+            float_t draw = runif.sample();
             if ( std::isinf(-logAR)){
                 // 0 acceptance rate
                 std::cout << "rejecting!\n";
