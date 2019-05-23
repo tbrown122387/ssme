@@ -9,7 +9,8 @@
 #define NUMPARTS 100
 #define DIMOBS 1
 #define NUMPARAMS 3
-# define DIMSTATE 1
+#define DIMSTATE 1
+#define FLOATTYPE float
 
 int main(int argc, char* argv[]){
 
@@ -30,7 +31,8 @@ int main(int argc, char* argv[]){
    std::string samples_base_name = argv[2];
    std::string messages_base_name = argv[3];
    unsigned int num_mcmc_iters = atoi(argv[4]);
-   do_ada_pmmh_univ_svol<NUMPARAMS,DIMSTATE,DIMOBS,NUMPARTS>(data_loc, 
+   do_ada_pmmh_univ_svol<NUMPARAMS,DIMSTATE,DIMOBS,NUMPARTS,FLOATTYPE>(
+		   					     data_loc, 
                                                              samples_base_name, 
                                                              messages_base_name, 
                                                              num_mcmc_iters, 

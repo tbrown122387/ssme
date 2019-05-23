@@ -29,7 +29,7 @@
  * estimate is performed. This can be ignored, but it can be handy for use in the
  * proposal density on a transformed space.
  */
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t = double>
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
 class ada_pmmh{
 public:
 // TODO: optional logging!

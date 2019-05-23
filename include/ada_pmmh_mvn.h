@@ -29,7 +29,7 @@
  * or constrainedspace. This means that the user never has to worry about handling any 
  * kind of Jacobian.
  */
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t = double>
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
 class ada_pmmh_mvn{
 public:
 
@@ -101,7 +101,7 @@ private:
     unsigned int m_t0;  // the time it starts adapting
     unsigned int m_t1; // the time it stops adapting
     psm m_Ct;
-    rvsamp::MVNSampler<numparams> m_mvn_gen;
+    rvsamp::MVNSampler<numparams,float_t> m_mvn_gen;
     std::ofstream m_samples_file_stream; 
     std::ofstream m_message_stream;
     unsigned int m_num_mcmc_iters;
@@ -221,7 +221,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commenceSampling()
 {
 
     // random number stuff to decide on whether to accept or reject
-    rvsamp::UniformSampler runif; 
+    rvsamp::UniformSampler<float_t> runif; 
     
     float_t oldLogLike (0.0);
     float_t oldLogPrior(0.0);
