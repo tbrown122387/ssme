@@ -147,7 +147,7 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
  , m_eps(.01)
  , m_print_to_console(print_to_console)
 {
-    m_data = utils::readInData<dimobs>(data_file);
+    m_data = utils::readInData<dimobs,float_t>(data_file);
     std::string samples_file = utils::genStringWithTime(sample_file_base_name);
     m_samples_file_stream.open(samples_file); 
     std::string messages_file = utils::genStringWithTime(message_file_base_name);
@@ -237,7 +237,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commenceSampling()
         
             // write accepted (initial) parameters to file (initial guesses are always "accepted")
             // notice that they are the untransformed/constrained versions!
-            utils::logParams<numparams>(m_current_theta.getUnTransParams(), m_samples_file_stream);
+            utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
             
             // get logLike 
             if (!m_multicore){
@@ -392,7 +392,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commenceSampling()
                 
             // log the theta which may have changedor not
             // notice that this is on the untransformed or constrained space
-            utils::logParams<numparams>(m_current_theta.getUnTransParams(), m_samples_file_stream);
+            utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
                 
         } // else (not the first iteration)    
     } // while(m_iter < m_num_mcmc_iters) // every iteration

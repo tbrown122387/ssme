@@ -231,7 +231,7 @@ void ada_rwmh<numparams,dimobs,float_t>::commenceSampling(const std::vector<Eige
             // write initial parameters to file (initial guesses are always "accepted")
             // notice that they are the untransformed/constrained versions!
             // this makes analysis easier when the time comes
-            utils::logParams<numparams>(m_current_theta.getUnTransParams(), m_samples_file_stream);
+            utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
             
             // get logLike 
             oldLogLike = logLikeEvaluate(m_current_theta, data);
@@ -346,7 +346,7 @@ void ada_rwmh<numparams,dimobs,float_t>::commenceSampling(const std::vector<Eige
                 
             // log the theta which may have changedor not
             // notice that this is on the untransformed or constrained space
-            utils::logParams<numparams>(m_current_theta.getUnTransParams(), m_samples_file_stream);
+            utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
                 
         } // else (not the first iteration)    
     } // while(m_iter < m_num_mcmc_iters) // every iteration

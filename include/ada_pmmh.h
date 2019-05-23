@@ -152,7 +152,7 @@ ada_pmmh<numparams,dimobs,numparts,float_t>::ada_pmmh(const psv &start_trans_the
  , m_sd(2.4*2.4/numparams)
  , m_eps(.01)
 {
-    m_data = utils::readInData<dimobs>(data_file);
+    m_data = utils::readInData<dimobs,float_t>(data_file);
     m_samples_file_stream.open(samples_file);
     m_message_stream.open(messages_file);  
     m_num_extra_threads = std::thread::hardware_concurrency() - 1;
@@ -236,7 +236,7 @@ void ada_pmmh<numparams,dimobs,numparts,float_t>::commenceSampling()
             std::cout << "***Iter number: " << 1 << " out of " << m_num_mcmc_iters << "\n";        
         
             // write accepted (initial) parameters to file (initial guesses are always "accepted")
-            utils::logParams<numparams>(m_current_trans_theta, m_samples_file_stream);
+            utils::logParams<numparams, float_t>(m_current_trans_theta, m_samples_file_stream);
             
             // get logLike (we use cancel token but it never changes) 
             std::atomic_bool cancel_token(false);
@@ -390,7 +390,7 @@ void ada_pmmh<numparams,dimobs,numparts,float_t>::commenceSampling()
             }
                 
             // log the theta which may have changedor not
-            utils::logParams<numparams>(m_current_trans_theta, m_samples_file_stream);
+            utils::logParams<numparams,float_t>(m_current_trans_theta, m_samples_file_stream);
                 
         } // else (not the first iteration)    
     } // while(m_iter < m_num_mcmc_iters) // every iteration
