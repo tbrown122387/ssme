@@ -14,7 +14,7 @@ $(shell mkdir -p $(dir $(OBJS)) >/dev/null)
 # compiler and linker stuff
 CXX := g++
 LD := g++
-CXXFLAGS := -std=c++11 -pg -Wall -O3 # use this one for speed
+CXXFLAGS := -std=c++11 -g -pg -Wall -O3 # use this one for speed
 #CXXFLAGS := -std=c++11 -g -Wall -pg  # use this one for debugging
 CPPFLAGS := -I/usr/include/eigen3 -I$$HOME/pf/include -I$$HOME/ssme/include
 LDFLAGS := "-L$$HOME/pf/bin" "-L$$HOME/ssme/binaries"
@@ -25,6 +25,7 @@ LDLIBS := -lpf -lssme -lpthread
 COMPILE.cc = $(CXX) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) -c -o $@
 # link object files to binary
 LINK.o = $(LD) $(LDFLAGS) -o $@ 
+#LINK.o = $(LD) $(LDFLAGS) -pg -o $@ // use for gprof
 # precompile step
 PRECOMPILE =
 # postcompile step

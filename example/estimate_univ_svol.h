@@ -34,7 +34,8 @@ public:
             const unsigned int &t0, 
             const unsigned int &t1,
             const psm &C0,
-            bool print_to_console);
+            bool print_to_console,
+            unsigned int print_every_k);
         
     float_t logPriorEvaluate(const paramPack<float_t>& theta);
 
@@ -54,8 +55,9 @@ univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::univ_svol_estim
                                                     const unsigned int &t0,
                                                     const unsigned int &t1,
                                                     const psm &C0,
-                                                    bool print_to_console) 
-    : ada_pmmh_mvn<numparams,dimobs,numparts,float_t>(startTransTheta, tts, numMCMCIters, dataFile, samples_base_name, messages_base_name, mc, t0, t1, C0, print_to_console)
+                                                    bool print_to_console,
+                                                    unsigned int print_every_k) 
+    : ada_pmmh_mvn<numparams,dimobs,numparts,float_t>(startTransTheta, tts, numMCMCIters, dataFile, samples_base_name, messages_base_name, mc, t0, t1, C0, print_to_console,print_every_k)
 {
 }
 
@@ -146,7 +148,8 @@ void do_ada_pmmh_univ_svol(const std::string &datafile, const std::string &sampl
                                                     	t0,
                                                     	t1,
                                                     	C0,
-                                                    	true );
+                                                    	false, // print console
+                                                        1);
     mcmcobj.commenceSampling();
 
 }

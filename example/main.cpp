@@ -10,7 +10,7 @@
 #define DIMOBS 1
 #define NUMPARAMS 3
 #define DIMSTATE 1
-#define FLOATTYPE float
+#define FLOATTYPE double
 
 int main(int argc, char* argv[]){
 
