@@ -32,7 +32,6 @@
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
 class ada_pmmh{
 public:
-// TODO: optional logging!
 
     using osv = Eigen::Matrix<float_t,dimobs,1>;
     using psv = Eigen::Matrix<float_t,numparams,1>;
@@ -50,7 +49,9 @@ public:
      * @param mc stands for multicore. true or false if you want to use extra cores.
      * @param t0 iteration at which you start adapting the posterior covariance matrix.
      * @param t1 time you stop adapting the posterior covariance matrix.
-     * @param C0 initial covariance matrix to be used in the moving ave. calculation.
+     * @param C0 initial covariance matrix to be used in the moving ave. calculation
+     * @param bool print_to_console TODO
+     * @param unsigned int print_every_k TODO
      */
     ada_pmmh(const psv &start_trans_theta, 
              const unsigned int &num_mcmc_iters,
@@ -61,6 +62,8 @@ public:
              const unsigned int &t0,
              const unsigned int &t1,
              const psm &C0);
+             //bool print_to_console
+             //unsigned int print_every_k);
              
 
     /**

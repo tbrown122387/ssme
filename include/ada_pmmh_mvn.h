@@ -9,7 +9,6 @@
 #include <fstream> // ofstream
 #include <future> // std::future
 #include <chrono> //std::chrono::system_clock::now()
-#include <typeinfo> // typeid()
 
 #include "rv_eval.h"
 #include "rv_samp.h"
@@ -48,6 +47,8 @@ public:
      * @param t0 time you start adapting
      * @param t1 time you stop adapting
      * @param C0 initial covariance matrix for proposal distribution.
+     * @param print_to_console true if you want to see messages in real time
+     * @param print_every_k print messages and samples every (this number) iterations
      */
     ada_pmmh_mvn(const psv &start_trans_theta, 
                  const std::vector<TransType>& tts,
@@ -59,7 +60,8 @@ public:
                  const unsigned int &t0,
                  const unsigned int &t1,
                  const psm &C0,
-                 bool print_to_console);
+                 bool print_to_console,
+                 unsigned int print_every_k);
              
     
     /**
@@ -111,7 +113,7 @@ private:
     float_t m_sd; // perhaps there's a better name for this
     float_t m_eps;
     bool m_print_to_console;
-    
+    unsigned int m_print_every_k;    
     
     
     void update_moments_and_Ct(const paramPack<float_t>& newTheta);
@@ -132,7 +134,8 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
                                             const unsigned int &t0,
                                             const unsigned int &t1,
                                             const psm &C0,
-                                            bool print_to_console)
+                                            bool print_to_console,
+                                            unsigned int print_every_k)
  : m_current_theta(start_trans_theta, tts)
  , m_tts(tts)
  , m_sigma_hat(psm::Zero())
@@ -146,6 +149,7 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
  , m_sd(2.4*2.4/numparams)
  , m_eps(.01)
  , m_print_to_console(print_to_console)
+ , m_print_every_k(print_every_k)
 {
     m_data = utils::readInData<dimobs,float_t>(data_file);
     std::string samples_file = utils::genStringWithTime(sample_file_base_name);
@@ -231,14 +235,20 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commenceSampling()
         // first iteration no acceptance probability
         if (m_iter == 0) { 
             
-            m_message_stream << "***Iter number: " << 1 << " out of " << m_num_mcmc_iters << "\n";
-            if(m_print_to_console)
-                std::cout << "***Iter number: " << 1 << " out of " << m_num_mcmc_iters << "\n";        
-        
-            // write accepted (initial) parameters to file (initial guesses are always "accepted")
-            // notice that they are the untransformed/constrained versions!
-            utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
+            if(m_iter % m_print_every_k == 0){
+                
+                m_message_stream << "***Iter number: " << 1 << " out of " << m_num_mcmc_iters << "\n";
             
+
+                if(m_print_to_console)
+                    std::cout << "***Iter number: " << 1 << " out of " << m_num_mcmc_iters << "\n";        
+                         
+                // write accepted (initial) parameters to file (initial guesses are always "accepted")
+                // notice that they are the untransformed/constrained versions!
+                utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
+
+            }
+           
             // get logLike 
             if (!m_multicore){
                 oldLogLike = logLikeEvaluate(m_current_theta, m_data);
@@ -272,7 +282,6 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commenceSampling()
 
             // update sample moments (with the parameters that were just accepted) and Ct so we can qSample()
             update_moments_and_Ct(m_current_theta);
-            m_message_stream << "Ct: \n " << get_ct() << "\n";                
             
             // propose a new theta
             psv proposed_trans_theta = qSample(m_current_theta);
@@ -304,81 +313,138 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commenceSampling()
             float_t logAR = newLogPrior + newLL - oldLogPrior - oldLogLike;                
                 
             // output some stuff
-            m_message_stream << "***Iter number: " << m_iter+1 << " out of " << m_num_mcmc_iters << "\n";
-            if(m_print_to_console)
-                std::cout << "***Iter number: " << m_iter+1 << " out of " << m_num_mcmc_iters << "\n";        
-
-            m_message_stream << "acceptance rate: " << m_ma_accept_rate << " \n";
-            if(m_print_to_console)
-                std::cout << "acceptance rate: " << m_ma_accept_rate << " \n";            
-
-            m_message_stream << "oldLogLike: " << oldLogLike << "\n";
-            if(m_print_to_console)
-                std::cout << "oldLogLike: " << oldLogLike << "\n";
+            if(m_iter % m_print_every_k == 0){
+                 
+                m_message_stream << "***Iter number: " << m_iter+1 << " out of " << m_num_mcmc_iters << "\n"
+                                  << "acceptance rate: " << m_ma_accept_rate << " \n"
+                                  << "oldLogLike: " << oldLogLike << "\n"
+                                  << "newLogLike: " << newLL << "\n"
+                                  << "PriorRatio: " << std::exp(newLogPrior - oldLogPrior) << "\n"
+                                  << "LikeRatio: " << std::exp(newLL - oldLogLike) << "\n"
+                                  << "AR: " << std::exp(logAR) << "\n"
+                                  << "Ct: \n " << get_ct() << "\n";                
             
-            m_message_stream << "newLogLike: " << newLL << "\n";
-            if(m_print_to_console)
-                std::cout << "newLogLike: " << newLL << "\n";
+                if(m_print_to_console){
 
-            m_message_stream << "PriorRatio: " << std::exp(newLogPrior - oldLogPrior) << "\n";
-            if(m_print_to_console)
-                std::cout << "PriorRatio: " << std::exp(newLogPrior - oldLogPrior) << "\n";
-            
-            m_message_stream << "LikeRatio: " << std::exp(newLL - oldLogLike) << "\n";
-            if(m_print_to_console)
-                std::cout << "LikeRatio: " << std::exp(newLL - oldLogLike) << "\n";
-            
-            m_message_stream << "AR: " << std::exp(logAR) << "\n";
-            if(m_print_to_console)
-                std::cout << "AR: " << std::exp(logAR) << "\n";
+                    std::cout        << "***Iter number: " << m_iter+1 << " out of " << m_num_mcmc_iters << "\n"
+                                     << "acceptance rate: " << m_ma_accept_rate << " \n"
+                                     << "oldLogLike: " << oldLogLike << "\n"
+                                     << "newLogLike: " << newLL << "\n"
+                                     << "PriorRatio: " << std::exp(newLogPrior - oldLogPrior) << "\n"
+                                     << "LikeRatio: " << std::exp(newLL - oldLogLike) << "\n"
+                                     << "AR: " << std::exp(logAR) << "\n"
+                                     << "Ct: \n " << get_ct() << "\n";                
+
+                }
+            }
 
             // decide whether to accept or reject
             float_t draw = runif.sample();
-            if ( std::isinf(-logAR)){
-                // 0 acceptance rate
-                if(m_print_to_console)
-                    std::cout << "rejecting!\n";
+            if ( std::isinf(-logAR)){  // 0 acceptance rate
+                
+                if(m_iter % m_print_every_k == 0){
+                    
+                    m_message_stream << "rejected 100 percent\n";
+             
+                    // log the theta which may have changedor not
+                    // notice that this is on the untransformed or constrained space
+                    utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
+
+                    if(m_print_to_console)
+                        std::cout << "rejected 100 percent\n";
+
+                }
+
                 m_ma_accept_rate = 0.0/(m_iter+1.0) + m_iter*m_ma_accept_rate/(m_iter+1.0);
                 // do not change the parameters
                 // oldPrior stays the same 
                 // oldLogLike stays the same
                 m_iter++; // increase number of iter
-                m_message_stream << "rejected 100 percent\n";
-            }else if (logAR >= 0.0){
-                // 100 percent accept 
-                if(m_print_to_console)
-                    std::cout << "accepted 100 percent\n";
+            
+            }else if (logAR >= 0.0){ // 100 percent accept 
+
+                if(m_iter % m_print_every_k == 0){
+                    
+                    m_message_stream << "accepted 100 percent\n";
+             
+                    // log the theta which may have changedor not
+                    // notice that this is on the untransformed or constrained space
+                    utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
+
+                    if(m_print_to_console)
+                        std::cout << "accepted 100 percent\n";
+
+                }
+
                 m_ma_accept_rate = 1.0/(m_iter+1.0) + m_iter*m_ma_accept_rate/(m_iter+1.0);
                 m_current_theta.takeValues(proposed_theta);
                 oldLogPrior = newLogPrior;
                 oldLogLike = newLL;
-                m_message_stream << "accepted 100 percent\n";
                 m_iter++; // increase number of iters
-            }else if ( std::log(draw) <= logAR ) {
-                // probabilistic accept
-                if(m_print_to_console)
-                    std::cout << "accepting!\n";
+
+            }else if ( std::log(draw) <= logAR ) { // probabilistic accept
+
+                if(m_iter % m_print_every_k == 0){
+                    
+                    m_message_stream << "accepted probabilistically\n";
+             
+                    // log the theta which may have changedor not
+                    // notice that this is on the untransformed or constrained space
+                    utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
+
+                    if(m_print_to_console)
+                        std::cout << "accepted probabilistically\n";
+
+                }
+
                 m_iter++; // increase number of iters
                 m_ma_accept_rate = 1.0/(m_iter+1.0) + m_iter*m_ma_accept_rate/(m_iter+1.0);
                 m_current_theta.takeValues(proposed_theta);
                 oldLogPrior = newLogPrior;
                 oldLogLike = newLL;
-                m_message_stream << "accepted probabilistically\n";
+
             } else if ( std::log(draw) > logAR ) {
-                if(m_print_to_console)
-                    std::cout << "rejecting!\n";
+
+                if(m_iter % m_print_every_k == 0){
+                    
+                    m_message_stream << "rejected probabilistically\n";
+             
+                    // log the theta which may have changedor not
+                    // notice that this is on the untransformed or constrained space
+                    utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
+
+                    if(m_print_to_console)
+                        std::cout << "rejected probabilistically\n";
+
+                }
+
                 // probabilistically reject
                 // parameters do not change
                 // oldPrior stays the same 
                 // oldLogLike stays the same     
                 m_ma_accept_rate = 0.0/(m_iter+1.0) + m_iter*m_ma_accept_rate/(m_iter+1.0);
                 m_iter++; // increase number of iters           
-                m_message_stream << "rejected probabilistically\n";
+
             }else if (std::isnan(logAR) ){ 
+
+                if(m_iter % m_print_every_k == 0){
+                    
+                    m_message_stream << "rejected from NaN\n";
+             
+                    // log the theta which may have changedor not
+                    // notice that this is on the untransformed or constrained space
+                    utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
+
+                    if(m_print_to_console)
+                        std::cout << "rejected from NaN\n";
+
+                }
+
                 // this is unexpected behavior
                 m_iter++; // increase number of iters
                 m_ma_accept_rate = 0.0/(m_iter+1.0) + m_iter*m_ma_accept_rate/(m_iter+1.0);
                 std::cerr << "there was a NaN. Not accepting proposal. \n";
+
                 // does not terminate!
                 // parameters don't change
                 // oldPrior stays the same 
@@ -388,12 +454,10 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commenceSampling()
                 std::cerr << "you coded your MCMC incorrectly\n";
                 std::cerr << "stopping...";
                 m_iter++; // increase number of iters
+		return;
             }
                 
-            // log the theta which may have changedor not
-            // notice that this is on the untransformed or constrained space
-            utils::logParams<numparams,float_t>(m_current_theta.getUnTransParams(), m_samples_file_stream);
-                
+               
         } // else (not the first iteration)    
     } // while(m_iter < m_num_mcmc_iters) // every iteration
     
