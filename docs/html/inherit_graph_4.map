@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classparamPack.html" title="paramPack" alt="" coords="5,5,93,32"/>
+<area shape="rect" id="node1" href="$classparamTransform.html" title="paramTransform\&lt; float_t \&gt;" alt="" coords="5,81,183,108"/>
+<area shape="rect" id="node2" href="$classlogitTrans.html" title="logitTrans\&lt; float_t \&gt;" alt="" coords="253,5,391,32"/>
+<area shape="rect" id="node3" href="$classlogTrans.html" title="logTrans\&lt; float_t \&gt;" alt="" coords="256,56,388,83"/>
+<area shape="rect" id="node4" href="$classnullTrans.html" title="nullTrans\&lt; float_t \&gt;" alt="" coords="255,107,389,133"/>
+<area shape="rect" id="node5" href="$classtwiceFisherTrans.html" title="twiceFisherTrans\&lt; float_t \&gt;" alt="" coords="231,157,413,184"/>
 </map>

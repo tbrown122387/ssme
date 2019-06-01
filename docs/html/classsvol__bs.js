@@ -1,15 +1,16 @@
 var classsvol__bs =
 [
-    [ "osv", "classsvol__bs.html#ada43d30435c238bad4e7affffc316db7", null ],
-    [ "ssv", "classsvol__bs.html#a4901395fcf0f3c64f90d05c66339fe0e", null ],
-    [ "svol_bs", "classsvol__bs.html#a732fd48dc72387fa792c969bd4a7318d", null ],
-    [ "fSamp", "classsvol__bs.html#a4546fb765228621313fc5ad8834e4cdf", null ],
-    [ "logGEv", "classsvol__bs.html#ab92198d54517c9dca2f0028440f140be", null ],
-    [ "logMuEv", "classsvol__bs.html#a08e5fc3ae6560fe5d5ebf1498e972234", null ],
-    [ "logQ1Ev", "classsvol__bs.html#aae36729af9543e86cfca34b6a4c901a1", null ],
-    [ "q1Samp", "classsvol__bs.html#ac4e7a7ec8738284184be1649eaf084f1", null ],
-    [ "m_beta", "classsvol__bs.html#a9dba552e4de89bc488c7780866776129", null ],
-    [ "m_phi", "classsvol__bs.html#a7f69d783f885e301c80e7d166c3a5610", null ],
-    [ "m_sigma", "classsvol__bs.html#a594300257a3784ba41114f74d1c1e37d", null ],
-    [ "m_stdNormSampler", "classsvol__bs.html#adb58cc515aec2185434ae6b4639a1e02", null ]
+    [ "osv", "classsvol__bs.html#a90e38a1fae511361b0ac017b0c5c80a0", null ],
+    [ "ssv", "classsvol__bs.html#a8ef6370aa347e276147b393786a7ecd5", null ],
+    [ "svol_bs", "classsvol__bs.html#a36902082260b8fb13251722ac8b527a8", null ],
+    [ "svol_bs", "classsvol__bs.html#ae881f2825f480976227f46922c47679f", null ],
+    [ "fSamp", "classsvol__bs.html#a59120c1870072f1d63a3057d9ba614cf", null ],
+    [ "logGEv", "classsvol__bs.html#a460a24a129edaf68650aeec9d28fedf8", null ],
+    [ "logMuEv", "classsvol__bs.html#a067870660bf0d60b032411df7fe32546", null ],
+    [ "logQ1Ev", "classsvol__bs.html#a4461faab02ba3fa09ee9e4977841b297", null ],
+    [ "q1Samp", "classsvol__bs.html#ab12997187805f7d9b21f5041daaf70b7", null ],
+    [ "m_beta", "classsvol__bs.html#ae197d739aedd1c2df113f2de6131495c", null ],
+    [ "m_phi", "classsvol__bs.html#ab46db50cdce58fd3b9d72566dfc12715", null ],
+    [ "m_sigma", "classsvol__bs.html#aa312d7aa75de3c1d42c023a2ff8d63b5", null ],
+    [ "m_stdNormSampler", "classsvol__bs.html#a324a11de663832348bf3ce3435a1b0df", null ]
 ];

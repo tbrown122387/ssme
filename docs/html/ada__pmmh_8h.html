@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('ada__pmmh_8h.html','');});
 </div><!--header-->
 <div class="contents">
 
-<p>Performs an adaptive version of the particle marginal Metropilis-Hastings algorithm. The user is asked to design his/her own proposal density and prior distribution. The sampling is handled on an "as-is" basis, which means that it is entirely the user's own responsibility to handle Jacobians that might pop up if the prior and proposal density are specified for two different parameterizations. These parameters will be written in an "as-is" fashion, as well. These calculations can be facilitates using the <code><a class="el" href="classparamPack.html">paramPack</a></code> class, however using this class is not absolutely necessary. Also, for convenience, a moving average covariance matrix estimate is performed. This can be ignored, but it can be handy for use in the proposal density on a transformed space.  
+<p>Performs an adaptive version of the particle marginal Metropilis-Hastings algorithm. The user is asked to design his/her own proposal density and prior distribution. The sampling is handled on an "as-is" basis, which means that it is entirely the user's own responsibility to decide on what parameterization to use, to handle Jacobians if they are necessary, etc. These parameters will be written in an "as-is" fashion, as well. These calculations can be facilitates using the <code><a class="el" href="classparamPack.html">paramPack</a></code> class, however using this class is not absolutely necessary. Also, for convenience, a moving average covariance matrix estimate is performed; however, this should be ignored if the user is not interested in adaptive MCMC or isn't using a transformed parameter space.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;Eigen/Dense&gt;</code><br />
@@ -101,19 +101,17 @@ $(document).ready(function(){initNavTree('ada__pmmh_8h.html','');});
 Include dependency graph for ada_pmmh.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="ada__pmmh_8h__incl.png" border="0" usemap="#include_2ada__pmmh_8h" alt=""/></div>
-<map name="include_2ada__pmmh_8h" id="include_2ada__pmmh_8h">
-</map>
 </div>
 </div>
 <p><a href="ada__pmmh_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh.html">ada_pmmh&lt; numparams, dimobs, numparts &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh.html">ada_pmmh&lt; numparams, dimobs, numparts, float_t &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Performs an adaptive version of the particle marginal Metropilis-Hastings algorithm. The user is asked to design his/her own proposal density and prior distribution. The sampling is handled on an "as-is" basis, which means that it is entirely the user's own responsibility to handle Jacobians that might pop up if the prior and proposal density are specified for two different parameterizations. These parameters will be written in an "as-is" fashion, as well. These calculations can be facilitates using the <code><a class="el" href="classparamPack.html">paramPack</a></code> class, however using this class is not absolutely necessary. Also, for convenience, a moving average covariance matrix estimate is performed. This can be ignored, but it can be handy for use in the proposal density on a transformed space. </p>
+<div class="textblock"><p>Performs an adaptive version of the particle marginal Metropilis-Hastings algorithm. The user is asked to design his/her own proposal density and prior distribution. The sampling is handled on an "as-is" basis, which means that it is entirely the user's own responsibility to decide on what parameterization to use, to handle Jacobians if they are necessary, etc. These parameters will be written in an "as-is" fashion, as well. These calculations can be facilitates using the <code><a class="el" href="classparamPack.html">paramPack</a></code> class, however using this class is not absolutely necessary. Also, for convenience, a moving average covariance matrix estimate is performed; however, this should be ignored if the user is not interested in adaptive MCMC or isn't using a transformed parameter space. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

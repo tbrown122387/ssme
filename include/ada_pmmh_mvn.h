@@ -23,10 +23,11 @@
  * @file ada_pmmh_mvn.h
  * @brief Performs adaptive particle marginal metropolis-hastings sampling, using a 
  * multivariate normal distribution as the proposal. This samples on the transformed 
- * space, but it writes the the untransformed/constrained samples to the output. The   
+ * space, but it writes out the untransformed/constrained samples to the output. The   
  * priors requested by the user are for the (hopefully more convenient) un-transformed 
- * or constrainedspace. This means that the user never has to worry about handling any 
- * kind of Jacobian.
+ * or constrained space. This means that the user never has to worry about handling any 
+ * kind of Jacobian--just specify a prior on the familiar space, and a function that 
+ * approximates log-likelihoods.
  */
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
 class ada_pmmh_mvn{
@@ -268,11 +269,15 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commenceSampling()
             }
             
             // store prior for next round
-            oldLogPrior = logPriorEvaluate(m_current_theta) + m_current_theta.getLogJacobian(); ///!!!!!
-            if( std::isinf(oldLogPrior) || std::isnan(oldLogPrior)){
-                std::cerr << "oldLogPrior must be a real number. returning.\n";
+            oldLogPrior = logPriorEvaluate(m_current_theta) + m_current_theta.getLogJacobian(); 
+            if( std::isinf(oldLogPrior) ){
+                std::cerr << "oldLogPrior is infinite. Returning from commenceSampling().\n";
                 return;
-            }            
+            }
+            if(std::isnan(oldLogPrior)){
+                std::cerr << "oldLogPrior is not a number. Returning from commenceSampling().\n";
+                return;
+            }
             
             // increase the iteration counter
             m_iter++;

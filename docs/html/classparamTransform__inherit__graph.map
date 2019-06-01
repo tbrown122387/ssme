@@ -1,6 +1,6 @@
-<map id="paramTransform" name="paramTransform">
-<area shape="rect" id="node2" href="$classlogitTrans.html" title="logitTrans" alt="" coords="5,80,84,107"/>
-<area shape="rect" id="node3" href="$classlogTrans.html" title="logTrans" alt="" coords="109,80,181,107"/>
-<area shape="rect" id="node4" href="$classnullTrans.html" title="nullTrans" alt="" coords="205,80,279,107"/>
-<area shape="rect" id="node5" href="$classtwiceFisherTrans.html" title="twiceFisherTrans" alt="" coords="303,80,426,107"/>
+<map id="paramTransform&lt; float_t &gt;" name="paramTransform&lt; float_t &gt;">
+<area shape="rect" id="node2" href="$classlogitTrans.html" title="logitTrans\&lt; float_t \&gt;" alt="" coords="253,5,391,32"/>
+<area shape="rect" id="node3" href="$classlogTrans.html" title="logTrans\&lt; float_t \&gt;" alt="" coords="256,56,388,83"/>
+<area shape="rect" id="node4" href="$classnullTrans.html" title="nullTrans\&lt; float_t \&gt;" alt="" coords="255,107,389,133"/>
+<area shape="rect" id="node5" href="$classtwiceFisherTrans.html" title="twiceFisherTrans\&lt; float_t \&gt;" alt="" coords="231,157,413,184"/>
 </map>

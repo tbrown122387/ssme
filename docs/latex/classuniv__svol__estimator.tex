@@ -1,8 +1,8 @@
-\hypertarget{classuniv__svol__estimator}{}\section{univ\+\_\+svol\+\_\+estimator$<$ numparams, dimnss, dimss, dimobs, numparts $>$ Class Template Reference}
-\label{classuniv__svol__estimator}\index{univ\+\_\+svol\+\_\+estimator$<$ numparams, dimnss, dimss, dimobs, numparts $>$@{univ\+\_\+svol\+\_\+estimator$<$ numparams, dimnss, dimss, dimobs, numparts $>$}}
+\hypertarget{classuniv__svol__estimator}{}\section{univ\+\_\+svol\+\_\+estimator$<$ numparams, dimstate, dimobs, numparts, float\+\_\+t $>$ Class Template Reference}
+\label{classuniv__svol__estimator}\index{univ\+\_\+svol\+\_\+estimator$<$ numparams, dimstate, dimobs, numparts, float\+\_\+t $>$@{univ\+\_\+svol\+\_\+estimator$<$ numparams, dimstate, dimobs, numparts, float\+\_\+t $>$}}
 
 
-Inheritance diagram for univ\+\_\+svol\+\_\+estimator$<$ numparams, dimnss, dimss, dimobs, numparts $>$\+:
+Inheritance diagram for univ\+\_\+svol\+\_\+estimator$<$ numparams, dimstate, dimobs, numparts, float\+\_\+t $>$\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
@@ -12,7 +12,7 @@ Inheritance diagram for univ\+\_\+svol\+\_\+estimator$<$ numparams, dimnss, dims
 \end{figure}
 
 
-Collaboration diagram for univ\+\_\+svol\+\_\+estimator$<$ numparams, dimnss, dimss, dimobs, numparts $>$\+:
+Collaboration diagram for univ\+\_\+svol\+\_\+estimator$<$ numparams, dimstate, dimobs, numparts, float\+\_\+t $>$\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
@@ -23,34 +23,34 @@ Collaboration diagram for univ\+\_\+svol\+\_\+estimator$<$ numparams, dimnss, di
 \subsection*{Public Types}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classuniv__svol__estimator_a8a2885f5c1f04d599de5c10c732f678e}\label{classuniv__svol__estimator_a8a2885f5c1f04d599de5c10c732f678e}} 
-using {\bfseries psv} = Eigen\+::\+Matrix$<$ double, numparams, 1 $>$
+\mbox{\Hypertarget{classuniv__svol__estimator_a01b200275c33196fc939700e2ae2cae8}\label{classuniv__svol__estimator_a01b200275c33196fc939700e2ae2cae8}} 
+using {\bfseries psv} = Eigen\+::\+Matrix$<$ float\+\_\+t, numparams, 1 $>$
 \item 
-\mbox{\Hypertarget{classuniv__svol__estimator_ae375e08936c3b348e7f43d25ce5b2673}\label{classuniv__svol__estimator_ae375e08936c3b348e7f43d25ce5b2673}} 
-using {\bfseries psm} = Eigen\+::\+Matrix$<$ double, numparams, numparams $>$
+\mbox{\Hypertarget{classuniv__svol__estimator_a49cb877a0ab3ac89cd59659ff4100e4c}\label{classuniv__svol__estimator_a49cb877a0ab3ac89cd59659ff4100e4c}} 
+using {\bfseries psm} = Eigen\+::\+Matrix$<$ float\+\_\+t, numparams, numparams $>$
 \item 
-\mbox{\Hypertarget{classuniv__svol__estimator_ac1b364d74291b50f7e874cec66670e97}\label{classuniv__svol__estimator_ac1b364d74291b50f7e874cec66670e97}} 
-using {\bfseries osv} = Eigen\+::\+Matrix$<$ double, dimobs, 1 $>$
+\mbox{\Hypertarget{classuniv__svol__estimator_ae88faafe9c8b75708d18260c0f4740a4}\label{classuniv__svol__estimator_ae88faafe9c8b75708d18260c0f4740a4}} 
+using {\bfseries osv} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimobs, 1 $>$
 \end{DoxyCompactItemize}
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classuniv__svol__estimator_ad635fb185be86037131bdf394fb46afa}\label{classuniv__svol__estimator_ad635fb185be86037131bdf394fb46afa}} 
-{\bfseries univ\+\_\+svol\+\_\+estimator} (const psv \&start\+Trans\+Theta, const std\+::vector$<$ Trans\+Type $>$ \&tts, const unsigned int \&num\+M\+C\+M\+C\+Iters, const std\+::string \&data\+File, const std\+::string \&samples\+\_\+base\+\_\+name, const std\+::string \&messages\+\_\+base\+\_\+name, const bool \&mc, const unsigned int \&t0, const unsigned int \&t1, const psm \&C0, bool print\+\_\+to\+\_\+console)
+\mbox{\Hypertarget{classuniv__svol__estimator_a16694966fefdaef94dcee68e961cf978}\label{classuniv__svol__estimator_a16694966fefdaef94dcee68e961cf978}} 
+{\bfseries univ\+\_\+svol\+\_\+estimator} (const psv \&start\+Trans\+Theta, const std\+::vector$<$ \hyperlink{param__transforms_8h_acee593b112f4fc85f850631b9c6aaae9}{Trans\+Type} $>$ \&tts, const unsigned int \&num\+M\+C\+M\+C\+Iters, const std\+::string \&data\+File, const std\+::string \&samples\+\_\+base\+\_\+name, const std\+::string \&messages\+\_\+base\+\_\+name, const bool \&mc, const unsigned int \&t0, const unsigned int \&t1, const psm \&C0, bool print\+\_\+to\+\_\+console, unsigned int print\+\_\+every\+\_\+k)
 \item 
-double \hyperlink{classuniv__svol__estimator_a6ee82e972206fa6ba1c8b4e359a7f6b7}{log\+Prior\+Evaluate} (const \hyperlink{classparamPack}{param\+Pack} \&theta)
+float\+\_\+t \hyperlink{classuniv__svol__estimator_a2e0e55bf061ca8f59fa5d42ae6495fdd}{log\+Prior\+Evaluate} (const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&theta)
 \begin{DoxyCompactList}\small\item\em Evaluates the log of the model\textquotesingle{}s prior distribution assuming the original/nontransformed/contrained parameterization. \end{DoxyCompactList}\item 
-double \hyperlink{classuniv__svol__estimator_aa73d0f9b96955c0b57fe59052e280008}{log\+Like\+Evaluate} (const \hyperlink{classparamPack}{param\+Pack} \&theta, const std\+::vector$<$ osv $>$ \&data)
+float\+\_\+t \hyperlink{classuniv__svol__estimator_a1223321e7875a4d40f9c4817753a2e01}{log\+Like\+Evaluate} (const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&theta, const std\+::vector$<$ osv $>$ \&data)
 \begin{DoxyCompactList}\small\item\em Evaluates (approximates) the log-\/likelihood with a particle filter. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Member Function Documentation}
-\mbox{\Hypertarget{classuniv__svol__estimator_aa73d0f9b96955c0b57fe59052e280008}\label{classuniv__svol__estimator_aa73d0f9b96955c0b57fe59052e280008}} 
+\mbox{\Hypertarget{classuniv__svol__estimator_a1223321e7875a4d40f9c4817753a2e01}\label{classuniv__svol__estimator_a1223321e7875a4d40f9c4817753a2e01}} 
 \index{univ\+\_\+svol\+\_\+estimator@{univ\+\_\+svol\+\_\+estimator}!log\+Like\+Evaluate@{log\+Like\+Evaluate}}
 \index{log\+Like\+Evaluate@{log\+Like\+Evaluate}!univ\+\_\+svol\+\_\+estimator@{univ\+\_\+svol\+\_\+estimator}}
 \subsubsection{\texorpdfstring{log\+Like\+Evaluate()}{logLikeEvaluate()}}
-{\footnotesize\ttfamily template$<$size\+\_\+t numparams, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimobs, size\+\_\+t numparts$>$ \\
-double \hyperlink{classuniv__svol__estimator}{univ\+\_\+svol\+\_\+estimator}$<$ numparams, dimnss, dimss, dimobs, numparts $>$\+::log\+Like\+Evaluate (\begin{DoxyParamCaption}\item[{const \hyperlink{classparamPack}{param\+Pack} \&}]{theta,  }\item[{const std\+::vector$<$ osv $>$ \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+{\footnotesize\ttfamily template$<$size\+\_\+t numparams, size\+\_\+t dimstate, size\+\_\+t dimobs, size\+\_\+t numparts, typename float\+\_\+t $>$ \\
+float\+\_\+t \hyperlink{classuniv__svol__estimator}{univ\+\_\+svol\+\_\+estimator}$<$ numparams, dimstate, dimobs, numparts, float\+\_\+t $>$\+::log\+Like\+Evaluate (\begin{DoxyParamCaption}\item[{const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&}]{theta,  }\item[{const std\+::vector$<$ osv $>$ \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
 
 
 
@@ -62,22 +62,20 @@ Evaluates (approximates) the log-\/likelihood with a particle filter.
 \hline
 {\em data} & the observed data with which to run the particle filter. \\
 \hline
-{\em cancelled} & is a token you need to provide if doing multithreaded likelihood evals. This allows the function to terminate prematurely. \\
-\hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-the evaluation (as a double) of the log likelihood approximation. 
+the evaluation (as a float\+\_\+t) of the log likelihood approximation. 
 \end{DoxyReturn}
 
 
-Implements \hyperlink{classada__pmmh__mvn_ab2ebebd48c6cc1c35ec71f6f68529c61}{ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts $>$}.
+Implements \hyperlink{classada__pmmh__mvn_a82d43085173fd0ed33ee42de9be48b77}{ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts, float\+\_\+t $>$}.
 
-\mbox{\Hypertarget{classuniv__svol__estimator_a6ee82e972206fa6ba1c8b4e359a7f6b7}\label{classuniv__svol__estimator_a6ee82e972206fa6ba1c8b4e359a7f6b7}} 
+\mbox{\Hypertarget{classuniv__svol__estimator_a2e0e55bf061ca8f59fa5d42ae6495fdd}\label{classuniv__svol__estimator_a2e0e55bf061ca8f59fa5d42ae6495fdd}} 
 \index{univ\+\_\+svol\+\_\+estimator@{univ\+\_\+svol\+\_\+estimator}!log\+Prior\+Evaluate@{log\+Prior\+Evaluate}}
 \index{log\+Prior\+Evaluate@{log\+Prior\+Evaluate}!univ\+\_\+svol\+\_\+estimator@{univ\+\_\+svol\+\_\+estimator}}
 \subsubsection{\texorpdfstring{log\+Prior\+Evaluate()}{logPriorEvaluate()}}
-{\footnotesize\ttfamily template$<$size\+\_\+t numparams, size\+\_\+t dimnss, size\+\_\+t dimss, size\+\_\+t dimobs, size\+\_\+t numparts$>$ \\
-double \hyperlink{classuniv__svol__estimator}{univ\+\_\+svol\+\_\+estimator}$<$ numparams, dimnss, dimss, dimobs, numparts $>$\+::log\+Prior\+Evaluate (\begin{DoxyParamCaption}\item[{const \hyperlink{classparamPack}{param\+Pack} \&}]{theta }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+{\footnotesize\ttfamily template$<$size\+\_\+t numparams, size\+\_\+t dimstate, size\+\_\+t dimobs, size\+\_\+t numparts, typename float\+\_\+t $>$ \\
+float\+\_\+t \hyperlink{classuniv__svol__estimator}{univ\+\_\+svol\+\_\+estimator}$<$ numparams, dimstate, dimobs, numparts, float\+\_\+t $>$\+::log\+Prior\+Evaluate (\begin{DoxyParamCaption}\item[{const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&}]{theta }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
 
 
 
@@ -93,7 +91,7 @@ the log of the prior density.
 \end{DoxyReturn}
 
 
-Implements \hyperlink{classada__pmmh__mvn_aff5af228ed4a7149287493e3ea6a5467}{ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts $>$}.
+Implements \hyperlink{classada__pmmh__mvn_af946eae70a63045515ed7830c35106dc}{ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts, float\+\_\+t $>$}.
 
 
 

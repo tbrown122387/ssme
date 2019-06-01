@@ -1,0 +1,70 @@
+\hypertarget{param__transforms_8h}{}\section{include/param\+\_\+transforms.h File Reference}
+\label{param__transforms_8h}\index{include/param\+\_\+transforms.\+h@{include/param\+\_\+transforms.\+h}}
+
+
+a pure virtual base class. cts params only.  
+
+
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+Include dependency graph for param\+\_\+transforms.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=344pt]{param__transforms_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{param__transforms_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classparamTransform}{param\+Transform$<$ float\+\_\+t $>$}
+\item 
+class \hyperlink{classnullTrans}{null\+Trans$<$ float\+\_\+t $>$}
+\item 
+class \hyperlink{classtwiceFisherTrans}{twice\+Fisher\+Trans$<$ float\+\_\+t $>$}
+\item 
+class \hyperlink{classlogitTrans}{logit\+Trans$<$ float\+\_\+t $>$}
+\item 
+class \hyperlink{classlogTrans}{log\+Trans$<$ float\+\_\+t $>$}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{param__transforms_8h_acee593b112f4fc85f850631b9c6aaae9}{Trans\+Type} \{ {\bfseries T\+T\+\_\+null}, 
+{\bfseries T\+T\+\_\+twice\+\_\+fisher}, 
+{\bfseries T\+T\+\_\+logit}, 
+{\bfseries T\+T\+\_\+log}
+ \}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+a pure virtual base class. cts params only. 
+
+trans\+\_\+p = log(orig\+\_\+p).
+
+trans\+\_\+p = logit(orig\+\_\+p).
+
+trans\+\_\+p = log(1+orig\+\_\+p) -\/ log(1-\/orig\+\_\+p) = logit((orig\+\_\+p+1)/2).
+
+trans\+\_\+p = orig\+\_\+p.
+
+\subsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{param__transforms_8h_acee593b112f4fc85f850631b9c6aaae9}\label{param__transforms_8h_acee593b112f4fc85f850631b9c6aaae9}} 
+\index{param\+\_\+transforms.\+h@{param\+\_\+transforms.\+h}!Trans\+Type@{Trans\+Type}}
+\index{Trans\+Type@{Trans\+Type}!param\+\_\+transforms.\+h@{param\+\_\+transforms.\+h}}
+\subsubsection{\texorpdfstring{Trans\+Type}{TransType}}
+{\footnotesize\ttfamily enum \hyperlink{param__transforms_8h_acee593b112f4fc85f850631b9c6aaae9}{Trans\+Type}\hspace{0.3cm}{\ttfamily [strong]}}
+
+enum class for different types of transformations 

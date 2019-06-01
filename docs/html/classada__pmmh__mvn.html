@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ssme: ada_pmmh_mvn&lt; numparams, dimobs, numparts &gt; Class Template Reference</title>
+<title>ssme: ada_pmmh_mvn&lt; numparams, dimobs, numparts, float_t &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -86,147 +86,142 @@ $(document).ready(function(){initNavTree('classada__pmmh__mvn.html','');});
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classada__pmmh__mvn-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">ada_pmmh_mvn&lt; numparams, dimobs, numparts &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+<div class="title">ada_pmmh_mvn&lt; numparams, dimobs, numparts, float_t &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p><code>#include &lt;<a class="el" href="ada__pmmh__mvn_8h_source.html">ada_pmmh_mvn.h</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for ada_pmmh_mvn&lt; numparams, dimobs, numparts &gt;:</div>
+Inheritance diagram for ada_pmmh_mvn&lt; numparams, dimobs, numparts, float_t &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classada__pmmh__mvn__inherit__graph.png" border="0" usemap="#ada__pmmh__mvn_3_01numparams_00_01dimobs_00_01numparts_01_4_inherit__map" alt="Inheritance graph"/></div>
-<map name="ada__pmmh__mvn_3_01numparams_00_01dimobs_00_01numparts_01_4_inherit__map" id="ada__pmmh__mvn_3_01numparams_00_01dimobs_00_01numparts_01_4_inherit__map">
-<area shape="rect" id="node2" href="classuniv__svol__estimator.html" title="univ_svol_estimator\l\&lt; numparams, dimobs,\l numparts \&gt;" alt="" coords="29,95,185,151"/>
-</map>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for ada_pmmh_mvn&lt; numparams, dimobs, numparts &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="classada__pmmh__mvn__coll__graph.png" border="0" usemap="#ada__pmmh__mvn_3_01numparams_00_01dimobs_00_01numparts_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="ada__pmmh__mvn_3_01numparams_00_01dimobs_00_01numparts_01_4_coll__map" id="ada__pmmh__mvn_3_01numparams_00_01dimobs_00_01numparts_01_4_coll__map">
-<area shape="rect" id="node2" href="classparamPack.html" title="paramPack" alt="" coords="63,5,151,32"/>
+<div class="center"><img src="classada__pmmh__mvn__inherit__graph.png" border="0" usemap="#ada__pmmh__mvn_3_01numparams_00_01dimobs_00_01numparts_00_01float__t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="ada__pmmh__mvn_3_01numparams_00_01dimobs_00_01numparts_00_01float__t_01_4_inherit__map" id="ada__pmmh__mvn_3_01numparams_00_01dimobs_00_01numparts_00_01float__t_01_4_inherit__map">
+<area shape="rect" id="node2" href="classuniv__svol__estimator.html" title="univ_svol_estimator\l\&lt; numparams, dimobs,\l numparts, float_t \&gt;" alt="" coords="29,95,185,151"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a2be52b9b18ebc707d2a01186ead69a79"><td class="memItemLeft" align="right" valign="top"><a id="a2be52b9b18ebc707d2a01186ead69a79"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>osv</b> = Eigen::Matrix&lt; double, dimobs, 1 &gt;</td></tr>
-<tr class="separator:a2be52b9b18ebc707d2a01186ead69a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4705162cb4330ad6d92ed2ba5ddc3b1"><td class="memItemLeft" align="right" valign="top"><a id="af4705162cb4330ad6d92ed2ba5ddc3b1"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>psv</b> = Eigen::Matrix&lt; double, numparams, 1 &gt;</td></tr>
-<tr class="separator:af4705162cb4330ad6d92ed2ba5ddc3b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a795deffec8002e5b307b197c22822490"><td class="memItemLeft" align="right" valign="top"><a id="a795deffec8002e5b307b197c22822490"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>psm</b> = Eigen::Matrix&lt; double, numparams, numparams &gt;</td></tr>
-<tr class="separator:a795deffec8002e5b307b197c22822490"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af036f732a29ede6fee08cdaacc9bbaaa"><td class="memItemLeft" align="right" valign="top"><a id="af036f732a29ede6fee08cdaacc9bbaaa"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>osv</b> = Eigen::Matrix&lt; float_t, dimobs, 1 &gt;</td></tr>
+<tr class="separator:af036f732a29ede6fee08cdaacc9bbaaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb9df4d2086af9cace0f8aeebd805a73"><td class="memItemLeft" align="right" valign="top"><a id="adb9df4d2086af9cace0f8aeebd805a73"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>psv</b> = Eigen::Matrix&lt; float_t, numparams, 1 &gt;</td></tr>
+<tr class="separator:adb9df4d2086af9cace0f8aeebd805a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cb69e6998319cbe2733965a177dc8d1"><td class="memItemLeft" align="right" valign="top"><a id="a1cb69e6998319cbe2733965a177dc8d1"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>psm</b> = Eigen::Matrix&lt; float_t, numparams, numparams &gt;</td></tr>
+<tr class="separator:a1cb69e6998319cbe2733965a177dc8d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae3155f8b2994845d7f637279b04ce176"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html#ae3155f8b2994845d7f637279b04ce176">ada_pmmh_mvn</a> (const psv &amp;start_trans_theta, const std::vector&lt; TransType &gt; &amp;tts, const unsigned int &amp;num_mcmc_iters, const std::string &amp;data_file, const std::string &amp;sample_file_base_name, const std::string &amp;message_file_base_name, const bool &amp;mc, const unsigned int &amp;t0, const unsigned int &amp;t1, const psm &amp;C0, bool print_to_console)</td></tr>
-<tr class="memdesc:ae3155f8b2994845d7f637279b04ce176"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor.  <a href="#ae3155f8b2994845d7f637279b04ce176">More...</a><br /></td></tr>
-<tr class="separator:ae3155f8b2994845d7f637279b04ce176"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa1c6c2a6e2f775c217967135c8dd262"><td class="memItemLeft" align="right" valign="top">psm&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html#aaa1c6c2a6e2f775c217967135c8dd262">get_ct</a> () const</td></tr>
-<tr class="memdesc:aaa1c6c2a6e2f775c217967135c8dd262"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current proposal distribution's covariance matrix.  <a href="#aaa1c6c2a6e2f775c217967135c8dd262">More...</a><br /></td></tr>
-<tr class="separator:aaa1c6c2a6e2f775c217967135c8dd262"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9fa416a913aeb6f6ea8189bfa23353f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html#ab9fa416a913aeb6f6ea8189bfa23353f">commenceSampling</a> ()</td></tr>
-<tr class="memdesc:ab9fa416a913aeb6f6ea8189bfa23353f"><td class="mdescLeft">&#160;</td><td class="mdescRight">starts the sampling  <a href="#ab9fa416a913aeb6f6ea8189bfa23353f">More...</a><br /></td></tr>
-<tr class="separator:ab9fa416a913aeb6f6ea8189bfa23353f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff5af228ed4a7149287493e3ea6a5467"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html#aff5af228ed4a7149287493e3ea6a5467">logPriorEvaluate</a> (const <a class="el" href="classparamPack.html">paramPack</a> &amp;theta)=0</td></tr>
-<tr class="memdesc:aff5af228ed4a7149287493e3ea6a5467"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates the log of the model's prior distribution assuming the original/nontransformed/contrained parameterization.  <a href="#aff5af228ed4a7149287493e3ea6a5467">More...</a><br /></td></tr>
-<tr class="separator:aff5af228ed4a7149287493e3ea6a5467"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2ebebd48c6cc1c35ec71f6f68529c61"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html#ab2ebebd48c6cc1c35ec71f6f68529c61">logLikeEvaluate</a> (const <a class="el" href="classparamPack.html">paramPack</a> &amp;theta, const std::vector&lt; osv &gt; &amp;data)=0</td></tr>
-<tr class="memdesc:ab2ebebd48c6cc1c35ec71f6f68529c61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates (approximates) the log-likelihood with a particle filter.  <a href="#ab2ebebd48c6cc1c35ec71f6f68529c61">More...</a><br /></td></tr>
-<tr class="separator:ab2ebebd48c6cc1c35ec71f6f68529c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a749d2c42d1c5741edeb55b641dca9625"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html#a749d2c42d1c5741edeb55b641dca9625">ada_pmmh_mvn</a> (const psv &amp;start_trans_theta, const std::vector&lt; <a class="el" href="param__transforms_8h.html#acee593b112f4fc85f850631b9c6aaae9">TransType</a> &gt; &amp;tts, const unsigned int &amp;num_mcmc_iters, const std::string &amp;data_file, const std::string &amp;sample_file_base_name, const std::string &amp;message_file_base_name, const bool &amp;mc, const unsigned int &amp;t0, const unsigned int &amp;t1, const psm &amp;C0, bool print_to_console, unsigned int print_every_k)</td></tr>
+<tr class="memdesc:a749d2c42d1c5741edeb55b641dca9625"><td class="mdescLeft">&#160;</td><td class="mdescRight">The constructor.  <a href="#a749d2c42d1c5741edeb55b641dca9625">More...</a><br /></td></tr>
+<tr class="separator:a749d2c42d1c5741edeb55b641dca9625"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06930a79f4d2a62aa0cf24528c77e5a7"><td class="memItemLeft" align="right" valign="top">psm&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html#a06930a79f4d2a62aa0cf24528c77e5a7">get_ct</a> () const</td></tr>
+<tr class="memdesc:a06930a79f4d2a62aa0cf24528c77e5a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current proposal distribution's covariance matrix.  <a href="#a06930a79f4d2a62aa0cf24528c77e5a7">More...</a><br /></td></tr>
+<tr class="separator:a06930a79f4d2a62aa0cf24528c77e5a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a891d79acc39485cdd9104bdf120bec7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html#a891d79acc39485cdd9104bdf120bec7a">commenceSampling</a> ()</td></tr>
+<tr class="memdesc:a891d79acc39485cdd9104bdf120bec7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">starts the sampling  <a href="#a891d79acc39485cdd9104bdf120bec7a">More...</a><br /></td></tr>
+<tr class="separator:a891d79acc39485cdd9104bdf120bec7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af946eae70a63045515ed7830c35106dc"><td class="memItemLeft" align="right" valign="top">virtual float_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html#af946eae70a63045515ed7830c35106dc">logPriorEvaluate</a> (const <a class="el" href="classparamPack.html">paramPack</a>&lt; float_t &gt; &amp;theta)=0</td></tr>
+<tr class="memdesc:af946eae70a63045515ed7830c35106dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates the log of the model's prior distribution assuming the original/nontransformed/contrained parameterization.  <a href="#af946eae70a63045515ed7830c35106dc">More...</a><br /></td></tr>
+<tr class="separator:af946eae70a63045515ed7830c35106dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82d43085173fd0ed33ee42de9be48b77"><td class="memItemLeft" align="right" valign="top">virtual float_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html#a82d43085173fd0ed33ee42de9be48b77">logLikeEvaluate</a> (const <a class="el" href="classparamPack.html">paramPack</a>&lt; float_t &gt; &amp;theta, const std::vector&lt; osv &gt; &amp;data)=0</td></tr>
+<tr class="memdesc:a82d43085173fd0ed33ee42de9be48b77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates (approximates) the log-likelihood with a particle filter.  <a href="#a82d43085173fd0ed33ee42de9be48b77">More...</a><br /></td></tr>
+<tr class="separator:a82d43085173fd0ed33ee42de9be48b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a29c1675361d7f9da31365f3939efe630"><td class="memItemLeft" align="right" valign="top"><a id="a29c1675361d7f9da31365f3939efe630"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>update_moments_and_Ct</b> (const <a class="el" href="classparamPack.html">paramPack</a> &amp;newTheta)</td></tr>
-<tr class="separator:a29c1675361d7f9da31365f3939efe630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa98a7a7f2b7e1b3a56f68334a1d1f8f5"><td class="memItemLeft" align="right" valign="top"><a id="aa98a7a7f2b7e1b3a56f68334a1d1f8f5"></a>
-psv&#160;</td><td class="memItemRight" valign="bottom"><b>qSample</b> (const <a class="el" href="classparamPack.html">paramPack</a> &amp;oldTheta)</td></tr>
-<tr class="separator:aa98a7a7f2b7e1b3a56f68334a1d1f8f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4c5909e3f7b1ce098c04e53f5f1b58d"><td class="memItemLeft" align="right" valign="top"><a id="ac4c5909e3f7b1ce098c04e53f5f1b58d"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>logQEvaluate</b> (const <a class="el" href="classparamPack.html">paramPack</a> &amp;oldParams, const <a class="el" href="classparamPack.html">paramPack</a> &amp;newParams)</td></tr>
-<tr class="separator:ac4c5909e3f7b1ce098c04e53f5f1b58d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac02d38688740c1379a852f2d07a8ea0a"><td class="memItemLeft" align="right" valign="top"><a id="ac02d38688740c1379a852f2d07a8ea0a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>update_moments_and_Ct</b> (const <a class="el" href="classparamPack.html">paramPack</a>&lt; float_t &gt; &amp;newTheta)</td></tr>
+<tr class="separator:ac02d38688740c1379a852f2d07a8ea0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ffbe9f38347905cd2549778a04d5ddf"><td class="memItemLeft" align="right" valign="top"><a id="a8ffbe9f38347905cd2549778a04d5ddf"></a>
+psv&#160;</td><td class="memItemRight" valign="bottom"><b>qSample</b> (const <a class="el" href="classparamPack.html">paramPack</a>&lt; float_t &gt; &amp;oldTheta)</td></tr>
+<tr class="separator:a8ffbe9f38347905cd2549778a04d5ddf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fb402251d938f5ec20754a84029bad2"><td class="memItemLeft" align="right" valign="top"><a id="a2fb402251d938f5ec20754a84029bad2"></a>
+float_t&#160;</td><td class="memItemRight" valign="bottom"><b>logQEvaluate</b> (const <a class="el" href="classparamPack.html">paramPack</a>&lt; float_t &gt; &amp;oldParams, const <a class="el" href="classparamPack.html">paramPack</a>&lt; float_t &gt; &amp;newParams)</td></tr>
+<tr class="separator:a2fb402251d938f5ec20754a84029bad2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:ab949771e5ae192570033d114d0c2e7ae"><td class="memItemLeft" align="right" valign="top"><a id="ab949771e5ae192570033d114d0c2e7ae"></a>
+<tr class="memitem:a5088adab431640298be526751ca2fa94"><td class="memItemLeft" align="right" valign="top"><a id="a5088adab431640298be526751ca2fa94"></a>
 std::vector&lt; osv &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_data</b></td></tr>
-<tr class="separator:ab949771e5ae192570033d114d0c2e7ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa6d44bbd0c45d62f203da32ef0ab8d0"><td class="memItemLeft" align="right" valign="top"><a id="afa6d44bbd0c45d62f203da32ef0ab8d0"></a>
-<a class="el" href="classparamPack.html">paramPack</a>&#160;</td><td class="memItemRight" valign="bottom"><b>m_current_theta</b></td></tr>
-<tr class="separator:afa6d44bbd0c45d62f203da32ef0ab8d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2202b57d48c4b7bbc07c6fab6ccda8c1"><td class="memItemLeft" align="right" valign="top"><a id="a2202b57d48c4b7bbc07c6fab6ccda8c1"></a>
-std::vector&lt; TransType &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_tts</b></td></tr>
-<tr class="separator:a2202b57d48c4b7bbc07c6fab6ccda8c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab011919037ee168ea23961959d065d2e"><td class="memItemLeft" align="right" valign="top"><a id="ab011919037ee168ea23961959d065d2e"></a>
+<tr class="separator:a5088adab431640298be526751ca2fa94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d33f16a15e709862cbe4ca13249c7a1"><td class="memItemLeft" align="right" valign="top"><a id="a2d33f16a15e709862cbe4ca13249c7a1"></a>
+<a class="el" href="classparamPack.html">paramPack</a>&lt; float_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_current_theta</b></td></tr>
+<tr class="separator:a2d33f16a15e709862cbe4ca13249c7a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab003f4ee2c98ac1a22cd0a504830aef5"><td class="memItemLeft" align="right" valign="top"><a id="ab003f4ee2c98ac1a22cd0a504830aef5"></a>
+std::vector&lt; <a class="el" href="param__transforms_8h.html#acee593b112f4fc85f850631b9c6aaae9">TransType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_tts</b></td></tr>
+<tr class="separator:ab003f4ee2c98ac1a22cd0a504830aef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afff9cd2d50bb0577aa861f30df27d4eb"><td class="memItemLeft" align="right" valign="top"><a id="afff9cd2d50bb0577aa861f30df27d4eb"></a>
 psm&#160;</td><td class="memItemRight" valign="bottom"><b>m_sigma_hat</b></td></tr>
-<tr class="separator:ab011919037ee168ea23961959d065d2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d9247e7aa6bae30dfd2395d16f42758"><td class="memItemLeft" align="right" valign="top"><a id="a5d9247e7aa6bae30dfd2395d16f42758"></a>
+<tr class="separator:afff9cd2d50bb0577aa861f30df27d4eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab95fb64336166bbad83562a75f80a1f7"><td class="memItemLeft" align="right" valign="top"><a id="ab95fb64336166bbad83562a75f80a1f7"></a>
 psv&#160;</td><td class="memItemRight" valign="bottom"><b>m_mean_trans_theta</b></td></tr>
-<tr class="separator:a5d9247e7aa6bae30dfd2395d16f42758"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a681eaec171e0f8d52bd3a0a51bd640bf"><td class="memItemLeft" align="right" valign="top"><a id="a681eaec171e0f8d52bd3a0a51bd640bf"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>m_ma_accept_rate</b></td></tr>
-<tr class="separator:a681eaec171e0f8d52bd3a0a51bd640bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0219599e1feb9b3c22426ecc057f82f5"><td class="memItemLeft" align="right" valign="top"><a id="a0219599e1feb9b3c22426ecc057f82f5"></a>
+<tr class="separator:ab95fb64336166bbad83562a75f80a1f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a668c49d3ef53a5c69dcc96b4784a34f0"><td class="memItemLeft" align="right" valign="top"><a id="a668c49d3ef53a5c69dcc96b4784a34f0"></a>
+float_t&#160;</td><td class="memItemRight" valign="bottom"><b>m_ma_accept_rate</b></td></tr>
+<tr class="separator:a668c49d3ef53a5c69dcc96b4784a34f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8208a1108ef730a8f67efce9c804753"><td class="memItemLeft" align="right" valign="top"><a id="aa8208a1108ef730a8f67efce9c804753"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_t0</b></td></tr>
-<tr class="separator:a0219599e1feb9b3c22426ecc057f82f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa08cfdc9084342d7ae84ae903854af1f"><td class="memItemLeft" align="right" valign="top"><a id="aa08cfdc9084342d7ae84ae903854af1f"></a>
+<tr class="separator:aa8208a1108ef730a8f67efce9c804753"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3cf6f22e3efd4869eca06c78325b20f"><td class="memItemLeft" align="right" valign="top"><a id="ab3cf6f22e3efd4869eca06c78325b20f"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_t1</b></td></tr>
-<tr class="separator:aa08cfdc9084342d7ae84ae903854af1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ada2100837e389cca8381f16c353490"><td class="memItemLeft" align="right" valign="top"><a id="a4ada2100837e389cca8381f16c353490"></a>
+<tr class="separator:ab3cf6f22e3efd4869eca06c78325b20f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b2d63854397e746b7118c75e310686b"><td class="memItemLeft" align="right" valign="top"><a id="a8b2d63854397e746b7118c75e310686b"></a>
 psm&#160;</td><td class="memItemRight" valign="bottom"><b>m_Ct</b></td></tr>
-<tr class="separator:a4ada2100837e389cca8381f16c353490"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca464299316ee6241d495a01dd60b505"><td class="memItemLeft" align="right" valign="top"><a id="aca464299316ee6241d495a01dd60b505"></a>
-rvsamp::MVNSampler&lt; numparams &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_mvn_gen</b></td></tr>
-<tr class="separator:aca464299316ee6241d495a01dd60b505"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8db545c9725213921bd4db1592d52f5"><td class="memItemLeft" align="right" valign="top"><a id="ac8db545c9725213921bd4db1592d52f5"></a>
+<tr class="separator:a8b2d63854397e746b7118c75e310686b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d49f77bf7ea14f780f6192ad520410f"><td class="memItemLeft" align="right" valign="top"><a id="a0d49f77bf7ea14f780f6192ad520410f"></a>
+rvsamp::MVNSampler&lt; numparams, float_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_mvn_gen</b></td></tr>
+<tr class="separator:a0d49f77bf7ea14f780f6192ad520410f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2f05575406feb4bc2e7ed97d9edb703"><td class="memItemLeft" align="right" valign="top"><a id="aa2f05575406feb4bc2e7ed97d9edb703"></a>
 std::ofstream&#160;</td><td class="memItemRight" valign="bottom"><b>m_samples_file_stream</b></td></tr>
-<tr class="separator:ac8db545c9725213921bd4db1592d52f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a342db33e2e488aeefd818db9ad88b7c0"><td class="memItemLeft" align="right" valign="top"><a id="a342db33e2e488aeefd818db9ad88b7c0"></a>
+<tr class="separator:aa2f05575406feb4bc2e7ed97d9edb703"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad04a7bd0a0cf81836cbc3934b2b40ece"><td class="memItemLeft" align="right" valign="top"><a id="ad04a7bd0a0cf81836cbc3934b2b40ece"></a>
 std::ofstream&#160;</td><td class="memItemRight" valign="bottom"><b>m_message_stream</b></td></tr>
-<tr class="separator:a342db33e2e488aeefd818db9ad88b7c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa1052465ed3881ee73427e2dcefcad4"><td class="memItemLeft" align="right" valign="top"><a id="afa1052465ed3881ee73427e2dcefcad4"></a>
+<tr class="separator:ad04a7bd0a0cf81836cbc3934b2b40ece"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a653603682a96d0f30c82f5f5bd83503e"><td class="memItemLeft" align="right" valign="top"><a id="a653603682a96d0f30c82f5f5bd83503e"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_num_mcmc_iters</b></td></tr>
-<tr class="separator:afa1052465ed3881ee73427e2dcefcad4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6d00a88a8f8c21cedb17dc191b8180b"><td class="memItemLeft" align="right" valign="top"><a id="ad6d00a88a8f8c21cedb17dc191b8180b"></a>
+<tr class="separator:a653603682a96d0f30c82f5f5bd83503e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a508a228e3effb586bbf2fdc38c5dfaf9"><td class="memItemLeft" align="right" valign="top"><a id="a508a228e3effb586bbf2fdc38c5dfaf9"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_num_extra_threads</b></td></tr>
-<tr class="separator:ad6d00a88a8f8c21cedb17dc191b8180b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f2d20b6d51017ab6ee1c01e130f3da5"><td class="memItemLeft" align="right" valign="top"><a id="a0f2d20b6d51017ab6ee1c01e130f3da5"></a>
+<tr class="separator:a508a228e3effb586bbf2fdc38c5dfaf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5afb1ceaa3f6173f3b12c2d492105ad"><td class="memItemLeft" align="right" valign="top"><a id="ae5afb1ceaa3f6173f3b12c2d492105ad"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_multicore</b></td></tr>
-<tr class="separator:a0f2d20b6d51017ab6ee1c01e130f3da5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a373ba09d8097827060ac773cd008684e"><td class="memItemLeft" align="right" valign="top"><a id="a373ba09d8097827060ac773cd008684e"></a>
+<tr class="separator:ae5afb1ceaa3f6173f3b12c2d492105ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06b5eed1ebb523262ec69e46bc70393d"><td class="memItemLeft" align="right" valign="top"><a id="a06b5eed1ebb523262ec69e46bc70393d"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_iter</b></td></tr>
-<tr class="separator:a373ba09d8097827060ac773cd008684e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1a988af0305a7baff3a15cc3a12f8cf"><td class="memItemLeft" align="right" valign="top"><a id="aa1a988af0305a7baff3a15cc3a12f8cf"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>m_sd</b></td></tr>
-<tr class="separator:aa1a988af0305a7baff3a15cc3a12f8cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94301c74a280baa8194a5d5e0e178973"><td class="memItemLeft" align="right" valign="top"><a id="a94301c74a280baa8194a5d5e0e178973"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>m_eps</b></td></tr>
-<tr class="separator:a94301c74a280baa8194a5d5e0e178973"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a406b2c36419506202f9d607ae8acf46a"><td class="memItemLeft" align="right" valign="top"><a id="a406b2c36419506202f9d607ae8acf46a"></a>
+<tr class="separator:a06b5eed1ebb523262ec69e46bc70393d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad33ac891e9fb4bd9b59185d874d05301"><td class="memItemLeft" align="right" valign="top"><a id="ad33ac891e9fb4bd9b59185d874d05301"></a>
+float_t&#160;</td><td class="memItemRight" valign="bottom"><b>m_sd</b></td></tr>
+<tr class="separator:ad33ac891e9fb4bd9b59185d874d05301"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abaf7185b58d25568b0032903e5fc1748"><td class="memItemLeft" align="right" valign="top"><a id="abaf7185b58d25568b0032903e5fc1748"></a>
+float_t&#160;</td><td class="memItemRight" valign="bottom"><b>m_eps</b></td></tr>
+<tr class="separator:abaf7185b58d25568b0032903e5fc1748"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f1b4d3880798e8f0d72728f51fbaf32"><td class="memItemLeft" align="right" valign="top"><a id="a9f1b4d3880798e8f0d72728f51fbaf32"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_print_to_console</b></td></tr>
-<tr class="separator:a406b2c36419506202f9d607ae8acf46a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a9f1b4d3880798e8f0d72728f51fbaf32"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1eb75f119d61924cdbfa9b00c07d795"><td class="memItemLeft" align="right" valign="top"><a id="ab1eb75f119d61924cdbfa9b00c07d795"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>m_print_every_k</b></td></tr>
+<tr class="separator:ab1eb75f119d61924cdbfa9b00c07d795"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;size_t numparams, size_t dimobs, size_t numparts&gt;<br />
-class ada_pmmh_mvn&lt; numparams, dimobs, numparts &gt;</h3>
+<div class="textblock"><h3>template&lt;size_t numparams, size_t dimobs, size_t numparts, typename float_t&gt;<br />
+class ada_pmmh_mvn&lt; numparams, dimobs, numparts, float_t &gt;</h3>
 
 <dl class="section author"><dt>Author</dt><dd>t </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>24/05/18 </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ae3155f8b2994845d7f637279b04ce176"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3155f8b2994845d7f637279b04ce176">&#9670;&nbsp;</a></span>ada_pmmh_mvn()</h2>
+<a id="a749d2c42d1c5741edeb55b641dca9625"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a749d2c42d1c5741edeb55b641dca9625">&#9670;&nbsp;</a></span>ada_pmmh_mvn()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
+template&lt;size_t numparams, size_t dimobs, size_t numparts, typename float_t &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a>&lt; numparams, dimobs, numparts &gt;::<a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a> </td>
+          <td class="memname"><a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a>&lt; numparams, dimobs, numparts, float_t &gt;::<a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a> </td>
           <td>(</td>
           <td class="paramtype">const psv &amp;&#160;</td>
           <td class="paramname"><em>start_trans_theta</em>, </td>
@@ -234,7 +229,7 @@ template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; TransType &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="param__transforms_8h.html#acee593b112f4fc85f850631b9c6aaae9">TransType</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>tts</em>, </td>
         </tr>
         <tr>
@@ -289,7 +284,13 @@ template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>print_to_console</em>&#160;</td>
+          <td class="paramname"><em>print_to_console</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>print_every_k</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -311,6 +312,8 @@ template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
     <tr><td class="paramname">t0</td><td>time you start adapting </td></tr>
     <tr><td class="paramname">t1</td><td>time you stop adapting </td></tr>
     <tr><td class="paramname">C0</td><td>initial covariance matrix for proposal distribution. </td></tr>
+    <tr><td class="paramname">print_to_console</td><td>true if you want to see messages in real time </td></tr>
+    <tr><td class="paramname">print_every_k</td><td>print messages and samples every (this number) iterations </td></tr>
   </table>
   </dd>
 </dl>
@@ -318,16 +321,16 @@ template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab9fa416a913aeb6f6ea8189bfa23353f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab9fa416a913aeb6f6ea8189bfa23353f">&#9670;&nbsp;</a></span>commenceSampling()</h2>
+<a id="a891d79acc39485cdd9104bdf120bec7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a891d79acc39485cdd9104bdf120bec7a">&#9670;&nbsp;</a></span>commenceSampling()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
+template&lt;size_t numparams, size_t dimobs, size_t numparts, typename float_t &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a>&lt; numparams, dimobs, numparts &gt;::commenceSampling </td>
+          <td class="memname">void <a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a>&lt; numparams, dimobs, numparts, float_t &gt;::commenceSampling </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -340,16 +343,16 @@ template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
 
 </div>
 </div>
-<a id="aaa1c6c2a6e2f775c217967135c8dd262"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa1c6c2a6e2f775c217967135c8dd262">&#9670;&nbsp;</a></span>get_ct()</h2>
+<a id="a06930a79f4d2a62aa0cf24528c77e5a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06930a79f4d2a62aa0cf24528c77e5a7">&#9670;&nbsp;</a></span>get_ct()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
+template&lt;size_t numparams, size_t dimobs, size_t numparts, typename float_t &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a>&lt; numparams, dimobs, numparts &gt;::get_ct </td>
+          <td class="memname">auto <a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a>&lt; numparams, dimobs, numparts, float_t &gt;::get_ct </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -362,21 +365,21 @@ template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
 
 </div>
 </div>
-<a id="ab2ebebd48c6cc1c35ec71f6f68529c61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab2ebebd48c6cc1c35ec71f6f68529c61">&#9670;&nbsp;</a></span>logLikeEvaluate()</h2>
+<a id="a82d43085173fd0ed33ee42de9be48b77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82d43085173fd0ed33ee42de9be48b77">&#9670;&nbsp;</a></span>logLikeEvaluate()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
+template&lt;size_t numparams, size_t dimobs, size_t numparts, typename float_t&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual double <a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a>&lt; numparams, dimobs, numparts &gt;::logLikeEvaluate </td>
+          <td class="memname">virtual float_t <a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a>&lt; numparams, dimobs, numparts, float_t &gt;::logLikeEvaluate </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classparamPack.html">paramPack</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classparamPack.html">paramPack</a>&lt; float_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>theta</em>, </td>
         </tr>
         <tr>
@@ -403,31 +406,30 @@ template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
   <table class="params">
     <tr><td class="paramname">theta</td><td>the parameters with which to run the particle filter. </td></tr>
     <tr><td class="paramname">data</td><td>the observed data with which to run the particle filter. </td></tr>
-    <tr><td class="paramname">cancelled</td><td>is a token you need to provide if doing multithreaded likelihood evals. This allows the function to terminate prematurely. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>the evaluation (as a double) of the log likelihood approximation. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the evaluation (as a float_t) of the log likelihood approximation. </dd></dl>
 
-<p>Implemented in <a class="el" href="classuniv__svol__estimator.html#aa73d0f9b96955c0b57fe59052e280008">univ_svol_estimator&lt; numparams, dimnss, dimss, dimobs, numparts &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classuniv__svol__estimator.html#a1223321e7875a4d40f9c4817753a2e01">univ_svol_estimator&lt; numparams, dimstate, dimobs, numparts, float_t &gt;</a>.</p>
 
 </div>
 </div>
-<a id="aff5af228ed4a7149287493e3ea6a5467"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff5af228ed4a7149287493e3ea6a5467">&#9670;&nbsp;</a></span>logPriorEvaluate()</h2>
+<a id="af946eae70a63045515ed7830c35106dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af946eae70a63045515ed7830c35106dc">&#9670;&nbsp;</a></span>logPriorEvaluate()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
+template&lt;size_t numparams, size_t dimobs, size_t numparts, typename float_t&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual double <a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a>&lt; numparams, dimobs, numparts &gt;::logPriorEvaluate </td>
+          <td class="memname">virtual float_t <a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn</a>&lt; numparams, dimobs, numparts, float_t &gt;::logPriorEvaluate </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classparamPack.html">paramPack</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classparamPack.html">paramPack</a>&lt; float_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>theta</em></td><td>)</td>
           <td></td>
         </tr>
@@ -448,7 +450,7 @@ template&lt;size_t numparams, size_t dimobs, size_t numparts&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the log of the prior density. </dd></dl>
 
-<p>Implemented in <a class="el" href="classuniv__svol__estimator.html#a6ee82e972206fa6ba1c8b4e359a7f6b7">univ_svol_estimator&lt; numparams, dimnss, dimss, dimobs, numparts &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classuniv__svol__estimator.html#a2e0e55bf061ca8f59fa5d42ae6495fdd">univ_svol_estimator&lt; numparams, dimstate, dimobs, numparts, float_t &gt;</a>.</p>
 
 </div>
 </div>

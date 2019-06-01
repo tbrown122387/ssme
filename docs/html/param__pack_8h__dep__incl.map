@@ -1,7 +1,6 @@
 <map id="include/param_pack.h" name="include/param_pack.h">
 <area shape="rect" id="node2" href="$estimate__univ__svol_8h_source.html" title="example/estimate_univ\l_svol.h" alt="" coords="5,155,161,196"/>
-<area shape="rect" id="node3" href="$mod__msl1_8h_source.html" title="example/mod_msl1.h" alt="" coords="258,80,405,107"/>
-<area shape="rect" id="node4" href="$filter__msl1_8h_source.html" title="example/filter_msl1.h" alt="" coords="369,162,515,189"/>
-<area shape="rect" id="node5" href="$ada__pmmh__mvn_8h.html" title="Performs adaptive particle marginal metropolis&#45;hastings sampling, using a multivariate normal distrib..." alt="" coords="59,80,233,107"/>
-<area shape="rect" id="node6" href="$get__mcmc__estimate_8h_source.html" title="include/get_mcmc_estimate.h" alt="" coords="480,80,676,107"/>
+<area shape="rect" id="node3" href="$ada__pmmh__mvn_8h.html" title="Performs adaptive particle marginal metropolis&#45;hastings sampling, using a multivariate normal distrib..." alt="" coords="59,80,233,107"/>
+<area shape="rect" id="node4" href="$ada__rwmh_8h.html" title="Performs adaptive random walk metropolis&#45;hastings sampling (uses a multivariate normal distribution a..." alt="" coords="258,80,397,107"/>
+<area shape="rect" id="node5" href="$get__mcmc__estimate_8h_source.html" title="include/get_mcmc_estimate.h" alt="" coords="421,80,617,107"/>
 </map>

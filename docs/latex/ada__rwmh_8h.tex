@@ -1,0 +1,34 @@
+\hypertarget{ada__rwmh_8h}{}\section{include/ada\+\_\+rwmh.h File Reference}
+\label{ada__rwmh_8h}\index{include/ada\+\_\+rwmh.\+h@{include/ada\+\_\+rwmh.\+h}}
+
+
+Performs adaptive random walk metropolis-\/hastings sampling (uses a multivariate normal distribution as the proposal). This samples on the transformed space, but it writes the untransformed/constrained samples to the output. The priors requested by the user are for the (more convenient) un-\/transformed aka constrained space. This means that the user never has to worry about handling any kind of Jacobian.  
+
+
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include \char`\"{}rv\+\_\+eval.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}rv\+\_\+samp.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}utils.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}param\+\_\+pack.\+h\char`\"{}}\newline
+Include dependency graph for ada\+\_\+rwmh.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{ada__rwmh_8h__incl}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classada__rwmh}{ada\+\_\+rwmh$<$ numparams, dimobs, float\+\_\+t $>$}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Performs adaptive random walk metropolis-\/hastings sampling (uses a multivariate normal distribution as the proposal). This samples on the transformed space, but it writes the untransformed/constrained samples to the output. The priors requested by the user are for the (more convenient) un-\/transformed aka constrained space. This means that the user never has to worry about handling any kind of Jacobian. 
+

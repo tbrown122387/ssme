@@ -1,4 +1,3 @@
-<map id="univ_svol_estimator&lt; numparams, dimnss, dimss, dimobs, numparts &gt;" name="univ_svol_estimator&lt; numparams, dimnss, dimss, dimobs, numparts &gt;">
-<area shape="rect" id="node2" href="$classada__pmmh__mvn.html" title="ada_pmmh_mvn\&lt; numparams,\l dimobs, numparts \&gt;" alt="" coords="5,95,208,136"/>
-<area shape="rect" id="node3" href="$classparamPack.html" title="paramPack" alt="" coords="63,5,151,32"/>
+<map id="univ_svol_estimator&lt; numparams, dimstate, dimobs, numparts, float_t &gt;" name="univ_svol_estimator&lt; numparams, dimstate, dimobs, numparts, float_t &gt;">
+<area shape="rect" id="node2" href="$classada__pmmh__mvn.html" title="ada_pmmh_mvn\&lt; numparams,\l dimobs, numparts, float_t \&gt;" alt="" coords="5,5,208,47"/>
 </map>

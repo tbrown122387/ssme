@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['nsssmat',['nsssMat',['../classmsl1__rbbpf.html#a8dd96568dc27eddb553e9ff8bf4b3c64',1,'msl1_rbbpf']]],
-  ['nsssv',['nsssv',['../classmsl1__rbbpf.html#a7a938d1eb0d1db350b2f2f6804d58999',1,'msl1_rbbpf']]],
-  ['nulltrans',['nullTrans',['../classnullTrans.html',1,'']]]
+  ['ssme_3a_20a_20c_2b_2b_20static_20library_20for_20the_20estimation_20of_20state_20space_20models',['SSME: a c++ static library for the estimation of state space models',['../index.html',1,'']]],
+  ['svol_5fbs',['svol_bs',['../classsvol__bs.html',1,'']]]
 ];

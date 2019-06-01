@@ -1,6 +1,6 @@
 var classtwiceFisherTrans =
 [
-    [ "invTrans", "classtwiceFisherTrans.html#a5bdcbf4f98e6ac10f4b28aa067db3f0d", null ],
-    [ "logJacobian", "classtwiceFisherTrans.html#a134740afe211efd97f0cb078e51d278d", null ],
-    [ "trans", "classtwiceFisherTrans.html#aaf4a8e1af5f96d546ddfb820668991af", null ]
+    [ "invTrans", "classtwiceFisherTrans.html#a5ccfa1b6979a4932a864f9ba557e731d", null ],
+    [ "logJacobian", "classtwiceFisherTrans.html#af384b46c1206793a0457fb52e4024cf4", null ],
+    [ "trans", "classtwiceFisherTrans.html#a76cce7c83edcc4af90eed6ca367fd77d", null ]
 ];

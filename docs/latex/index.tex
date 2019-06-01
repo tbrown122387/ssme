@@ -1,3 +1,5 @@
+\href{https://zenodo.org/badge/latestdoi/154373836}{\tt }
+
 The current availability includes\+:
 
 
@@ -6,4 +8,14 @@ The current availability includes\+:
 \item particle marginal Metropolis-\/\+Hastings with multivariate normal random-\/walk proposals.
 \end{DoxyEnumerate}
 
-Also included is the {\ttfamily \hyperlink{classparamPack}{param\+Pack}} container class that holds onto parameters. Because it is quite common to transform the parameters, this class has the ability to return transformed and untransformed parameters vectors, as well as automatically compute and return (log-\/ )jacobians (which comes in handy when working with evaluating the parameter proposal distribution). 
+Also included is the {\ttfamily \hyperlink{classparamPack}{param\+Pack}} container class that holds onto parameters. Because it is quite common to transform the parameters, this class has the ability to return transformed and untransformed parameters vectors, as well as automatically compute and return (log-\/ )jacobians (which comes in handy when working with evaluating the parameter proposal distribution).
+
+\subsection*{example\+:}
+
+For an example, navigate to the {\ttfamily ssme/example} directory, type {\ttfamily make}, and then something like
+
+
+\begin{DoxyCode}
+./main spy\_returns.csv univ\_svol\_pmmh\_samples univ\_svol\_pmmh\_messages 1000
+\end{DoxyCode}
+ 

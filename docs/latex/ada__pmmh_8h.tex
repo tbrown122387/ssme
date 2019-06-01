@@ -2,7 +2,7 @@
 \label{ada__pmmh_8h}\index{include/ada\+\_\+pmmh.\+h@{include/ada\+\_\+pmmh.\+h}}
 
 
-Performs an adaptive version of the particle marginal Metropilis-\/\+Hastings algorithm. The user is asked to design his/her own proposal density and prior distribution. The sampling is handled on an \char`\"{}as-\/is\char`\"{} basis, which means that it is entirely the user\textquotesingle{}s own responsibility to handle Jacobians that might pop up if the prior and proposal density are specified for two different parameterizations. These parameters will be written in an \char`\"{}as-\/is\char`\"{} fashion, as well. These calculations can be facilitates using the {\ttfamily \hyperlink{classparamPack}{param\+Pack}} class, however using this class is not absolutely necessary. Also, for convenience, a moving average covariance matrix estimate is performed. This can be ignored, but it can be handy for use in the proposal density on a transformed space.  
+Performs an adaptive version of the particle marginal Metropilis-\/\+Hastings algorithm. The user is asked to design his/her own proposal density and prior distribution. The sampling is handled on an \char`\"{}as-\/is\char`\"{} basis, which means that it is entirely the user\textquotesingle{}s own responsibility to decide on what parameterization to use, to handle Jacobians if they are necessary, etc. These parameters will be written in an \char`\"{}as-\/is\char`\"{} fashion, as well. These calculations can be facilitates using the {\ttfamily \hyperlink{classparamPack}{param\+Pack}} class, however using this class is not absolutely necessary. Also, for convenience, a moving average covariance matrix estimate is performed; however, this should be ignored if the user is not interested in adaptive M\+C\+MC or isn\textquotesingle{}t using a transformed parameter space.  
 
 
 {\ttfamily \#include $<$vector$>$}\newline
@@ -14,8 +14,7 @@ Performs an adaptive version of the particle marginal Metropilis-\/\+Hastings al
 {\ttfamily \#include $<$future$>$}\newline
 {\ttfamily \#include \char`\"{}rv\+\_\+samp.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}utils.\+h\char`\"{}}\newline
-Include dependency graph for ada\+\_\+pmmh.\+h\+:
-\nopagebreak
+Include dependency graph for ada\+\_\+pmmh.\+h\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -25,10 +24,10 @@ Include dependency graph for ada\+\_\+pmmh.\+h\+:
 \subsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-class \hyperlink{classada__pmmh}{ada\+\_\+pmmh$<$ numparams, dimobs, numparts $>$}
+class \hyperlink{classada__pmmh}{ada\+\_\+pmmh$<$ numparams, dimobs, numparts, float\+\_\+t $>$}
 \end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-Performs an adaptive version of the particle marginal Metropilis-\/\+Hastings algorithm. The user is asked to design his/her own proposal density and prior distribution. The sampling is handled on an \char`\"{}as-\/is\char`\"{} basis, which means that it is entirely the user\textquotesingle{}s own responsibility to handle Jacobians that might pop up if the prior and proposal density are specified for two different parameterizations. These parameters will be written in an \char`\"{}as-\/is\char`\"{} fashion, as well. These calculations can be facilitates using the {\ttfamily \hyperlink{classparamPack}{param\+Pack}} class, however using this class is not absolutely necessary. Also, for convenience, a moving average covariance matrix estimate is performed. This can be ignored, but it can be handy for use in the proposal density on a transformed space. 
+Performs an adaptive version of the particle marginal Metropilis-\/\+Hastings algorithm. The user is asked to design his/her own proposal density and prior distribution. The sampling is handled on an \char`\"{}as-\/is\char`\"{} basis, which means that it is entirely the user\textquotesingle{}s own responsibility to decide on what parameterization to use, to handle Jacobians if they are necessary, etc. These parameters will be written in an \char`\"{}as-\/is\char`\"{} fashion, as well. These calculations can be facilitates using the {\ttfamily \hyperlink{classparamPack}{param\+Pack}} class, however using this class is not absolutely necessary. Also, for convenience, a moving average covariance matrix estimate is performed; however, this should be ignored if the user is not interested in adaptive M\+C\+MC or isn\textquotesingle{}t using a transformed parameter space. 
 

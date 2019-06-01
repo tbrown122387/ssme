@@ -1,5 +1,5 @@
-\hypertarget{classparamPack}{}\section{param\+Pack Class Reference}
-\label{classparamPack}\index{param\+Pack@{param\+Pack}}
+\hypertarget{classparamPack}{}\section{param\+Pack$<$ float\+\_\+t $>$ Class Template Reference}
+\label{classparamPack}\index{param\+Pack$<$ float\+\_\+t $>$@{param\+Pack$<$ float\+\_\+t $>$}}
 
 
 {\ttfamily \#include $<$param\+\_\+pack.\+h$>$}
@@ -7,77 +7,85 @@
 \subsection*{Public Types}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classparamPack_a669db12cf2e7908255bf95bc1c46aafe}\label{classparamPack_a669db12cf2e7908255bf95bc1c46aafe}} 
-using {\bfseries vecptrs} = std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \hyperlink{classparamTransform}{param\+Transform} $>$ $>$
+\mbox{\Hypertarget{classparamPack_a7af90cb7604e5816be45fa5c4032f5ea}\label{classparamPack_a7af90cb7604e5816be45fa5c4032f5ea}} 
+using {\bfseries vecptrs} = std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \hyperlink{classparamTransform}{param\+Transform}$<$ float\+\_\+t $>$ $>$$>$
+\item 
+\mbox{\Hypertarget{classparamPack_a02e7f06874b3cc6e4488e52a30d10bf9}\label{classparamPack_a02e7f06874b3cc6e4488e52a30d10bf9}} 
+using {\bfseries eig\+\_\+dyn\+\_\+vec} = Eigen\+::\+Matrix$<$ float\+\_\+t, Eigen\+::\+Dynamic, 1 $>$
 \end{DoxyCompactItemize}
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classparamPack_a404c1db9bb4ebc258ac79200e1b92cf9}\label{classparamPack_a404c1db9bb4ebc258ac79200e1b92cf9}} 
-{\bfseries param\+Pack} (const \hyperlink{classparamPack}{param\+Pack} \&pp)=delete
+\mbox{\Hypertarget{classparamPack_a1f2d0fd1a41fc3613720fea6970f3863}\label{classparamPack_a1f2d0fd1a41fc3613720fea6970f3863}} 
+{\bfseries param\+Pack} (const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&pp)=delete
 \item 
-\mbox{\Hypertarget{classparamPack_a132baf34915216cae985ddcbff40cf75}\label{classparamPack_a132baf34915216cae985ddcbff40cf75}} 
-{\bfseries param\+Pack} (const Eigen\+::\+Vector\+Xd \&trans\+\_\+params, vecptrs \&\&t\+\_\+functors)
+\mbox{\Hypertarget{classparamPack_aa0604c18c4193d9fb1d2ebdbf4b13453}\label{classparamPack_aa0604c18c4193d9fb1d2ebdbf4b13453}} 
+{\bfseries param\+Pack} (const eig\+\_\+dyn\+\_\+vec \&trans\+\_\+params, vecptrs \&\&t\+\_\+functors)
 \item 
-\mbox{\Hypertarget{classparamPack_adc1cb981efe75da7e64fa279cd9ec467}\label{classparamPack_adc1cb981efe75da7e64fa279cd9ec467}} 
-{\bfseries param\+Pack} (const Eigen\+::\+Vector\+Xd \&params, const std\+::vector$<$ Trans\+Type $>$ \&vec\+\_\+trans\+\_\+types, bool start\+\_\+w\+\_\+trans\+\_\+params=true)
+\mbox{\Hypertarget{classparamPack_a5b7435ceaba6ff09bb15c41a2e4c0ea8}\label{classparamPack_a5b7435ceaba6ff09bb15c41a2e4c0ea8}} 
+{\bfseries param\+Pack} (const eig\+\_\+dyn\+\_\+vec \&params, const std\+::vector$<$ \hyperlink{param__transforms_8h_acee593b112f4fc85f850631b9c6aaae9}{Trans\+Type} $>$ \&vec\+\_\+trans\+\_\+types, bool start\+\_\+w\+\_\+trans\+\_\+params=true)
 \item 
-\mbox{\Hypertarget{classparamPack_a14b86328a0a82a7d00b631fd79884e94}\label{classparamPack_a14b86328a0a82a7d00b631fd79884e94}} 
-\hyperlink{classparamPack}{param\+Pack} \& {\bfseries operator=} (const \hyperlink{classparamPack}{param\+Pack} \&other)=delete
+\mbox{\Hypertarget{classparamPack_a0915d75808a11dbee39426c5edb75011}\label{classparamPack_a0915d75808a11dbee39426c5edb75011}} 
+\hyperlink{classparamPack}{param\+Pack} \& {\bfseries operator=} (const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&other)=delete
 \item 
-\mbox{\Hypertarget{classparamPack_a7374a7e3ea39a54d020fc91a3d971ffd}\label{classparamPack_a7374a7e3ea39a54d020fc91a3d971ffd}} 
+\mbox{\Hypertarget{classparamPack_ab09197e05185ab2981c2b8e539eaaa35}\label{classparamPack_ab09197e05185ab2981c2b8e539eaaa35}} 
 \hyperlink{classparamPack}{param\+Pack} \& {\bfseries operator=} (\hyperlink{classparamPack}{param\+Pack} \&\&other)=delete
 \item 
-unsigned int \hyperlink{classparamPack_a69fc36c50f73e6b827d2e339e2e8b806}{get\+Num\+Params} () const
+unsigned int \hyperlink{classparamPack_ad9df1725f12d795a3abeddfca0485cda}{get\+Num\+Params} () const
 \begin{DoxyCompactList}\small\item\em get number of parameters \end{DoxyCompactList}\item 
-Eigen\+::\+Vector\+Xd \hyperlink{classparamPack_a384545f4e43c572c236b2535514830e3}{get\+Trans\+Params} () const
+auto \hyperlink{classparamPack_ae389cdb81dea521ebe21d170c4c855f8}{get\+Trans\+Params} () const -\/$>$ eig\+\_\+dyn\+\_\+vec
 \begin{DoxyCompactList}\small\item\em get the transformed parameters in the unrestricted space \end{DoxyCompactList}\item 
-Eigen\+::\+Vector\+Xd \hyperlink{classparamPack_afd45bfe2c0c9d157df3f146d57bc492d}{get\+Un\+Trans\+Params} () const
+auto \hyperlink{classparamPack_ad655cb6e6fea5c5f7d2e3c158467e7db}{get\+Un\+Trans\+Params} () const -\/$>$ eig\+\_\+dyn\+\_\+vec
 \begin{DoxyCompactList}\small\item\em get the untransformed parameters in the possibly-\/restricted space \end{DoxyCompactList}\item 
-Eigen\+::\+Vector\+Xd \hyperlink{classparamPack_aab8d550dbd4f28fce067197ba96f80fa}{get\+Trans\+Params} (const unsigned int \&start, const unsigned int \&end) const
+auto \hyperlink{classparamPack_a078ccf2804e0cb8e0e02cfda73118c37}{get\+Trans\+Params} (const unsigned int \&start, const unsigned int \&end) const -\/$>$ eig\+\_\+dyn\+\_\+vec
 \begin{DoxyCompactList}\small\item\em get a subset of the transformed parameters in the unrestricted space \end{DoxyCompactList}\item 
-Eigen\+::\+Vector\+Xd \hyperlink{classparamPack_a0a2a21e73e3c8371e91db1b056317c46}{get\+Un\+Trans\+Params} (const unsigned int \&start, const unsigned int \&end) const
+auto \hyperlink{classparamPack_abe83b3043897bf62b6026f6c461942c6}{get\+Un\+Trans\+Params} (const unsigned int \&start, const unsigned int \&end) const -\/$>$ eig\+\_\+dyn\+\_\+vec
 \begin{DoxyCompactList}\small\item\em get a subset of the untransformed parameters in the possibly-\/restricted space \end{DoxyCompactList}\item 
-double \hyperlink{classparamPack_adb44adbc09eb281022984461fc2050f2}{get\+Log\+Jacobian} () const
+auto \hyperlink{classparamPack_a0febeb3a640212940e0ef351dae5a599}{get\+Log\+Jacobian} () const -\/$>$ float\+\_\+t
 \begin{DoxyCompactList}\small\item\em get the log of the Jacobian determinant you need for the density of transformed parameters. \end{DoxyCompactList}\item 
-void \hyperlink{classparamPack_ac179e7541c993e05e5e435d5f20c558a}{take\+Values} (const \hyperlink{classparamPack}{param\+Pack} \&other)
+void \hyperlink{classparamPack_aa0826edf3da82e1b8ffe133f14e6f119}{take\+Values} (const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&other)
 \begin{DoxyCompactList}\small\item\em copy values from another \hyperlink{classparamPack}{param\+Pack} \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classparamPack_a3b341549b133b3f0ac47d6c600b7bcff}\label{classparamPack_a3b341549b133b3f0ac47d6c600b7bcff}} 
-Eigen\+::\+Vector\+Xd {\bfseries m\+\_\+trans\+\_\+params}
+\mbox{\Hypertarget{classparamPack_ad18231aa0b5d090c81bdb87a62b05fbd}\label{classparamPack_ad18231aa0b5d090c81bdb87a62b05fbd}} 
+eig\+\_\+dyn\+\_\+vec {\bfseries m\+\_\+trans\+\_\+params}
 \item 
-\mbox{\Hypertarget{classparamPack_a8f9043bb2a179abb7ea707e36de2cfc1}\label{classparamPack_a8f9043bb2a179abb7ea707e36de2cfc1}} 
+\mbox{\Hypertarget{classparamPack_a5a42b680acc71cf54ba1d5c9925b4776}\label{classparamPack_a5a42b680acc71cf54ba1d5c9925b4776}} 
 vecptrs {\bfseries m\+\_\+transform\+\_\+functors}
 \end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
+\subsubsection*{template$<$typename float\+\_\+t$>$\newline
+class param\+Pack$<$ float\+\_\+t $>$}
+
 \begin{DoxyAuthor}{Author}
 t 
 \end{DoxyAuthor}
 
 
 \subsection{Member Function Documentation}
-\mbox{\Hypertarget{classparamPack_adb44adbc09eb281022984461fc2050f2}\label{classparamPack_adb44adbc09eb281022984461fc2050f2}} 
+\mbox{\Hypertarget{classparamPack_a0febeb3a640212940e0ef351dae5a599}\label{classparamPack_a0febeb3a640212940e0ef351dae5a599}} 
 \index{param\+Pack@{param\+Pack}!get\+Log\+Jacobian@{get\+Log\+Jacobian}}
 \index{get\+Log\+Jacobian@{get\+Log\+Jacobian}!param\+Pack@{param\+Pack}}
 \subsubsection{\texorpdfstring{get\+Log\+Jacobian()}{getLogJacobian()}}
-{\footnotesize\ttfamily double param\+Pack\+::get\+Log\+Jacobian (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+{\footnotesize\ttfamily template$<$typename float\+\_\+t $>$ \\
+float\+\_\+t \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$\+::get\+Log\+Jacobian (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const -\/$>$ float\+\_\+t}
 
 
 
 get the log of the Jacobian determinant you need for the density of transformed parameters. 
 
 get the log of the Jacobian determinant you need for the density of transformed params \begin{DoxyReturn}{Returns}
-a double 
+a float\+\_\+t 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classparamPack_a69fc36c50f73e6b827d2e339e2e8b806}\label{classparamPack_a69fc36c50f73e6b827d2e339e2e8b806}} 
+\mbox{\Hypertarget{classparamPack_ad9df1725f12d795a3abeddfca0485cda}\label{classparamPack_ad9df1725f12d795a3abeddfca0485cda}} 
 \index{param\+Pack@{param\+Pack}!get\+Num\+Params@{get\+Num\+Params}}
 \index{get\+Num\+Params@{get\+Num\+Params}!param\+Pack@{param\+Pack}}
 \subsubsection{\texorpdfstring{get\+Num\+Params()}{getNumParams()}}
-{\footnotesize\ttfamily unsigned int param\+Pack\+::get\+Num\+Params (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+{\footnotesize\ttfamily template$<$typename float\+\_\+t $>$ \\
+unsigned int \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$\+::get\+Num\+Params (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
 
 
 
@@ -86,11 +94,12 @@ get number of parameters
 gets the number of parameters in your pack \begin{DoxyReturn}{Returns}
 an unsigned integer 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classparamPack_a384545f4e43c572c236b2535514830e3}\label{classparamPack_a384545f4e43c572c236b2535514830e3}} 
+\mbox{\Hypertarget{classparamPack_ae389cdb81dea521ebe21d170c4c855f8}\label{classparamPack_ae389cdb81dea521ebe21d170c4c855f8}} 
 \index{param\+Pack@{param\+Pack}!get\+Trans\+Params@{get\+Trans\+Params}}
 \index{get\+Trans\+Params@{get\+Trans\+Params}!param\+Pack@{param\+Pack}}
 \subsubsection{\texorpdfstring{get\+Trans\+Params()}{getTransParams()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
-{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd param\+Pack\+::get\+Trans\+Params (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+{\footnotesize\ttfamily template$<$typename float\+\_\+t $>$ \\
+auto \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$\+::get\+Trans\+Params (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const -\/$>$ eig\+\_\+dyn\+\_\+vec}
 
 
 
@@ -99,11 +108,12 @@ get the transformed parameters in the unrestricted space
 get the transformed parameters on the unrestricted space \begin{DoxyReturn}{Returns}
 an Eigen\+::\+Vector of transformed parameters 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classparamPack_aab8d550dbd4f28fce067197ba96f80fa}\label{classparamPack_aab8d550dbd4f28fce067197ba96f80fa}} 
+\mbox{\Hypertarget{classparamPack_a078ccf2804e0cb8e0e02cfda73118c37}\label{classparamPack_a078ccf2804e0cb8e0e02cfda73118c37}} 
 \index{param\+Pack@{param\+Pack}!get\+Trans\+Params@{get\+Trans\+Params}}
 \index{get\+Trans\+Params@{get\+Trans\+Params}!param\+Pack@{param\+Pack}}
 \subsubsection{\texorpdfstring{get\+Trans\+Params()}{getTransParams()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
-{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd param\+Pack\+::get\+Trans\+Params (\begin{DoxyParamCaption}\item[{const unsigned int \&}]{start,  }\item[{const unsigned int \&}]{end }\end{DoxyParamCaption}) const}
+{\footnotesize\ttfamily template$<$typename float\+\_\+t $>$ \\
+auto \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$\+::get\+Trans\+Params (\begin{DoxyParamCaption}\item[{const unsigned int \&}]{start,  }\item[{const unsigned int \&}]{end }\end{DoxyParamCaption}) const -\/$>$ eig\+\_\+dyn\+\_\+vec}
 
 
 
@@ -119,11 +129,12 @@ get a subset of the transformed parameters on the unrestricted space
 \begin{DoxyReturn}{Returns}
 an Eigen\+::\+Vector of transformed parameters 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classparamPack_afd45bfe2c0c9d157df3f146d57bc492d}\label{classparamPack_afd45bfe2c0c9d157df3f146d57bc492d}} 
+\mbox{\Hypertarget{classparamPack_ad655cb6e6fea5c5f7d2e3c158467e7db}\label{classparamPack_ad655cb6e6fea5c5f7d2e3c158467e7db}} 
 \index{param\+Pack@{param\+Pack}!get\+Un\+Trans\+Params@{get\+Un\+Trans\+Params}}
 \index{get\+Un\+Trans\+Params@{get\+Un\+Trans\+Params}!param\+Pack@{param\+Pack}}
 \subsubsection{\texorpdfstring{get\+Un\+Trans\+Params()}{getUnTransParams()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
-{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd param\+Pack\+::get\+Un\+Trans\+Params (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+{\footnotesize\ttfamily template$<$typename float\+\_\+t $>$ \\
+auto \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$\+::get\+Un\+Trans\+Params (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const -\/$>$ eig\+\_\+dyn\+\_\+vec}
 
 
 
@@ -132,11 +143,12 @@ get the untransformed parameters in the possibly-\/restricted space
 get the untransformed parameters on the possibly-\/restricted space \begin{DoxyReturn}{Returns}
 an Eigen\+::\+Vector of transformed parameters 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classparamPack_a0a2a21e73e3c8371e91db1b056317c46}\label{classparamPack_a0a2a21e73e3c8371e91db1b056317c46}} 
+\mbox{\Hypertarget{classparamPack_abe83b3043897bf62b6026f6c461942c6}\label{classparamPack_abe83b3043897bf62b6026f6c461942c6}} 
 \index{param\+Pack@{param\+Pack}!get\+Un\+Trans\+Params@{get\+Un\+Trans\+Params}}
 \index{get\+Un\+Trans\+Params@{get\+Un\+Trans\+Params}!param\+Pack@{param\+Pack}}
 \subsubsection{\texorpdfstring{get\+Un\+Trans\+Params()}{getUnTransParams()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
-{\footnotesize\ttfamily Eigen\+::\+Vector\+Xd param\+Pack\+::get\+Un\+Trans\+Params (\begin{DoxyParamCaption}\item[{const unsigned int \&}]{start,  }\item[{const unsigned int \&}]{end }\end{DoxyParamCaption}) const}
+{\footnotesize\ttfamily template$<$typename float\+\_\+t $>$ \\
+auto \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$\+::get\+Un\+Trans\+Params (\begin{DoxyParamCaption}\item[{const unsigned int \&}]{start,  }\item[{const unsigned int \&}]{end }\end{DoxyParamCaption}) const -\/$>$ eig\+\_\+dyn\+\_\+vec}
 
 
 
@@ -152,11 +164,12 @@ get a subset of the transformed parameters on the unrestricted space
 \begin{DoxyReturn}{Returns}
 an Eigen\+::\+Vector of transformed parameters 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classparamPack_ac179e7541c993e05e5e435d5f20c558a}\label{classparamPack_ac179e7541c993e05e5e435d5f20c558a}} 
+\mbox{\Hypertarget{classparamPack_aa0826edf3da82e1b8ffe133f14e6f119}\label{classparamPack_aa0826edf3da82e1b8ffe133f14e6f119}} 
 \index{param\+Pack@{param\+Pack}!take\+Values@{take\+Values}}
 \index{take\+Values@{take\+Values}!param\+Pack@{param\+Pack}}
 \subsubsection{\texorpdfstring{take\+Values()}{takeValues()}}
-{\footnotesize\ttfamily void param\+Pack\+::take\+Values (\begin{DoxyParamCaption}\item[{const \hyperlink{classparamPack}{param\+Pack} \&}]{other }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily template$<$typename float\+\_\+t $>$ \\
+void \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$\+::take\+Values (\begin{DoxyParamCaption}\item[{const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&}]{other }\end{DoxyParamCaption})}
 
 
 

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['svol_5fbs',['svol_bs',['../classsvol__bs.html',1,'']]]
+  ['twicefishertrans',['twiceFisherTrans',['../classtwiceFisherTrans.html',1,'']]]
 ];

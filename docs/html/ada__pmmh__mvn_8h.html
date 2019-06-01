@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('ada__pmmh__mvn_8h.html','');});
 </div><!--header-->
 <div class="contents">
 
-<p>Performs adaptive particle marginal metropolis-hastings sampling, using a multivariate normal distribution as the proposal. This samples on the transformed space, but it writes the the untransformed/constrained samples to the output. The priors requested by the user are for the (hopefully more convenient) un-transformed or constrainedspace. This means that the user never has to worry about handling any kind of Jacobian.  
+<p>Performs adaptive particle marginal metropolis-hastings sampling, using a multivariate normal distribution as the proposal. This samples on the transformed space, but it writes out the untransformed/constrained samples to the output. The priors requested by the user are for the (hopefully more convenient) un-transformed or constrained space. This means that the user never has to worry about handling any kind of Jacobian&ndash;just specify a prior on the familiar space, and a function that approximates log-likelihoods.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;Eigen/Dense&gt;</code><br />
@@ -96,7 +96,6 @@ $(document).ready(function(){initNavTree('ada__pmmh__mvn_8h.html','');});
 <code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;future&gt;</code><br />
 <code>#include &lt;chrono&gt;</code><br />
-<code>#include &lt;typeinfo&gt;</code><br />
 <code>#include &quot;rv_eval.h&quot;</code><br />
 <code>#include &quot;rv_samp.h&quot;</code><br />
 <code>#include &quot;utils.h&quot;</code><br />
@@ -106,8 +105,8 @@ Include dependency graph for ada_pmmh_mvn.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="ada__pmmh__mvn_8h__incl.png" border="0" usemap="#include_2ada__pmmh__mvn_8h" alt=""/></div>
 <map name="include_2ada__pmmh__mvn_8h" id="include_2ada__pmmh__mvn_8h">
-<area shape="rect" id="node14" href="param__pack_8h.html" title="Stores transformed parameters, as well as the functions that can change them to the untransformed par..." alt="" coords="159,80,263,107"/>
-<area shape="rect" id="node16" href="param__transforms_8h_source.html" title="param_transforms.h" alt="" coords="261,155,400,181"/>
+<area shape="rect" id="node13" href="param__pack_8h.html" title="Stores transformed parameters, as well as the functions that can change them to the untransformed par..." alt="" coords="279,80,383,107"/>
+<area shape="rect" id="node17" href="param__transforms_8h.html" title="a pure virtual base class. cts params only. " alt="" coords="261,155,400,181"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -123,11 +122,11 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn&lt; numparams, dimobs, numparts &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classada__pmmh__mvn.html">ada_pmmh_mvn&lt; numparams, dimobs, numparts, float_t &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Performs adaptive particle marginal metropolis-hastings sampling, using a multivariate normal distribution as the proposal. This samples on the transformed space, but it writes the the untransformed/constrained samples to the output. The priors requested by the user are for the (hopefully more convenient) un-transformed or constrainedspace. This means that the user never has to worry about handling any kind of Jacobian. </p>
+<div class="textblock"><p>Performs adaptive particle marginal metropolis-hastings sampling, using a multivariate normal distribution as the proposal. This samples on the transformed space, but it writes out the untransformed/constrained samples to the output. The priors requested by the user are for the (hopefully more convenient) un-transformed or constrained space. This means that the user never has to worry about handling any kind of Jacobian&ndash;just specify a prior on the familiar space, and a function that approximates log-likelihoods. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -83,13 +83,16 @@ $(document).ready(function(){initNavTree('index.html','');});
 <div class="title">SSME: a c++ static library for the estimation of state space models </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>The current availability includes:</p>
+<div class="textblock"><p><a href="https://zenodo.org/badge/latestdoi/154373836"></a></p>
+<p>The current availability includes:</p>
 <ol type="1">
 <li>particle marginal Metropolis-Hastings with generic parameter proposal distributions.</li>
 <li>particle marginal Metropolis-Hastings with multivariate normal random-walk proposals.</li>
 </ol>
-<p>Also included is the <code><a class="el" href="classparamPack.html">paramPack</a></code> container class that holds onto parameters. Because it is quite common to transform the parameters, this class has the ability to return transformed and untransformed parameters vectors, as well as automatically compute and return (log- )jacobians (which comes in handy when working with evaluating the parameter proposal distribution). </p>
-</div></div><!-- contents -->
+<p>Also included is the <code><a class="el" href="classparamPack.html">paramPack</a></code> container class that holds onto parameters. Because it is quite common to transform the parameters, this class has the ability to return transformed and untransformed parameters vectors, as well as automatically compute and return (log- )jacobians (which comes in handy when working with evaluating the parameter proposal distribution).</p>
+<h2>example:</h2>
+<p>For an example, navigate to the <code>ssme/example</code> directory, type <code>make</code>, and then something like</p>
+<div class="fragment"><div class="line">./main spy_returns.csv univ_svol_pmmh_samples univ_svol_pmmh_messages 1000</div></div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

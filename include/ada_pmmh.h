@@ -21,13 +21,13 @@
  * @brief Performs an adaptive version of the particle marginal Metropilis-Hastings
  * algorithm. The user is asked to design his/her own proposal density and prior 
  * distribution. The sampling is handled on an "as-is" basis, which means that it is
- * entirely the user's own responsibility to handle Jacobians that might pop up if 
- * the prior and proposal density are specified for two different parameterizations.
+ * entirely the user's own responsibility to decide on what parameterization to use, 
+ * to handle Jacobians if they are necessary, etc.
  * These parameters will be written in an "as-is" fashion, as well. These calculations 
  * can be facilitates using the `paramPack` class, however using this class is not 
  * absolutely necessary. Also, for convenience, a moving average covariance matrix 
- * estimate is performed. This can be ignored, but it can be handy for use in the
- * proposal density on a transformed space.
+ * estimate is performed; however, this should be ignored if the user is not interested
+ * in adaptive MCMC or isn't using a transformed parameter space.
  */
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
 class ada_pmmh{
@@ -40,7 +40,7 @@ public:
 
     /**
      * @brief The constructor.
-     * @param start_trans_theta the initial (possibly transformed) parameters 
+     * @param start_theta the initial parameters, using the parameterization chosen by the user. 
      * you want to start sampling from.
      * @param num_mcmc_iters the number of MCMC iterations you want to do.
      * @param data_file the location of the observed time series data.
@@ -53,7 +53,7 @@ public:
      * @param bool print_to_console TODO
      * @param unsigned int print_every_k TODO
      */
-    ada_pmmh(const psv &start_trans_theta, 
+    ada_pmmh(const psv &start_theta, 
              const unsigned int &num_mcmc_iters,
              const std::string &data_file, 
              const std::string &samples_file, 
@@ -80,37 +80,37 @@ public:
     
 
     /**
-     * @brief Evaluates the log of the model's prior distribution.
-     * @param transTheta the transformed parameters argument.
+     * @brief Evaluates the log of the model's prior distribution, using the parameterization chosen by the user.
+     * @param theta the transformed parameters argument.
      * @return the log of the prior density.
      */
-    virtual float_t logPriorEvaluate(const psv &transTheta) = 0;
+    virtual float_t logPriorEvaluate(const psv &theta) = 0;
 
 
     /** 
-     * @brief Evaluates the logarithm of the proposal density.
-     * @param oldTransParams the old parameters that are (probably) transformed.
-     * @param newTransParams the new parameters that are (probably) transformed. 
+     * @brief Evaluates the logarithm of the proposal density, using the parameterization chosen by the user.
+     * @param old_params the old parameters.
+     * @param new_params the new parameters. 
      * @return the log of the proposal density.
      */
-    virtual float_t logQEvaluate(const psv &oldTransParams, const psv &newTransParams) = 0; 
+    virtual float_t logQEvaluate(const psv &old_params, const psv &new_params) = 0; 
 
 
     /**
-     * @brief Approximates the log likelihood with a particle filter.
+     * @brief Approximates the log likelihood with a particle filter, using the parameterization chosen by the user.
      * @param theta the parameters with which to run the particle filter.
      * @param data the observed data with which to run the particle filter.
      * @param cancelled is a token you need to provide if doing multithreaded likelihood evals. This allows the function to terminate prematurely. 
      * @return the evaluation of the log likelihood approximation.
      */
-    virtual float_t logLikeEvaluate(const psv &transTheta, const std::vector<osv> &data, std::atomic_bool& cancelled) = 0;
+    virtual float_t logLikeEvaluate(const psv &theta, const std::vector<osv> &data, std::atomic_bool& cancelled) = 0;
 //TODO: remove cancellation token
     
              
 private:
     std::vector<osv> m_data;
-    psv m_current_trans_theta;
-    psm m_sigma_hat; // for transformed parameters; n-1 in the denominator.
+    psv m_current_theta;
+    psm m_sigma_hat; // ideally for transformed parameters; n-1 in the denominator.
     psv m_mean_trans_theta;
     float_t m_ma_accept_rate;
     unsigned int m_t0;  // the time it starts adapting
@@ -129,12 +129,12 @@ private:
     
     
     void update_moments_and_Ct(const psv &newTransTheta);
-    psv qSample(const psv &oldTransTheta);
+    psv qSample(const psv &old_theta);
 };
 
 
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-ada_pmmh<numparams,dimobs,numparts,float_t>::ada_pmmh(const psv &start_trans_theta, 
+ada_pmmh<numparams,dimobs,numparts,float_t>::ada_pmmh(const psv &start_theta, 
                                               const unsigned int &num_mcmc_iters,
                                               const std::string &data_file, 
                                               const std::string &samples_file, 
@@ -143,9 +143,9 @@ ada_pmmh<numparams,dimobs,numparts,float_t>::ada_pmmh(const psv &start_trans_the
                                               const unsigned int &t0,
                                               const unsigned int &t1,
                                               const psm &C0)
- : m_current_trans_theta(start_trans_theta)
+ : m_current_theta(start_theta)
  , m_sigma_hat(psm::Zero())
- , m_mean_trans_theta(psv::Zero())
+ , m_mean_theta(psv::Zero())
  , m_ma_accept_rate(0.0)
  , m_t0(t0), m_t1(t1)
  , m_Ct(C0)
@@ -210,11 +210,10 @@ auto ada_pmmh<numparams,dimobs,numparts,float_t>::get_ct() const -> psm
 
 
 template<size_t numparams, size_t dimobs, size_t numparts>
-auto ada_pmmh<numparams,dimobs,numparts,float_t>::qSample(const psv &oldTransParams) -> psv
+auto ada_pmmh<numparams,dimobs,numparts,float_t>::qSample(const psv &old_params) -> psv
 {
-    // assumes that Ct has already been updated
-    // assumes parameters are in transformed space    
-    m_mvn_gen.setMean(oldTransParams);
+    // assumes that Ct has already been updated if updating is being done
+    m_mvn_gen.setMean(old_params);
     m_mvn_gen.setCovar(m_Ct);
     return m_mvn_gen.sample();
 }
@@ -239,19 +238,19 @@ void ada_pmmh<numparams,dimobs,numparts,float_t>::commenceSampling()
             std::cout << "***Iter number: " << 1 << " out of " << m_num_mcmc_iters << "\n";        
         
             // write accepted (initial) parameters to file (initial guesses are always "accepted")
-            utils::logParams<numparams, float_t>(m_current_trans_theta, m_samples_file_stream);
+            utils::logParams<numparams, float_t>(m_current_theta, m_samples_file_stream);
             
             // get logLike (we use cancel token but it never changes) 
             std::atomic_bool cancel_token(false);
             if (!m_multicore){
-                oldLogLike = logLikeEvaluate(m_current_trans_theta, m_data, cancel_token);
+                oldLogLike = logLikeEvaluate(m_current_theta, m_data, cancel_token);
             }else{
                 std::vector<std::future<float_t> > newLogLikes;
                 for(size_t i = 0; i < m_num_extra_threads; ++i){
                     newLogLikes.push_back(std::async(std::launch::async,
                                                      &ada_pmmh::logLikeEvaluate,
                                                      this,
-                                                     std::cref(m_current_trans_theta), 
+                                                     std::cref(m_current_theta), 
                                                      std::cref(m_data),
                                                      std::ref(cancel_token)));               
                 }
@@ -262,7 +261,7 @@ void ada_pmmh<numparams,dimobs,numparts,float_t>::commenceSampling()
             }
             
             // store prior for next round
-            oldLogPrior = logPriorEvaluate(m_current_trans_theta);
+            oldLogPrior = logPriorEvaluate(m_current_theta);
             if( std::isinf(oldLogPrior) || std::isnan(oldLogPrior)){
                 std::cerr << "oldLogPrior must be a real number. returning.\n";
                 return;
@@ -275,29 +274,29 @@ void ada_pmmh<numparams,dimobs,numparts,float_t>::commenceSampling()
         else { // not the first iteration      
 
             // update sample moments (with the parameters that were just accepted) and Ct so we can qSample()
-            update_moments_and_Ct(m_current_trans_theta);
+            update_moments_and_Ct(m_current_theta);
             m_message_stream << "Ct: \n " << get_ct() << "\n";
             
             // propose a new theta
-            psv proposed_trans_theta = qSample(m_current_trans_theta);
+            psv proposed_theta = qSample(m_current_theta);
             
             // store some densities                        
-            float_t newLogPrior = logPriorEvaluate(proposed_trans_theta);
-            float_t logQOldToNew = logQEvaluate(m_current_trans_theta, proposed_trans_theta);
-            float_t logQNewToOld = logQEvaluate(proposed_trans_theta, m_current_trans_theta);
+            float_t newLogPrior = logPriorEvaluate(proposed_theta);
+            float_t logQOldToNew = logQEvaluate(m_current_theta, proposed_theta);
+            float_t logQNewToOld = logQEvaluate(proposed_theta, m_current_theta);
     
             // get the likelihood
             float_t newLL(0.0);
             std::atomic_bool cancel_token(false);
             if (!m_multicore){
-                newLL = logLikeEvaluate(proposed_trans_theta, m_data, cancel_token);
+                newLL = logLikeEvaluate(proposed_theta, m_data, cancel_token);
             }else{
                 std::vector<std::future<float_t> > newLogLikes;
                 for(size_t i = 0; i < m_num_extra_threads; ++i){
                     newLogLikes.push_back(std::async(std::launch::async,
                                                      &ada_pmmh::logLikeEvaluate,
                                                      this,
-                                                     std::cref(proposed_trans_theta), 
+                                                     std::cref(proposed_theta), 
                                                      std::cref(m_data),
                                                      std::ref(cancel_token)));               
                 }
@@ -347,7 +346,7 @@ void ada_pmmh<numparams,dimobs,numparts,float_t>::commenceSampling()
                 // 100 percent accept 
                 std::cout << "accepting!\n";
                 m_ma_accept_rate = 1.0/(m_iter+1.0) + m_iter*m_ma_accept_rate/(m_iter+1.0);
-                m_current_trans_theta = proposed_trans_theta;
+                m_current_theta = proposed_theta;
                 oldLogPrior = newLogPrior;
                 oldLogLike = newLL;
                 m_message_stream << "accepted 100 percent\n";
@@ -357,7 +356,7 @@ void ada_pmmh<numparams,dimobs,numparts,float_t>::commenceSampling()
                 std::cout << "accepting!\n";
                 m_iter++; // increase number of iters
                 m_ma_accept_rate = 1.0/(m_iter+1.0) + m_iter*m_ma_accept_rate/(m_iter+1.0);
-                m_current_trans_theta = proposed_trans_theta;
+                m_current_theta = proposed_theta;
                 oldLogPrior = newLogPrior;
                 oldLogLike = newLL;
                 m_message_stream << "accepted probabilistically\n";
@@ -393,7 +392,7 @@ void ada_pmmh<numparams,dimobs,numparts,float_t>::commenceSampling()
             }
                 
             // log the theta which may have changedor not
-            utils::logParams<numparams,float_t>(m_current_trans_theta, m_samples_file_stream);
+            utils::logParams<numparams,float_t>(m_current_theta, m_samples_file_stream);
                 
         } // else (not the first iteration)    
     } // while(m_iter < m_num_mcmc_iters) // every iteration

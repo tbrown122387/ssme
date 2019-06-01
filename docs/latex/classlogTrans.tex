@@ -1,40 +1,53 @@
-\hypertarget{classlogTrans}{}\section{log\+Trans Class Reference}
-\label{classlogTrans}\index{log\+Trans@{log\+Trans}}
+\hypertarget{classlogTrans}{}\section{log\+Trans$<$ float\+\_\+t $>$ Class Template Reference}
+\label{classlogTrans}\index{log\+Trans$<$ float\+\_\+t $>$@{log\+Trans$<$ float\+\_\+t $>$}}
 
 
-Inheritance diagram for log\+Trans\+:
+{\ttfamily \#include $<$param\+\_\+transforms.\+h$>$}
+
+
+
+Inheritance diagram for log\+Trans$<$ float\+\_\+t $>$\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=168pt]{classlogTrans__inherit__graph}
+\includegraphics[width=213pt]{classlogTrans__inherit__graph}
 \end{center}
 \end{figure}
 
 
-Collaboration diagram for log\+Trans\+:
+Collaboration diagram for log\+Trans$<$ float\+\_\+t $>$\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=168pt]{classlogTrans__coll__graph}
+\includegraphics[width=213pt]{classlogTrans__coll__graph}
 \end{center}
 \end{figure}
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classlogTrans_a091f99fe9fc1c85b73c5e1c220c6d227}\label{classlogTrans_a091f99fe9fc1c85b73c5e1c220c6d227}} 
-double \hyperlink{classlogTrans_a091f99fe9fc1c85b73c5e1c220c6d227}{trans} (const double \&p) override
+\mbox{\Hypertarget{classlogTrans_af83380d2e4c27b4311383e3ee164fc8a}\label{classlogTrans_af83380d2e4c27b4311383e3ee164fc8a}} 
+float\+\_\+t \hyperlink{classlogTrans_af83380d2e4c27b4311383e3ee164fc8a}{trans} (const float\+\_\+t \&p) override
 \begin{DoxyCompactList}\small\item\em from the constrained/nontransformed to the transformed/unconstrained space \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classlogTrans_ae831a7d20e94dd80b8805a90b850e94a}\label{classlogTrans_ae831a7d20e94dd80b8805a90b850e94a}} 
-double \hyperlink{classlogTrans_ae831a7d20e94dd80b8805a90b850e94a}{inv\+Trans} (const double \&trans\+\_\+p) override
+\mbox{\Hypertarget{classlogTrans_a0e8e563da2fb548d7eeced4e1f22e93d}\label{classlogTrans_a0e8e563da2fb548d7eeced4e1f22e93d}} 
+float\+\_\+t \hyperlink{classlogTrans_a0e8e563da2fb548d7eeced4e1f22e93d}{inv\+Trans} (const float\+\_\+t \&trans\+\_\+p) override
 \begin{DoxyCompactList}\small\item\em from the unconstrained/transformed to the constrained/untransformed space; \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classlogTrans_af234991224cf994204ce196a85622ca8}\label{classlogTrans_af234991224cf994204ce196a85622ca8}} 
-double \hyperlink{classlogTrans_af234991224cf994204ce196a85622ca8}{log\+Jacobian} (const double \&p) override
+\mbox{\Hypertarget{classlogTrans_a9b32167fdae993cf790996c0b88e20b6}\label{classlogTrans_a9b32167fdae993cf790996c0b88e20b6}} 
+float\+\_\+t \hyperlink{classlogTrans_a9b32167fdae993cf790996c0b88e20b6}{log\+Jacobian} (const float\+\_\+t \&p) override
 \begin{DoxyCompactList}\small\item\em get the log jacobian (from untransformed to transformed). For use with adjusting priors to the transformed space. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Additional Inherited Members}
 
 
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename float\+\_\+t$>$\newline
+class log\+Trans$<$ float\+\_\+t $>$}
+
+\begin{DoxyAuthor}{Author}
+t 
+\end{DoxyAuthor}
+
+
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-include/param\+\_\+transforms.\+h\end{DoxyCompactItemize}
+include/\hyperlink{param__transforms_8h}{param\+\_\+transforms.\+h}\end{DoxyCompactItemize}

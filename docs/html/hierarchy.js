@@ -1,21 +1,18 @@
 var hierarchy =
 [
-    [ "ada_pmmh< numparams, dimobs, numparts >", "classada__pmmh.html", null ],
-    [ "ada_pmmh_mvn< numparams, dimobs, numparts >", "classada__pmmh__mvn.html", [
-      [ "univ_svol_estimator< numparams, dimnss, dimss, dimobs, numparts >", "classuniv__svol__estimator.html", null ]
+    [ "ada_pmmh< numparams, dimobs, numparts, float_t >", "classada__pmmh.html", null ],
+    [ "ada_pmmh_mvn< numparams, dimobs, numparts, float_t >", "classada__pmmh__mvn.html", [
+      [ "univ_svol_estimator< numparams, dimstate, dimobs, numparts, float_t >", "classuniv__svol__estimator.html", null ]
     ] ],
+    [ "ada_rwmh< numparams, dimobs, float_t >", "classada__rwmh.html", null ],
     [ "BSFilter", null, [
-      [ "svol_bs< nparts, dimx, dimy, resampT >", "classsvol__bs.html", null ]
+      [ "svol_bs< nparts, dimx, dimy, resampT, float_t >", "classsvol__bs.html", null ]
     ] ],
-    [ "paramInvTransform", "classparamInvTransform.html", null ],
-    [ "paramPack", "classparamPack.html", null ],
-    [ "paramTransform", "classparamTransform.html", [
-      [ "logitTrans", "classlogitTrans.html", null ],
-      [ "logTrans", "classlogTrans.html", null ],
-      [ "nullTrans", "classnullTrans.html", null ],
-      [ "twiceFisherTrans", "classtwiceFisherTrans.html", null ]
-    ] ],
-    [ "rbpf_hmm_bs", null, [
-      [ "msl1_rbbpf< nparts, dimnss, dimss, dimy, resampT >", "classmsl1__rbbpf.html", null ]
+    [ "paramPack< float_t >", "classparamPack.html", null ],
+    [ "paramTransform< float_t >", "classparamTransform.html", [
+      [ "logitTrans< float_t >", "classlogitTrans.html", null ],
+      [ "logTrans< float_t >", "classlogTrans.html", null ],
+      [ "nullTrans< float_t >", "classnullTrans.html", null ],
+      [ "twiceFisherTrans< float_t >", "classtwiceFisherTrans.html", null ]
     ] ]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ssme: logTrans Class Reference</title>
+<title>ssme: logTrans&lt; float_t &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -83,55 +83,62 @@ $(document).ready(function(){initNavTree('classlogTrans.html','');});
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classlogTrans-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">logTrans Class Reference</div>  </div>
+<div class="title">logTrans&lt; float_t &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="param__transforms_8h_source.html">param_transforms.h</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for logTrans:</div>
+Inheritance diagram for logTrans&lt; float_t &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classlogTrans__inherit__graph.png" border="0" usemap="#logTrans_inherit__map" alt="Inheritance graph"/></div>
-<map name="logTrans_inherit__map" id="logTrans_inherit__map">
-<area shape="rect" id="node2" href="classparamTransform.html" title="paramTransform" alt="" coords="5,5,123,32"/>
+<div class="center"><img src="classlogTrans__inherit__graph.png" border="0" usemap="#logTrans_3_01float__t_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="logTrans_3_01float__t_01_4_inherit__map" id="logTrans_3_01float__t_01_4_inherit__map">
+<area shape="rect" id="node2" href="classparamTransform.html" title="paramTransform\&lt; float_t \&gt;" alt="" coords="5,5,183,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
-Collaboration diagram for logTrans:</div>
+Collaboration diagram for logTrans&lt; float_t &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classlogTrans__coll__graph.png" border="0" usemap="#logTrans_coll__map" alt="Collaboration graph"/></div>
-<map name="logTrans_coll__map" id="logTrans_coll__map">
-<area shape="rect" id="node2" href="classparamTransform.html" title="paramTransform" alt="" coords="5,5,123,32"/>
+<div class="center"><img src="classlogTrans__coll__graph.png" border="0" usemap="#logTrans_3_01float__t_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="logTrans_3_01float__t_01_4_coll__map" id="logTrans_3_01float__t_01_4_coll__map">
+<area shape="rect" id="node2" href="classparamTransform.html" title="paramTransform\&lt; float_t \&gt;" alt="" coords="5,5,183,32"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a091f99fe9fc1c85b73c5e1c220c6d227"><td class="memItemLeft" align="right" valign="top"><a id="a091f99fe9fc1c85b73c5e1c220c6d227"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlogTrans.html#a091f99fe9fc1c85b73c5e1c220c6d227">trans</a> (const double &amp;p) override</td></tr>
-<tr class="memdesc:a091f99fe9fc1c85b73c5e1c220c6d227"><td class="mdescLeft">&#160;</td><td class="mdescRight">from the constrained/nontransformed to the transformed/unconstrained space <br /></td></tr>
-<tr class="separator:a091f99fe9fc1c85b73c5e1c220c6d227"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae831a7d20e94dd80b8805a90b850e94a"><td class="memItemLeft" align="right" valign="top"><a id="ae831a7d20e94dd80b8805a90b850e94a"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlogTrans.html#ae831a7d20e94dd80b8805a90b850e94a">invTrans</a> (const double &amp;trans_p) override</td></tr>
-<tr class="memdesc:ae831a7d20e94dd80b8805a90b850e94a"><td class="mdescLeft">&#160;</td><td class="mdescRight">from the unconstrained/transformed to the constrained/untransformed space; <br /></td></tr>
-<tr class="separator:ae831a7d20e94dd80b8805a90b850e94a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af234991224cf994204ce196a85622ca8"><td class="memItemLeft" align="right" valign="top"><a id="af234991224cf994204ce196a85622ca8"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlogTrans.html#af234991224cf994204ce196a85622ca8">logJacobian</a> (const double &amp;p) override</td></tr>
-<tr class="memdesc:af234991224cf994204ce196a85622ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the log jacobian (from untransformed to transformed). For use with adjusting priors to the transformed space. <br /></td></tr>
-<tr class="separator:af234991224cf994204ce196a85622ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classparamTransform"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classparamTransform')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classparamTransform.html">paramTransform</a></td></tr>
-<tr class="memitem:a7eaa549e2a14fe05080378a5967d9c97 inherit pub_methods_classparamTransform"><td class="memItemLeft" align="right" valign="top"><a id="a7eaa549e2a14fe05080378a5967d9c97"></a>
-virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparamTransform.html#a7eaa549e2a14fe05080378a5967d9c97">~paramTransform</a> ()</td></tr>
-<tr class="memdesc:a7eaa549e2a14fe05080378a5967d9c97 inherit pub_methods_classparamTransform"><td class="mdescLeft">&#160;</td><td class="mdescRight">a virtual destructor <br /></td></tr>
-<tr class="separator:a7eaa549e2a14fe05080378a5967d9c97 inherit pub_methods_classparamTransform"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af83380d2e4c27b4311383e3ee164fc8a"><td class="memItemLeft" align="right" valign="top"><a id="af83380d2e4c27b4311383e3ee164fc8a"></a>
+float_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlogTrans.html#af83380d2e4c27b4311383e3ee164fc8a">trans</a> (const float_t &amp;p) override</td></tr>
+<tr class="memdesc:af83380d2e4c27b4311383e3ee164fc8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">from the constrained/nontransformed to the transformed/unconstrained space <br /></td></tr>
+<tr class="separator:af83380d2e4c27b4311383e3ee164fc8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e8e563da2fb548d7eeced4e1f22e93d"><td class="memItemLeft" align="right" valign="top"><a id="a0e8e563da2fb548d7eeced4e1f22e93d"></a>
+float_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlogTrans.html#a0e8e563da2fb548d7eeced4e1f22e93d">invTrans</a> (const float_t &amp;trans_p) override</td></tr>
+<tr class="memdesc:a0e8e563da2fb548d7eeced4e1f22e93d"><td class="mdescLeft">&#160;</td><td class="mdescRight">from the unconstrained/transformed to the constrained/untransformed space; <br /></td></tr>
+<tr class="separator:a0e8e563da2fb548d7eeced4e1f22e93d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b32167fdae993cf790996c0b88e20b6"><td class="memItemLeft" align="right" valign="top"><a id="a9b32167fdae993cf790996c0b88e20b6"></a>
+float_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlogTrans.html#a9b32167fdae993cf790996c0b88e20b6">logJacobian</a> (const float_t &amp;p) override</td></tr>
+<tr class="memdesc:a9b32167fdae993cf790996c0b88e20b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the log jacobian (from untransformed to transformed). For use with adjusting priors to the transformed space. <br /></td></tr>
+<tr class="separator:a9b32167fdae993cf790996c0b88e20b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classparamTransform"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classparamTransform')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classparamTransform.html">paramTransform&lt; float_t &gt;</a></td></tr>
+<tr class="memitem:a087c9c2780ede665f3e980415231cb70 inherit pub_methods_classparamTransform"><td class="memItemLeft" align="right" valign="top"><a id="a087c9c2780ede665f3e980415231cb70"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparamTransform.html#a087c9c2780ede665f3e980415231cb70">~paramTransform</a> ()</td></tr>
+<tr class="memdesc:a087c9c2780ede665f3e980415231cb70 inherit pub_methods_classparamTransform"><td class="mdescLeft">&#160;</td><td class="mdescRight">a virtual destructor <br /></td></tr>
+<tr class="separator:a087c9c2780ede665f3e980415231cb70 inherit pub_methods_classparamTransform"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_static_methods_classparamTransform"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classparamTransform')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classparamTransform.html">paramTransform</a></td></tr>
-<tr class="memitem:a3cef2dd407ed30c66ff9a5cab8516a3c inherit pub_static_methods_classparamTransform"><td class="memItemLeft" align="right" valign="top"><a id="a3cef2dd407ed30c66ff9a5cab8516a3c"></a>
-static std::unique_ptr&lt; <a class="el" href="classparamTransform.html">paramTransform</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparamTransform.html#a3cef2dd407ed30c66ff9a5cab8516a3c">create</a> (TransType tt)</td></tr>
-<tr class="memdesc:a3cef2dd407ed30c66ff9a5cab8516a3c inherit pub_static_methods_classparamTransform"><td class="mdescLeft">&#160;</td><td class="mdescRight">a static method to create unique pointers <br /></td></tr>
-<tr class="separator:a3cef2dd407ed30c66ff9a5cab8516a3c inherit pub_static_methods_classparamTransform"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_static_methods_classparamTransform"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classparamTransform')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classparamTransform.html">paramTransform&lt; float_t &gt;</a></td></tr>
+<tr class="memitem:af9a8ce5938cb694001e0227322b6c1c3 inherit pub_static_methods_classparamTransform"><td class="memItemLeft" align="right" valign="top"><a id="af9a8ce5938cb694001e0227322b6c1c3"></a>
+static std::unique_ptr&lt; <a class="el" href="classparamTransform.html">paramTransform</a>&lt; float_t &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparamTransform.html#af9a8ce5938cb694001e0227322b6c1c3">create</a> (<a class="el" href="param__transforms_8h.html#acee593b112f4fc85f850631b9c6aaae9">TransType</a> tt)</td></tr>
+<tr class="memdesc:af9a8ce5938cb694001e0227322b6c1c3 inherit pub_static_methods_classparamTransform"><td class="mdescLeft">&#160;</td><td class="mdescRight">a static method to create unique pointers <br /></td></tr>
+<tr class="separator:af9a8ce5938cb694001e0227322b6c1c3 inherit pub_static_methods_classparamTransform"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename float_t&gt;<br />
+class logTrans&lt; float_t &gt;</h3>
+
+<dl class="section author"><dt>Author</dt><dd>t </dd></dl>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/<a class="el" href="param__transforms_8h_source.html">param_transforms.h</a></li>
 </ul>
 </div><!-- contents -->

@@ -91,13 +91,15 @@ $(document).ready(function(){initNavTree('param__pack_8h.html','');});
 <div class="textblock"><code>#include &lt;Eigen/Dense&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
-<code>#include &quot;param_transforms.h&quot;</code><br />
+<code>#include &lt;utility&gt;</code><br />
+<code>#include &lt;stdexcept&gt;</code><br />
+<code>#include &quot;<a class="el" href="param__transforms_8h_source.html">param_transforms.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for param_pack.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="param__pack_8h__incl.png" border="0" usemap="#include_2param__pack_8h" alt=""/></div>
 <map name="include_2param__pack_8h" id="include_2param__pack_8h">
-<area shape="rect" id="node5" href="param__transforms_8h_source.html" title="param_transforms.h" alt="" coords="261,80,399,107"/>
+<area shape="rect" id="node7" href="param__transforms_8h.html" title="a pure virtual base class. cts params only. " alt="" coords="311,80,450,107"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -106,10 +108,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="center"><img src="param__pack_8h__dep__incl.png" border="0" usemap="#include_2param__pack_8hdep" alt=""/></div>
 <map name="include_2param__pack_8hdep" id="include_2param__pack_8hdep">
 <area shape="rect" id="node2" href="estimate__univ__svol_8h_source.html" title="example/estimate_univ\l_svol.h" alt="" coords="5,155,161,196"/>
-<area shape="rect" id="node3" href="mod__msl1_8h_source.html" title="example/mod_msl1.h" alt="" coords="258,80,405,107"/>
-<area shape="rect" id="node4" href="filter__msl1_8h_source.html" title="example/filter_msl1.h" alt="" coords="369,162,515,189"/>
-<area shape="rect" id="node5" href="ada__pmmh__mvn_8h.html" title="Performs adaptive particle marginal metropolis&#45;hastings sampling, using a multivariate normal distrib..." alt="" coords="59,80,233,107"/>
-<area shape="rect" id="node6" href="get__mcmc__estimate_8h_source.html" title="include/get_mcmc_estimate.h" alt="" coords="480,80,676,107"/>
+<area shape="rect" id="node3" href="ada__pmmh__mvn_8h.html" title="Performs adaptive particle marginal metropolis&#45;hastings sampling, using a multivariate normal distrib..." alt="" coords="59,80,233,107"/>
+<area shape="rect" id="node4" href="ada__rwmh_8h.html" title="Performs adaptive random walk metropolis&#45;hastings sampling (uses a multivariate normal distribution a..." alt="" coords="258,80,397,107"/>
+<area shape="rect" id="node5" href="get__mcmc__estimate_8h_source.html" title="include/get_mcmc_estimate.h" alt="" coords="421,80,617,107"/>
 </map>
 </div>
 </div>
@@ -117,16 +118,11 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparamPack.html">paramPack</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classparamPack.html">paramPack&lt; float_t &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Stores transformed parameters, as well as the functions that can change them to the untransformed parameters and back. </p>
-<p>trans_p = log(orig_p).</p>
-<p>trans_p = logit(orig_p).</p>
-<p>trans_p = log(1+orig_p) - log(1-orig_p) = logit((orig_p+1)/2).</p>
-<p>trans_p = orig_p.</p>
-<p>a pure virtual base class. cts params only.</p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
