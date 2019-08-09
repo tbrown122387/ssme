@@ -101,7 +101,7 @@ private:
     unsigned int m_t0;  // the time it starts adapting
     unsigned int m_t1; // the time it stops adapting
     psm m_Ct;
-    rvsamp::MVNSampler<numparams> m_mvn_gen;
+    rvsamp::MVNSampler<numparams,float_t> m_mvn_gen;
     std::ofstream m_samples_file_stream; 
     std::ofstream m_message_stream;
     unsigned int m_num_mcmc_iters;
@@ -220,7 +220,7 @@ void ada_rwmh<numparams,dimobs,float_t>::commenceSampling(const std::vector<Eige
 {
 
     // random number stuff to decide on whether to accept or reject
-    rvsamp::UniformSampler runif; 
+    rvsamp::UniformSampler<float_t> runif; 
     
     float_t oldLogLike (0.0);
     float_t oldLogPrior(0.0);
@@ -308,7 +308,7 @@ void ada_rwmh<numparams,dimobs,float_t>::commenceSampling(const std::vector<Eige
                 // printing
                 if(m_iter % m_print_every_k == 0){
 
-                    m_message_stream << "rejected 100 percent\n"
+                    m_message_stream << "rejected 100 percent\n";
 
 		    // log the theta which may have changedor not
             	    // notice that this is on the untransformed or constrained space
@@ -327,7 +327,7 @@ void ada_rwmh<numparams,dimobs,float_t>::commenceSampling(const std::vector<Eige
             }else if (logAR >= 0.0){ // 100 percent accept 
                 
                 if(m_iter % m_print_every_k == 0){
-                    m_message_stream << "accepted 100 percent\n"
+                    m_message_stream << "accepted 100 percent\n";
 
 		    // log the theta which may have changedor not
             	    // notice that this is on the untransformed or constrained space
@@ -346,7 +346,7 @@ void ada_rwmh<numparams,dimobs,float_t>::commenceSampling(const std::vector<Eige
             }else if ( std::log(draw) <= logAR ) { // probabilistic accept
 
                 if(m_iter % m_print_every_k == 0){
-                    m_message_stream << "accepted probabilistically\n"
+                    m_message_stream << "accepted probabilistically\n";
 
 		    // log the theta which may have changedor not
             	    // notice that this is on the untransformed or constrained space
@@ -366,7 +366,7 @@ void ada_rwmh<numparams,dimobs,float_t>::commenceSampling(const std::vector<Eige
             } else if ( std::log(draw) > logAR ) {
 
                 if(m_iter % m_print_every_k == 0){
-                    m_message_stream << "rejected probabilistically\n"
+                    m_message_stream << "rejected probabilistically\n";
 
 		    // log the theta which may have changedor not
             	    // notice that this is on the untransformed or constrained space
@@ -391,7 +391,7 @@ void ada_rwmh<numparams,dimobs,float_t>::commenceSampling(const std::vector<Eige
                 std::cerr << "\n\n\n\nthere was a NaN! Not accepting proposal. \n\n\n";
 
                 if(m_iter % m_print_every_k == 0){
-                    m_message_stream << "rejected probabilistically\n"
+                    m_message_stream << "rejected probabilistically\n";
 
 		    // log the theta which may have changedor not
             	    // notice that this is on the untransformed or constrained space
