@@ -1,4 +1,4 @@
-#include <UnitTest++/UnitTest++.h>
+#include <catch2/catch2.hpp>
 #include <Eigen/Dense>
 
 

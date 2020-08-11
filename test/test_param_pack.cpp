@@ -1,9 +1,9 @@
-#include <UnitTest++/UnitTest++.h>
+#include <catch2/catch.hpp>
 #include <Eigen/Dense>
 #include <utility> //move
 
-#include "param_pack.h"
-#include "param_transforms.h"
+#include <ssme/param_pack.h>
+#include <ssme/param_transforms.h>
 
 #define NP 4
 
