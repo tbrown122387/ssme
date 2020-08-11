@@ -1,12 +1,10 @@
-#include <catch2/catch2.hpp>
+#include <catch2/catch.hpp>
 #include <Eigen/Dense>
 
 
 
-
-TEST(test_apm_constructors){
-    
-
+TEST_CASE("test apm constructors", "[ada_pmmh]"){
+    // TODO
 
 }
 

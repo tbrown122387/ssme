@@ -8,12 +8,12 @@ class MyFixture {
 public:
     using input_t = std::vector<double>;
 
-    double d(input_t nums) {
+    static double d(input_t nums) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         return std::accumulate(nums.begin(), nums.end(), 0.0);
     }
 
-    thread_pool<input, std::function<double(input_t)>> pool;
+    thread_pool<input_t, std::function<double(input_t)>> pool;
     
     MyFixture() : pool(d, 1e4, true) {}
 };

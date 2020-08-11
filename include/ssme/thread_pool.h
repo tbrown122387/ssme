@@ -39,7 +39,6 @@ template<typename func_input_t, typename F>
 class thread_pool
 {
 
-    static_assert( std::is_function<F>::type, "F must be a function type");
     using func_output_t = typename std::result_of<F(func_input_t)>::type;
     static_assert( std::is_floating_point<func_output_t>::value,  
                    "function output type must be floating point");

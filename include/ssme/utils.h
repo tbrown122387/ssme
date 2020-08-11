@@ -42,7 +42,7 @@ namespace utils{
         // make sure open and doesn't close
         if(ofs.is_open()){
             // write stuff
-            for(size_t i = 0; i < dim; ++i){
+            for(size_t i = 0; i < vec.rows(); ++i){
                 if( i == 0)
                     ofs << vec(i,0);
                 else 
@@ -73,7 +73,7 @@ namespace utils{
         if(f.is_open()){
             
             // write stuff
-            for(size_t i = 0; i < dim; ++i){
+            for(size_t i = 0; i < vec.rows(); ++i){
                 if( i == 0)
                     f << vec(i,0);
                 else 
