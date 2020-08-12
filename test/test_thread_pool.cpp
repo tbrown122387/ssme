@@ -22,7 +22,7 @@ public:
 TEST_CASE_METHOD(MyFixture, "test thread pool", "[thread_pool]")
 {
 
-    unsigned num_tries(100);
+    unsigned num_tries(10);
     std::vector<std::future<double>> futs;
     for(size_t i = 0; i < num_tries; ++i){
         futs.push_back(pool.work(std::vector<double>{1.0, 1.0, 1.0}));

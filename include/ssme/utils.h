@@ -10,7 +10,11 @@
 #include <vector>   // vector
 
 
+/**
+ * @namesapce utils
+ */
 namespace utils{
+
 
     /**
      * @brief return string with format is YYYY-MM-DD.HH:mm:ss

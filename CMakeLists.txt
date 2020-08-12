@@ -8,6 +8,7 @@ include(GNUInstallDirs)
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 find_package(Catch2 2.9.2 REQUIRED)
+find_package( Threads REQUIRED )
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
@@ -17,7 +18,8 @@ target_include_directories(
 target_link_libraries(${PROJECT_NAME} 
     INTERFACE 
         Eigen3::Eigen 
-        Catch2::Catch2)
+        Catch2::Catch2
+        Threads::Threads)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 
 ## INSTALL 
@@ -46,7 +48,7 @@ install(EXPORT ${PROJECT_NAME}_Targets
 install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
               "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/pf DESTINATION include)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ssme DESTINATION include)
 
 ## Tests
 include(CTest)
