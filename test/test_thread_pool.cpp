@@ -23,9 +23,7 @@ TEST_CASE_METHOD(MyFixture, "test thread pool", "[thread_pool]")
 {
 
     unsigned num_tries(1e3);
-    std::future<double> fut;
-    for(size_t i = 0; i < num_tries; ++i){
-        fut =  pool.work(std::vector<double>{1.0, 1.0, 1.0});
-        REQUIRE( std::abs(fut.get()- 3.0) < .001  );
+    for(unsigned i = 0; i < num_tries; ++i){
+        REQUIRE( std::abs(pool.work(std::vector<double>{1.0, 1.0, 1.0})- 3.0) < .001  );
     }
 }

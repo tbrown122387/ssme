@@ -8,7 +8,7 @@
 #include <atomic>
 #include <future>
 
-#include <iostream>
+
 /**
  * @class join_threads
  * @brief RAII thread killer
@@ -81,7 +81,6 @@ class thread_pool
                 }else if( m_count.load() == m_total_calcs){
                     m_out.set_value(m_working_ave);
                     m_has_an_input = false;
-                    std::cout << m_count << ", " << m_working_ave << "\n";
                     m_count++;
                 }
 
@@ -133,17 +132,22 @@ public:
      * resets the accumulator thing to 0, and
      * resets the promise object
      */
-    std::future<func_output_t> work(func_input_t new_param) {
-        std::unique_lock<std::shared_mutex> param_lk(m_param_mut);
-        m_param = new_param;
-       
-        std::unique_lock<std::mutex> ave_lock(m_ac_mut); 
-        m_count = 0;
-        m_working_ave = 0.0;
+    func_output_t work(func_input_t new_param) {
+        
+        {
+            std::unique_lock<std::shared_mutex> param_lk(m_param_mut);
+            m_param = new_param;
+        }
+
+        {
+            std::unique_lock<std::mutex> ave_lock(m_ac_mut); 
+            m_count = 0;
+            m_working_ave = 0.0;
+        }
 
         m_out = std::promise<func_output_t>();
         m_has_an_input = true; 
-        return m_out.get_future();
+        return m_out.get_future().get();
     }
 };
 
