@@ -8,7 +8,7 @@
 #include <atomic>
 #include <future>
 
-
+#include <iostream>
 /**
  * @class join_threads
  * @brief RAII thread killer
@@ -74,13 +74,14 @@ class thread_pool
 
                 // write it to the average and increment count
                 // do this in thread-safe way with mutex
-                std::unique_lock<std::mutex> out_lock{m_ac_mut};
+                std::lock_guard<std::mutex> out_lock{m_ac_mut};
                 if( m_count.load() < m_total_calcs ) {
                     m_working_ave += val / m_total_calcs;
                     m_count++;
                 }else if( m_count.load() == m_total_calcs){
                     m_out.set_value(m_working_ave);
                     m_has_an_input = false;
+                    std::cout << m_count << ", " << m_working_ave << "\n";
                     m_count++;
                 }
 

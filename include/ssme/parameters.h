@@ -359,7 +359,8 @@ pack<float_t>::pack(const eig_dyn_vec& trans_params, vecptrs&& t_functors)
 template<typename float_t>
 pack<float_t>::pack(const eig_dyn_vec &params, const std::vector<trans_type> &vec_trans_types, bool start_w_trans_params)
 {
-    if( params.rows() != vec_trans_types.size() ){
+    unsigned int n = vec_trans_types.size(); 
+    if( params.rows() != n ){
         throw std::invalid_argument("params and vec_trans_types have to be the same size");
     }
     
@@ -369,13 +370,10 @@ pack<float_t>::pack(const eig_dyn_vec &params, const std::vector<trans_type> &ve
     
     if(start_w_trans_params){
         m_trans_params = params;
-    }else if(!start_w_trans_params){
+    }else {
         m_trans_params.resize(n);
         for(size_t i = 0; i < n; ++i)
             m_trans_params(i) = m_transform_functors[i]->trans(params(i));            
-            
-    }else{
-        throw std::invalid_argument("your vec_trans_types argument is the wrong size!");
     }
 }
 
