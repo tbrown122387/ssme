@@ -6,6 +6,7 @@
 
 class MyFixture {
 public:
+
     using input_t = std::vector<double>;
 
     static double d(input_t nums) {
@@ -13,7 +14,7 @@ public:
         return std::accumulate(nums.begin(), nums.end(), 0.0);
     }
 
-    thread_pool<input_t, std::function<double(input_t)>> pool;
+    thread_pool<input_t,double> pool;
     
     MyFixture() : pool(d, 1e4, true) {}
 };

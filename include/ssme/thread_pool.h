@@ -35,11 +35,12 @@ public:
  * single param writer, many concurrent parameter readers
  * output is averaged in a thread-safe way
  */
-template<typename func_input_t, typename F>
+template<typename func_input_t, typename func_output_t>
 class thread_pool
 {
-
-    using func_output_t = typename std::result_of<F(func_input_t)>::type;
+public:   
+    using F = std::function<func_output_t(func_input_t)>; 
+private:
     static_assert( std::is_floating_point<func_output_t>::value,  
                    "function output type must be floating point");
 
