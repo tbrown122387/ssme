@@ -19,7 +19,7 @@ namespace utils{
     /**
      * @brief return string with format is YYYY-MM-DD.HH:mm:ss
      */
-    std::string genStringWithTime(const std::string& str) {
+    std::string gen_string_with_time(const std::string& str) {
         time_t     now = time(0);
         struct tm  tstruct;
         char       buf[80];
@@ -41,7 +41,7 @@ namespace utils{
      * @param ofs the target ofstream.
      */
     template<typename Derived>
-    void logParams(const Eigen::DenseBase<Derived>& vec, std::ofstream &ofs)
+    void log_params(const Eigen::DenseBase<Derived>& vec, std::ofstream &ofs)
     {
         // make sure open and doesn't close
         if(ofs.is_open()){
@@ -68,7 +68,7 @@ namespace utils{
      * @param outfile the target file path.
      */
     template<typename Derived>
-    void logParams(const Eigen::DenseBase<Derived>& vec, const std::string &outfile) {
+    void log_params(const Eigen::DenseBase<Derived>& vec, const std::string &outfile) {
     
         // open the file in append mode
         std::ofstream f(outfile, std::ios::app);
@@ -99,7 +99,7 @@ namespace utils{
      * @param outfile the target file path.
      */
     template<size_t size, typename float_t>
-    void logParams(const std::array<float_t, size> &arr, const std::string &outfile) {
+    void log_params(const std::array<float_t, size> &arr, const std::string &outfile) {
 
         // open the file in append mode
         std::ofstream f(outfile, std::ios::app);
@@ -124,21 +124,21 @@ namespace utils{
     /**
      * @brief reads in data in a csv file with no header and separated by commas.
      * @tparam nc the number of columns.
-     * @param fileLoc the string filepath of the file.
+     * @param file_loc the string filepath of the file.
      * @return a std::vector of your data. Each elemenet is a row in Eigen::Vector form.
      */
     template<size_t nc, typename float_t>
-    std::vector<Eigen::Matrix<float_t,nc,1> > readInData(const std::string& fileLoc)
+    std::vector<Eigen::Matrix<float_t,nc,1> > read_data(const std::string& file_loc)
     {
         // returning this. gotta build it up
         std::vector<Eigen::Matrix<float_t,nc,1> > data;
         
         // start reading
         std::string line;
-        std::ifstream ifs(fileLoc);
+        std::ifstream ifs(file_loc);
         std::string one_number;    
         if(!ifs.is_open()){     // check if we can open inFile
-            std::cerr << "readInData() failed to read data from: " << fileLoc << "\n";
+            std::cerr << "readInData() failed to read data from: " << file_loc << "\n";
         }
         
         // didn't fail...keep going
@@ -165,7 +165,6 @@ namespace utils{
         }
         
         return data;
-        
     } 
 
 } // namespace utils
