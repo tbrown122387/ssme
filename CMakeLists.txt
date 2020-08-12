@@ -9,6 +9,7 @@ include(GNUInstallDirs)
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 find_package(Catch2 2.9.2 REQUIRED)
 find_package( Threads REQUIRED )
+find_package(pf CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
@@ -19,7 +20,8 @@ target_link_libraries(${PROJECT_NAME}
     INTERFACE 
         Eigen3::Eigen 
         Catch2::Catch2
-        Threads::Threads)
+        Threads::Threads
+        pf::pf)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 
 ## INSTALL 
