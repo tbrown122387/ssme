@@ -20,8 +20,11 @@ The current availability includes particle marginal Metropolis-Hastings with a m
 
 ## example:
 
-For an example, navigate to the `ssme/example` directory, type `make`, and then something like 
+For an example, navigate to the `ssme/example` directory, and type the following
 
 ```
+mkdir build && cd build
+cmake ..
+make
 ./main spy_returns.csv univ_svol_pmmh_samples univ_svol_pmmh_messages 1000
 ```

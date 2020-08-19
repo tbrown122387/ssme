@@ -10,6 +10,7 @@
 #include <pf/rv_samp.h>
 #include <ssme/utils.h> // readInData
 #include <ssme/parameters.h>
+#include <ssme/thread_pool.h>
 
 
 /**
@@ -119,7 +120,7 @@ private:
         std::vector<osv> data;
     };
     using tp_t = thread_pool<param_and_data, float_t>;
-    tp_t::F m_f; 
+    typename tp_t::F m_f; 
     tp_t m_pool; 
 
     /* changing MCMC state variables */
@@ -182,7 +183,7 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
  , m_pool(m_f, num_pfilters, mc)
  , m_log_accept_prob(-std::numeric_limits<float_t>::infinity())
 {
-    m_data = utils::read_in_data<dimobs,float_t>(data_file);
+    m_data = utils::read_data<dimobs,float_t>(data_file);
     
     std::string samples_file = utils::gen_string_with_time(sample_file_base_name);
     m_samples_file_stream.open(samples_file); 

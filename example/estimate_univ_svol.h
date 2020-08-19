@@ -3,16 +3,14 @@
 
 #include <string>
 
-#include "ada_pmmh_mvn.h"
-#include "param_pack.h"
-#include "rv_eval.h"
-#include "resamplers.h"
+#include <ssme/ada_pmmh_mvn.h>
+#include <ssme/parameters.h>
+#include <pf/rv_eval.h>
+#include <pf/resamplers.h>
+
 #include "univ_svol_bootstrap_filter.h"
 
 
-//////////////////////////////////////////////////////////////////////////////////////////
-//////////////////// univ_svol_estimator /////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
 
 template<size_t numparams, size_t dimstate, size_t dimobs, size_t numparts, typename float_t>
 class univ_svol_estimator : public ada_pmmh_mvn<numparams,dimobs,numparts,float_t>
@@ -24,10 +22,11 @@ public:
     using osv = Eigen::Matrix<float_t,dimobs,1>;
     
     univ_svol_estimator(
-            const psv &startTransTheta,
-            const std::vector<TransType>& tts,
-            const unsigned int &numMCMCIters, 
-            const std::string &dataFile, 
+            const psv &start_trans_theta,
+            const std::vector<param::trans_type>& tts,
+            const unsigned int &num_mcmc_iters,
+            const unsigned int &num_pfilters, 
+            const std::string &data_file, 
             const std::string &samples_base_name, 
             const std::string &messages_base_name,
             const bool &mc,
@@ -37,18 +36,19 @@ public:
             bool print_to_console,
             unsigned int print_every_k);
         
-    float_t logPriorEvaluate(const paramPack<float_t>& theta);
+    float_t log_prior_eval(const param::pack<float_t>& theta);
 
-    float_t logLikeEvaluate(const paramPack<float_t>& theta, const std::vector<osv> &data);
+    float_t log_like_eval(const param::pack<float_t>& theta, const std::vector<osv> &data);
 
 };
 
 template<size_t numparams, size_t dimstate, size_t dimobs, size_t numparts, typename float_t>
 univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::univ_svol_estimator(
-                                                    const psv &startTransTheta,
-                                                    const std::vector<TransType>& tts,
-                                                    const unsigned int &numMCMCIters, 
-                                                    const std::string &dataFile, 
+                                                    const psv &start_trans_theta,
+                                                    const std::vector<param::trans_type>& tts,
+                                                    const unsigned int &num_mcmc_iters,
+                                                    const unsigned int &num_pfilters, 
+                                                    const std::string &data_file, 
                                                     const std::string &samples_base_name, 
                                                     const std::string &messages_base_name,
                                                     const bool &mc,
@@ -57,22 +57,34 @@ univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::univ_svol_estim
                                                     const psm &C0,
                                                     bool print_to_console,
                                                     unsigned int print_every_k) 
-    : ada_pmmh_mvn<numparams,dimobs,numparts,float_t>(startTransTheta, tts, numMCMCIters, dataFile, samples_base_name, messages_base_name, mc, t0, t1, C0, print_to_console,print_every_k)
+    : ada_pmmh_mvn<numparams,dimobs,numparts,float_t>(start_trans_theta, 
+                                                      tts, 
+                                                      num_mcmc_iters, 
+                                                      num_pfilters,
+                                                      data_file, 
+                                                      samples_base_name, 
+                                                      messages_base_name, 
+                                                      mc, 
+                                                      t0, 
+                                                      t1, 
+                                                      C0, 
+                                                      print_to_console,
+                                                      print_every_k)
 {
 }
 
 
 template<size_t numparams, size_t dimstate, size_t dimobs, size_t numparts, typename float_t>
-float_t univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::logPriorEvaluate(const paramPack<float_t>& theta)
+float_t univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::log_prior_eval(const param::pack<float_t>& theta)
 {
     // value to be returned
     float_t returnThis(0.0);
    
     // 1 beta, 1 phi, 1 ss
     // unpack parameters
-    float_t beta = theta.getUnTransParams(0,0)(0);
-    float_t phi  = theta.getUnTransParams(1,1)(0);
-    float_t ss   = theta.getUnTransParams(2,2)(0);
+    float_t beta = theta.get_untrans_params(0,0)(0);
+    float_t phi  = theta.get_untrans_params(1,1)(0);
+    float_t ss   = theta.get_untrans_params(2,2)(0);
     
     // beta ~ normal(1.0, 1.0)
     returnThis += rveval::evalUnivNorm<float_t>(beta, 1.0, 1.0, true);
@@ -88,7 +100,7 @@ float_t univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::logPrio
 
 
 template<size_t numparams, size_t dimstate, size_t dimobs, size_t numparts, typename float_t>
-float_t univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::logLikeEvaluate(const paramPack<float_t>& theta, const std::vector<osv> &data)
+float_t univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::log_like_eval(const param::pack<float_t>& theta, const std::vector<osv> &data)
 {
 
     // jump out if there's a problem with the data
@@ -120,7 +132,12 @@ float_t univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::logLike
 
 
 template<size_t numparams, size_t dimstate, size_t dimobs, size_t numparts, typename float_t>
-void do_ada_pmmh_univ_svol(const std::string &datafile, const std::string &samples_base_name, const std::string &messages_base_name, unsigned int num_mcmc_iters, bool multicore)
+void do_ada_pmmh_univ_svol(const std::string &datafile, 
+                           const std::string &samples_base_name, 
+                           const std::string &messages_base_name, 
+                           unsigned int num_mcmc_iters, 
+                           unsigned int num_pfilters,
+                           bool multicore)
 {
     // the chain's starting parameters
     using psv = Eigen::Matrix<float_t,numparams,1>;
@@ -128,10 +145,10 @@ void do_ada_pmmh_univ_svol(const std::string &datafile, const std::string &sampl
 
     psv start_trans_theta;
     start_trans_theta << 1.0, rveval::twiceFisher<float_t>(.5), std::log(2.0e-4);
-    std::vector<TransType> tts;
-    tts.push_back(TransType::TT_null); // betas
-    tts.push_back(TransType::TT_twice_fisher); // phis
-    tts.push_back(TransType::TT_log); // sigma squareds
+    std::vector<param::trans_type> tts;
+    tts.push_back(param::trans_type::TT_null); // betas
+    tts.push_back(param::trans_type::TT_twice_fisher); // phis
+    tts.push_back(param::trans_type::TT_log); // sigma squareds
    
     // the chain's initial covariance matrix 
     psm C0 = psm::Identity()*.15;
@@ -141,6 +158,7 @@ void do_ada_pmmh_univ_svol(const std::string &datafile, const std::string &sampl
                                                     	start_trans_theta,
                                                     	tts,
                                                     	num_mcmc_iters, 
+                                                        num_pfilters,
                                                     	datafile, 
                                                     	samples_base_name, 
                                                     	messages_base_name, 
