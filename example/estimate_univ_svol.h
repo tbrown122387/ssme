@@ -168,7 +168,7 @@ void do_ada_pmmh_univ_svol(const std::string &datafile,
                                                     	C0,
                                                     	false, // print console
                                                         1);
-    mcmcobj.commenceSampling();
+    mcmcobj.commence_sampling();
 
 }
 

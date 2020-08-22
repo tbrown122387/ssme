@@ -14,6 +14,23 @@
 
 
 /**
+ * @struct param_and_data
+ * @brief a simple struct that bundles together
+ * params and data, so the function in the thread
+ * pool can take one argument
+ */
+template<typename float_t, size_t dimobs>
+struct param_and_data{
+    using osv = Eigen::Matrix<float_t,dimobs,1>;
+    param_and_data(param::pack<float_t>&& p, std::vector<osv>&& d)
+        : params(std::move(p)), data(std::move(d)) {}
+
+    param::pack<float_t> params; 
+    std::vector<osv> data;
+};
+
+
+/**
  * @class ada_pmmh_mvn
  * @author Taylor
  * @file ada_pmmh_mvn.h
@@ -115,18 +132,15 @@ private:
     unsigned int m_print_every_k;    
     
     /* thread pool (its function can only take one parameter) */
-    struct param_and_data{ 
-        param::pack<float_t> params; 
-        std::vector<osv> data;
-    };
-    using tp_t = thread_pool<param_and_data, float_t>;
+    using tp_t = thread_pool<param_and_data<float_t,dimobs>, float_t>;
     typename tp_t::F m_f; 
     tp_t m_pool; 
 
     /* changing MCMC state variables */
     float_t m_old_log_like;
     float_t m_new_log_like;
-    float_t m_old_log_pior;
+    float_t m_old_log_prior;
+    float_t m_new_log_prior;
     float_t m_log_accept_prob;
     bool m_accepted;
 
@@ -139,11 +153,11 @@ private:
 
 
     // TODO: https://eigen.tuxfamily.org/dox/TopicFunctionTakingEigenTypes.html
-    void record_params(const psv& params, std::ofstream& ofs) const;
+    void record_params();
 
-    void record_iter_num() const;
+    void record_iter_num();
 
-    void record_messages() const;
+    void record_messages();
 
 };
 
@@ -176,7 +190,7 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
  , m_eps(.01)
  , m_print_to_console(print_to_console)
  , m_print_every_k(print_every_k)
- , m_f([this](param_and_data both) -> float_t 
+ , m_f([this](param_and_data<float_t,dimobs> both) -> float_t 
          { 
             return this->log_like_eval(both.params, both.data); 
          })
@@ -254,17 +268,19 @@ auto ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::q_samp(const param::pack<f
 
 
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_params(const psv& params, std::ofstream& ofs) const
+void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_params() 
 {
     if( m_iter % m_print_every_k == 0){
-        if(ofs.is_open()){
-            for(size_t i = 0; i < params.rows(); ++i){
+        if(m_samples_file_stream.is_open()){
+
+            Eigen::Matrix<float_t,numparams,1> p = m_current_theta.get_untrans_params();
+            for(size_t i = 0; i < numparams; ++i){
                 if( i == 0)
-                    ofs << vec(i,0);
+                    m_samples_file_stream << p(i);
                 else 
-                    ofs << "," << params(i,0);
+                    m_samples_file_stream << "," << p(i);
             }       
-            ofs << "\n";
+            m_samples_file_stream << "\n";
         }else{
             std::cerr << "tried to write to a closed ofstream! " << "\n";
             m_message_stream << "tried to write to a closed ofstream! " << "\n";
@@ -274,7 +290,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_params(const psv& p
 
 
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_iter_num() const
+void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_iter_num() 
 {
     if(m_iter % m_print_every_k == 0){
         m_message_stream << "Iter number: " << m_iter + 1 << "\n";
@@ -285,16 +301,16 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_iter_num() const
 
 
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_messages() const
+void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_messages()
 {
     // format: 
     // iter number, acceptance rate, old_ll, new_ll, old log prior, new log prior, accept probability, outcome
     m_message_stream << m_iter+1 << ", " << m_ma_accept_rate << ", " << m_old_log_like << ", " 
-                     << m_new_log_like << ", " << m_old_log_pior << ", " << m_new_log_prior << ", "
+                     << m_new_log_like << ", " << m_old_log_prior << ", " << m_new_log_prior << ", "
                      << m_log_accept_prob << ", " << m_accepted << "\n";
     if(m_print_to_console){
         std::cout << m_iter+1 << ", " << m_ma_accept_rate << ", " << m_old_log_like << ", " 
-                  << m_new_log_like << ", " << m_old_log_pior << ", " << m_new_log_prior << ", "
+                  << m_new_log_like << ", " << m_old_log_prior << ", " << m_new_log_prior << ", "
                   << m_log_accept_prob << ", " << m_accepted << "\n";
     }
 
@@ -321,7 +337,9 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
             param::pack<float_t> proposed_theta(proposed_trans_theta, m_tts);
             
             m_new_log_prior = log_prior_eval(proposed_theta) + proposed_theta.get_log_jacobian();
-            m_new_log_like = m_pool.work( param_and_data{proposed_theta, m_data } );
+            m_new_log_like = m_pool.work( param_and_data<float_t,dimobs> {
+                                            std::move(proposed_theta), 
+                                            std::move(m_data) } );
 
             // decide whether to accept or reject
             m_log_accept_prob = m_new_log_prior + m_new_log_like - m_old_log_prior - m_old_log_like;                
@@ -329,9 +347,9 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
             m_accepted = log_uniform_draw < m_log_accept_prob;  // TODO: verify that everything compared to a NaN is false!
             if(m_accepted){
                 m_ma_accept_rate = 1.0/(m_iter+1.0) + m_iter*m_ma_accept_rate/(m_iter+1.0);
-                m_current_theta.takeValues(proposed_theta);
-                old_log_prior = new_log_prior;
-                old_log_like = new_log_like;
+                m_current_theta.take_values(proposed_theta);
+                m_old_log_prior = m_new_log_prior;
+                m_old_log_like = m_new_log_like;
             }else{
                 m_ma_accept_rate = 0.0/(m_iter+1.0) + m_iter*m_ma_accept_rate/(m_iter+1.0);
                 if( std::isnan(m_log_accept_prob) ) {
@@ -340,8 +358,10 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
             }
            
         }else{ // first iteration
-            m_old_log_like = m_pool.work( param_and_data{proposed_theta, m_data } );
-            m_old_log_prior = log_prior_eval(proposed_theta) + proposed_theta.get_log_jacobian();
+            m_old_log_like = m_pool.work( param_and_data<float_t,dimobs> {
+                                            std::move(m_current_theta), 
+                                            std::move(m_data) } );
+            m_old_log_prior = log_prior_eval(m_current_theta) + m_current_theta.get_log_jacobian();
         } 
             
         record_params();

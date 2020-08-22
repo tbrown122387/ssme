@@ -26,7 +26,7 @@ public:
 
     // ctors
     svol_bs(const float_t &phi, const float_t &beta, const float_t &sigma);
-    svol_bs(const paramPack<float_t>& pp); // assumes order beta, phi, ss
+    svol_bs(const param::pack<float_t>& pp); // assumes order beta, phi, ss
    
     // required functions defined by the state space model
     float_t logQ1Ev(const ssv &x1, const osv &y1);
@@ -47,12 +47,12 @@ svol_bs<nparts, dimx, dimy, resampT, float_t>::svol_bs(const float_t &phi, const
 
 
 template<size_t nparts, size_t dimx, size_t dimy, typename resampT, typename float_t>
-svol_bs<nparts, dimx, dimy, resampT, float_t>::svol_bs(const paramPack<float_t>& pp) 
+svol_bs<nparts, dimx, dimy, resampT, float_t>::svol_bs(const param::pack<float_t>& pp) 
 {
     // assumes in order beta, phi, ss
-    m_beta = pp.getUnTransParams(0,0)(0);
-    m_phi  = pp.getUnTransParams(1,1)(0);
-    m_sigma   = std::sqrt(pp.getUnTransParams(2,2)(0));
+    m_beta  = pp.get_untrans_params(0,0)(0);
+    m_phi   = pp.get_untrans_params(1,1)(0);
+    m_sigma = std::sqrt(pp.get_untrans_params(2,2)(0));
 }
 
 
@@ -77,22 +77,17 @@ auto svol_bs<nparts, dimx, dimy, resampT, float_t>::fSamp(const ssv &xtm1) -> ss
 template<size_t nparts, size_t dimx, size_t dimy, typename resampT, typename float_t>
 float_t svol_bs<nparts, dimx, dimy, resampT, float_t>::logGEv(const osv &yt, const ssv &xt)
 {
-    return rveval::evalUnivNorm<float_t>(
-				   yt(0),
-                                   0.0,
-                                   m_beta * std::exp(.5*xt(0)),
-                                   true);
+    return rveval::evalUnivNorm<float_t>(yt(0), 0.0, m_beta * std::exp(.5*xt(0)), true);
 }
 
 
 template<size_t nparts, size_t dimx, size_t dimy, typename resampT, typename float_t>
 float_t svol_bs<nparts, dimx, dimy, resampT, float_t>::logMuEv(const ssv &x1)
 {
-    return rveval::evalUnivNorm<float_t>(
-				   x1(0),
-                                   0.0,
-                                   m_sigma/std::sqrt(1.0 - m_phi*m_phi),
-                                   true);
+    return rveval::evalUnivNorm<float_t>(x1(0),
+                                         0.0,
+                                         m_sigma/std::sqrt(1.0 - m_phi*m_phi),
+                                         true);
 }
 
 
