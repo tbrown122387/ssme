@@ -7,6 +7,9 @@
 #define PREC .0001
 
 TEST_CASE("data_reader_test", "[read_in_data]"){
+
+    // you have to run the tests from within the ssme/tests/ directory otherwise it won't find the file below
+
     // cannot have header!
     // need to know num cols
     std::vector<Eigen::Matrix<double,2,1>> data = utils::read_data<2,double>("test_data.csv");
