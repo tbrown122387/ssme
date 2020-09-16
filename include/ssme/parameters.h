@@ -1,13 +1,13 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include <memory> // unique_ptr
+#include <memory> // shared_ptr
 #include <iostream>
 #include <stdexcept>
 #include <cmath>
 #include <Eigen/Dense>
 #include <vector>
-#include <utility> // std::move
+//#include <utility> // std::move
 #include <type_traits>
 
 
@@ -61,9 +61,9 @@ public:
 
 
     /**
-     * @brief a static method to create unique pointers 
+     * @brief a static method to create shared pointers 
      */
-    static std::unique_ptr<transform<float_t> > create(trans_type tt);
+    static std::shared_ptr<transform<float_t> > create(trans_type tt);
 };
 
 
@@ -124,6 +124,53 @@ public:
 
 
 /**
+ * @class transform_container
+ */
+template<typename float_t>
+class transform_container{
+private:
+    using vecptrs = std::vector<std::shared_ptr<transform<float_t>>>;
+    vecptrs m_ts;
+
+public:
+ 
+    /**
+     * @brief ctor
+     */
+    transform_container();
+  
+
+    /**
+     * @brief ctor
+     */
+    transform_container(const transform_container<float_t>& ts);
+   
+
+    /**
+     * @brief assignment operator
+     */
+    transform_container<float_t>& operator=(const transform_container<float_t>& other);
+   
+
+    /**
+     * @brief
+     */
+    void add_transform(trans_type tt);
+
+
+    /**
+     *
+     */
+    auto get_transforms() const -> vecptrs;
+
+
+    decltype(auto) size() const;
+
+    std::shared_ptr<transform<float_t>> operator[](unsigned int i) const; 
+};
+
+
+/**
  * @class pack
  * @author Taylor
  * @brief Stores transformed parameters, as well as the functions 
@@ -131,20 +178,40 @@ public:
  */
 template<typename float_t>
 class pack{
+private:
+ 
+    // type aliases
+    using eig_dyn_vec = Eigen::Matrix<float_t,Eigen::Dynamic,1>;
+   
+    eig_dyn_vec m_trans_params;
+    transform_container<float_t> m_transform_functors;
+    
 public:
 
-    // type aliases
-    using vecptrs = std::vector<std::unique_ptr<transform<float_t>>>;
-    using eig_dyn_vec = Eigen::Matrix<float_t,Eigen::Dynamic,1>;
-
     // ctors
-    pack(const pack<float_t>& pp) = delete; // disallow copy constructor
-    pack(const eig_dyn_vec &trans_params, vecptrs&& t_functors);
-    pack(const eig_dyn_vec &params, const std::vector<trans_type> &vec_trans_types, bool start_w_trans_params = true);
+    pack(const eig_dyn_vec &trans_params, const transform_container<float_t>& t_functors);
+
+
+    //TODO: define brace initialization
+    /**
+     * @brief ctor
+     * @param params an Eigen vector of parameters (transformed or nontransformed)
+     * @param vec_trans_types a vector of smooth transformations
+     * @param start_w_trans_params whether or not you are instantiating with (non)transformed params
+     */
+//    pack(const eig_dyn_vec &params, 
+//         const std::vector<trans_type> &vec_trans_types, 
+//         bool start_w_trans_params = true);
+   
     
+    /**
+     * @brief copy ctor
+     */
+    pack(const pack<float_t>& other);
+
+
     // assignment operators
-    pack& operator=(const pack<float_t>& other) = delete; // disallow assignment because std::vector<std::unique_ptr is move-only
-    pack& operator=(pack&& other) = delete;
+    pack<float_t>& operator=(const pack<float_t>& other);
 
     
     //! get number of parameters
@@ -152,7 +219,7 @@ public:
      * @brief gets the number of parameters in your pack
      * @return an unsigned integer 
      */
-    unsigned int get_num_params() const;
+    decltype(auto) get_num_params() const;
 
 
     //! get the transformed parameters in the unrestricted space
@@ -199,20 +266,14 @@ public:
      * @return a float_t
      */
     auto get_log_jacobian() const -> float_t;
-    
 
-    //! copy values from another pack
+
     /**
-     * @brief copy the values of another pack
-     * @param the other parameter pack whose values you want to take as your own
+     * @brief getter for the smooth transforms
      */
-    void take_values(const pack<float_t>& other); 
+    auto get_transforms() const -> transform_container<float_t>;
 
 
-private:
-    
-    eig_dyn_vec m_trans_params;
-    vecptrs m_transform_functors;
     
 };
 
@@ -221,23 +282,23 @@ private:
 
 
 template<typename float_t>
-std::unique_ptr<transform<float_t> > transform<float_t>::create(trans_type tt)
+std::shared_ptr<transform<float_t> > transform<float_t>::create(trans_type tt)
 {
     if(tt == trans_type::TT_null){
         
-        return std::unique_ptr<transform<float_t> >(new null_trans<float_t> );
+        return std::shared_ptr<transform<float_t> >(new null_trans<float_t> );
     
     }else if(tt == trans_type::TT_twice_fisher){
         
-        return std::unique_ptr<transform<float_t> >(new twice_fisher_trans<float_t> );
+        return std::shared_ptr<transform<float_t> >(new twice_fisher_trans<float_t> );
     
     }else if(tt == trans_type::TT_logit){
         
-        return std::unique_ptr<transform<float_t> >(new logit_trans<float_t> );
+        return std::shared_ptr<transform<float_t> >(new logit_trans<float_t> );
     
     }else if(tt == trans_type::TT_log){
 
-        return std::unique_ptr<transform<float_t> >(new log_trans<float_t> );
+        return std::shared_ptr<transform<float_t> >(new log_trans<float_t> );
     
     }else{
 
@@ -350,36 +411,103 @@ float_t log_trans<float_t>::log_jacobian(const float_t &trans_p){
 
 
 template<typename float_t>
-pack<float_t>::pack(const eig_dyn_vec& trans_params, vecptrs&& t_functors)
-    : m_trans_params(trans_params), m_transform_functors(std::move(t_functors))
+transform_container<float_t>::transform_container()
 {
 }
 
 
 template<typename float_t>
-pack<float_t>::pack(const eig_dyn_vec &params, const std::vector<trans_type> &vec_trans_types, bool start_w_trans_params)
+transform_container<float_t>::transform_container(const transform_container<float_t>& ts)
 {
-    unsigned int n = vec_trans_types.size(); 
-    if( params.rows() != n ){
-        throw std::invalid_argument("params and vec_trans_types have to be the same size");
-    }
-    
-    for(auto & tt : vec_trans_types){
-        m_transform_functors.push_back(transform<float_t>::create(tt));
-    }
-    
-    if(start_w_trans_params){
-        m_trans_params = params;
-    }else {
-        m_trans_params.resize(n);
-        for(size_t i = 0; i < n; ++i)
-            m_trans_params(i) = m_transform_functors[i]->trans(params(i));            
-    }
+    m_ts = ts.get_transforms();
 }
 
 
 template<typename float_t>
-unsigned int pack<float_t>::get_num_params() const
+transform_container<float_t>& transform_container<float_t>::operator=(const transform_container<float_t>& other)
+{
+    m_ts = other.get_transforms(); 
+}
+
+
+template<typename float_t>
+void transform_container<float_t>::add_transform(trans_type tt)
+{
+    m_ts.push_back(transform<float_t>::create( tt ));
+}
+
+
+template<typename float_t>
+auto transform_container<float_t>::get_transforms() const -> vecptrs
+{
+   return m_ts; 
+}
+
+
+template<typename float_t>
+decltype(auto) transform_container<float_t>::size() const 
+{
+   return m_ts.size(); 
+}
+
+
+template<typename float_t>
+std::shared_ptr<transform<float_t>> transform_container<float_t>::operator[](unsigned int i) const
+{
+   return m_ts[i]; 
+} 
+
+////////////////////////////////////////////////////////////////////////////////////
+
+
+template<typename float_t>
+pack<float_t>::pack(const eig_dyn_vec& trans_params, const transform_container<float_t>& t_functors)
+    : m_trans_params(trans_params), m_transform_functors(t_functors)
+{
+}
+
+
+///template<typename float_t>
+///pack<float_t>::pack(const eig_dyn_vec &params, 
+///                    const std::vector<trans_type> &vec_trans_types, 
+///                    bool start_w_trans_params)
+///{
+///    auto n = vec_trans_types.size(); 
+///    if( params.rows() != n ){
+///        throw std::invalid_argument("params and vec_trans_types have to be the same size");
+///    }
+///    
+///    for(auto & tt : vec_trans_types)
+///        m_transform_functors.add_transform(tt);
+///    
+///    if(start_w_trans_params){
+///        m_trans_params = params;
+///    }else {
+///        m_trans_params.resize(n);
+///        for(size_t i = 0; i < n; ++i)
+///            m_trans_params(i) = m_transform_functors[i]->trans(params(i));            
+///    }
+///}
+
+
+template<typename float_t>
+pack<float_t>::pack(const pack<float_t>& other)
+{
+    m_trans_params = other.get_trans_params();
+    m_transform_functors = other.get_transforms();
+}
+
+
+template<typename float_t>
+pack<float_t>& pack<float_t>::operator=(const pack<float_t>& other)
+{
+    m_trans_params = other.get_trans_params();
+    m_transform_functors = other.get_transforms();
+}
+
+
+template<typename float_t>
+decltype(auto) pack<float_t>::get_num_params() const 
 {
     return m_transform_functors.size();
 }
@@ -395,7 +523,7 @@ auto pack<float_t>::get_trans_params() const -> eig_dyn_vec
 template<typename float_t>
 auto pack<float_t>::get_untrans_params() const -> eig_dyn_vec
 {
-    unsigned int n = this->get_num_params();
+    auto n = this->get_num_params();
     eig_dyn_vec params(n);
     for(size_t i = 0; i < n; ++i)
         params(i) = m_transform_functors[i]->inv_trans(m_trans_params(i));
@@ -430,15 +558,12 @@ float_t pack<float_t>::get_log_jacobian() const
     return result;
 }
 
-
+  
 template<typename float_t>
-void pack<float_t>::take_values(const pack<float_t>& other)
+auto pack<float_t>::get_transforms() const -> transform_container<float_t>
 {
-    if(m_transform_functors.size() != other.get_num_params())
-        throw std::invalid_argument("other must have the same size as the caller");
-    m_trans_params = other.get_trans_params(0,m_trans_params.size()-1); // TODO: what happens when they are of different sizes?!
+    return m_transform_functors;
 }
-
 
 
 } //namespace param
