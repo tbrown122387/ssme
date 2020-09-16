@@ -122,6 +122,10 @@ public:
         }
     }
 
+
+    /**
+     * @brief destructor
+     */
     ~thread_pool() {
         m_done=true;
     }

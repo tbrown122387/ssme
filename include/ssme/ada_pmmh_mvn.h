@@ -132,9 +132,7 @@ private:
     unsigned int m_print_every_k;    
     
     /* thread pool (its function can only take one parameter) */
-    using tp_t = thread_pool<param_and_data<float_t,dimobs>, float_t>;
-    typename tp_t::F m_f; 
-    tp_t m_pool; 
+    thread_pool<param_and_data<float_t,dimobs>, float_t> m_pool; 
 
     /* changing MCMC state variables */
     float_t m_old_log_like;
@@ -159,6 +157,10 @@ private:
 
     void record_messages();
 
+    static float_t pool_func(const param_and_data<float_t,dimobs>& p_and_d)
+    {
+        return log_like_eval(p_and_d.params, p_and_d.data); 
+    }
 };
 
 
@@ -190,11 +192,7 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
  , m_eps(.01)
  , m_print_to_console(print_to_console)
  , m_print_every_k(print_every_k)
- , m_f([this](param_and_data<float_t,dimobs> both) -> float_t 
-         { 
-            return this->log_like_eval(both.params, both.data); 
-         })
- , m_pool(m_f, num_pfilters, mc)
+ , m_pool(pool_func, num_pfilters, mc)
  , m_log_accept_prob(-std::numeric_limits<float_t>::infinity())
 {
     m_data = utils::read_data<dimobs,float_t>(data_file);
