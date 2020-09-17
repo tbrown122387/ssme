@@ -13,9 +13,6 @@
 #include <ssme/thread_pool.h>
 
 
-    param::pack<float_t> params; 
-    std::vector<osv> data;
-
 /**
  * @class ada_pmmh_mvn
  * @author Taylor
@@ -35,6 +32,8 @@ public:
     using osv = Eigen::Matrix<float_t,dimobs,1>;
     using psv = Eigen::Matrix<float_t,numparams,1>;
     using psm = Eigen::Matrix<float_t,numparams,numparams>;
+    using dyn_data_t = param::pack<float_t>;
+    using static_data_t = std::vector<osv>;
 
     /**
      * @brief Constructs algorithm object
@@ -98,8 +97,7 @@ public:
     
              
 private:
-    std::vector<osv> m_data;
-    param::pack<float_t> m_current_theta;
+    dyn_data_t m_current_theta;
     param::transform_container<float_t> m_tts;
     psm m_sigma_hat; // for transformed parameters; n-1 in the denominator.
     psv m_mean_trans_theta;
@@ -118,7 +116,7 @@ private:
     unsigned int m_print_every_k;    
     
     /* thread pool (its function can only take one parameter) */
-    thread_pool<param::pack<float_t>, std::vector<osv>, float_t> m_pool; 
+    thread_pool<dyn_data_t, static_data_t, float_t> m_pool; 
 
     /* changing MCMC state variables */
     float_t m_old_log_like;
@@ -128,12 +126,11 @@ private:
     float_t m_log_accept_prob;
     bool m_accepted;
 
-    void update_moments_and_Ct(const param::pack<float_t>& new_theta);
+    void update_moments_and_Ct(const dyn_data_t& new_theta);
  
-    psv q_samp(const param::pack<float_t>& old_theta);
+    psv q_samp(const dyn_data_t& old_theta);
  
-    float_t log_q_eval(const param::pack<float_t>& oldParams, 
-                       const param::pack<float_t>& new_params);
+    float_t log_q_eval(const dyn_data_t& oldParams, const dyn_data_t& new_params);
 
 
     // TODO: https://eigen.tuxfamily.org/dox/TopicFunctionTakingEigenTypes.html
@@ -143,9 +140,9 @@ private:
 
     void record_messages();
 
-    static float_t pool_func(const param_and_data<float_t,dimobs>& p_and_d)
+    float_t pool_func(dyn_data_t param, static_data_t obs_data)
     {
-        return log_like_eval(p_and_d.params, p_and_d.data); 
+        return log_like_eval(param, obs_data); 
     }
 };
 
@@ -178,11 +175,17 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
  , m_eps(.01)
  , m_print_to_console(print_to_console)
  , m_print_every_k(print_every_k)
- , m_pool(pool_func, num_pfilters, mc)
+ , m_pool(std::bind(&ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::pool_func, 
+                    this, 
+                    std::placeholders::_1,
+                    std::placeholders::_2),
+         num_pfilters, 
+         mc)
  , m_log_accept_prob(-std::numeric_limits<float_t>::infinity())
 {
-    m_data = utils::read_data<dimobs,float_t>(data_file);
-    
+    static_data_t tmp_data = utils::read_data<dimobs,float_t>(data_file);
+    m_pool.add_observed_data( tmp_data );
+
     std::string samples_file = utils::gen_string_with_time(sample_file_base_name);
     m_samples_file_stream.open(samples_file); 
     
@@ -318,12 +321,10 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
             
             // propose a new theta
             proposed_trans_theta = q_samp(m_current_theta);
-            param::pack<float_t> proposed_theta(proposed_trans_theta, m_tts);
+            dyn_data_t proposed_theta(proposed_trans_theta, m_tts);
             
             m_new_log_prior = log_prior_eval(proposed_theta) + proposed_theta.get_log_jacobian();
-            m_new_log_like = m_pool.work( param_and_data<float_t,dimobs> {
-                                            std::move(proposed_theta), 
-                                            std::move(m_data) } );
+            m_new_log_like = m_pool.work(proposed_theta); 
 
             // decide whether to accept or reject
             m_log_accept_prob = m_new_log_prior + m_new_log_like - m_old_log_prior - m_old_log_like;                
@@ -342,9 +343,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
             }
            
         }else{ // first iteration
-            m_old_log_like = m_pool.work( param_and_data<float_t,dimobs> {
-                                            std::move(m_current_theta), 
-                                            std::move(m_data) } );
+            m_old_log_like = m_pool.work(m_current_theta); 
             m_old_log_prior = log_prior_eval(m_current_theta) + m_current_theta.get_log_jacobian();
         } 
             

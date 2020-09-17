@@ -18,7 +18,9 @@ public:
     thread_pool<param_t,obs_data_t,double> pool;
     
     MyFixture() 
-        : pool(d, std::vector<double>{999}, 1e4, true) {}
+        : pool(d, 1e4, true) {
+            pool.add_observed_data( std::vector<double>{999} );
+        }
 };
 
 
@@ -52,9 +54,10 @@ public:
                 [](param_t nums, obs_data_t od) -> double{
                     return std::accumulate(nums.begin(), nums.end(), 0.0);
                 },
-                std::vector<double>{999},
                 1e4, 
-                true) {}
+                true) {
+            pool.add_observed_data( std::vector<double>{999} );
+        }
 };
 
 
@@ -87,7 +90,10 @@ public:
                          this, 
                          std::placeholders::_1,
                          std::placeholders:: _2), 
-               std::vector<double>{999}, 1e4, true) {}
+               1e4, 
+               true) {
+            pool.add_observed_data( std::vector<double>{999} );
+        }
 };
 
 

@@ -210,6 +210,12 @@ public:
     pack(const pack<float_t>& other);
 
 
+    /**
+     * @brief default ctor
+     */
+    pack();
+
+
     // assignment operators
     pack<float_t>& operator=(const pack<float_t>& other);
 
@@ -495,6 +501,12 @@ pack<float_t>::pack(const pack<float_t>& other)
 {
     m_trans_params = other.get_trans_params();
     m_transform_functors = other.get_transforms();
+}
+
+    
+template<typename float_t>
+pack<float_t>::pack()
+{
 }
 
 

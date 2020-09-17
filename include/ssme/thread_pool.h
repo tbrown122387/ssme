@@ -59,7 +59,9 @@ private:
     dyn_data_t m_param; // changed occasionally by a single writer
     static_data_t m_observed_data; // data you're conditioning on that never changes  
     mutable std::shared_mutex m_param_mut; // shared lock for reading input
-   
+ 
+    /* whether the observed "static" data has been added to the thread pool yet */ 
+    bool m_no_data_yet; 
 
     /**
      * @brief function running on all threads
@@ -100,15 +102,15 @@ public:
      * @param num_comps the number of times to call f
      * @param mt do you want multiple threads 
      */  
-    thread_pool(F f, const static_data_t& obs_data, unsigned num_comps, bool mt = true) 
+    thread_pool(F f, unsigned num_comps, bool mt = true) 
         : m_working_ave(0.0)
         , m_count(0)
         , m_total_calcs(num_comps)
         , m_done(false)
         , m_has_an_input(false)
         , m_joiner(m_threads)
-        , m_observed_data(obs_data)
-        , m_f(f) 
+        , m_f(f)
+        , m_no_data_yet(true) 
     {
 
         unsigned nt = std::thread::hardware_concurrency(); // should I subtract one?
@@ -122,6 +124,12 @@ public:
             m_done=true;
             throw;
         }
+    }
+
+    void add_observed_data(const static_data_t& obs_data)
+    {
+        m_observed_data = obs_data;
+        m_no_data_yet = false;
     }
 
 
@@ -140,7 +148,10 @@ public:
      * resets the promise object
      */
     func_output_t work(dyn_data_t new_param) {
-        
+
+        if( m_no_data_yet ) 
+            throw std::runtime_error("must add observed data before calculating anything\n"); 
+
         {
             std::unique_lock<std::shared_mutex> param_lk(m_param_mut);
             m_param = new_param;
