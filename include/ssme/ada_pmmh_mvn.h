@@ -13,22 +13,8 @@
 #include <ssme/thread_pool.h>
 
 
-/**
- * @struct param_and_data
- * @brief a simple struct that bundles together
- * params and data, so the function in the thread
- * pool can take one argument
- */
-template<typename float_t, size_t dimobs>
-struct param_and_data{
-    using osv = Eigen::Matrix<float_t,dimobs,1>;
-    param_and_data(param::pack<float_t>&& p, std::vector<osv>&& d)
-        : params(std::move(p)), data(std::move(d)) {}
-
     param::pack<float_t> params; 
     std::vector<osv> data;
-};
-
 
 /**
  * @class ada_pmmh_mvn
@@ -49,7 +35,7 @@ public:
     using osv = Eigen::Matrix<float_t,dimobs,1>;
     using psv = Eigen::Matrix<float_t,numparams,1>;
     using psm = Eigen::Matrix<float_t,numparams,numparams>;
-    
+
     /**
      * @brief Constructs algorithm object
      * @param start_trans_theta the initial transformed parameters you want to start sampling from.
@@ -65,7 +51,7 @@ public:
      * @param print_every_k print messages and samples every (this number) iterations
      */
     ada_pmmh_mvn(const psv &start_trans_theta, 
-                 const std::vector<param::trans_type>& tts,
+                 const param::transform_container<float_t>& tts,
                  const unsigned int &num_mcmc_iters,
                  const unsigned int &num_pfilters,
                  const std::string &data_file, 
@@ -114,7 +100,7 @@ public:
 private:
     std::vector<osv> m_data;
     param::pack<float_t> m_current_theta;
-    std::vector<param::trans_type> m_tts;
+    param::transform_container<float_t> m_tts;
     psm m_sigma_hat; // for transformed parameters; n-1 in the denominator.
     psv m_mean_trans_theta;
     float_t m_ma_accept_rate;
@@ -132,7 +118,7 @@ private:
     unsigned int m_print_every_k;    
     
     /* thread pool (its function can only take one parameter) */
-    thread_pool<param_and_data<float_t,dimobs>, float_t> m_pool; 
+    thread_pool<param::pack<float_t>, std::vector<osv>, float_t> m_pool; 
 
     /* changing MCMC state variables */
     float_t m_old_log_like;
@@ -167,7 +153,7 @@ private:
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
 ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
                                             const psv &start_trans_theta, 
-                                            const std::vector<param::trans_type>& tts,
+                                            const param::transform_container<float_t>& tts,
                                             const unsigned int &num_mcmc_iters,
                                             const unsigned int &num_pfilters,
                                             const std::string &data_file, 
@@ -345,7 +331,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
             m_accepted = log_uniform_draw < m_log_accept_prob;  // TODO: verify that everything compared to a NaN is false!
             if(m_accepted){
                 m_ma_accept_rate = 1.0/(m_iter+1.0) + m_iter*m_ma_accept_rate/(m_iter+1.0);
-                m_current_theta.take_values(proposed_theta);
+                m_current_theta = proposed_theta;
                 m_old_log_prior = m_new_log_prior;
                 m_old_log_like = m_new_log_like;
             }else{

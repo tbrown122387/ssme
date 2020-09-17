@@ -23,7 +23,7 @@ public:
     
     univ_svol_estimator(
             const psv &start_trans_theta,
-            const std::vector<param::trans_type>& tts,
+            const param::transform_container<float_t>& tts,
             const unsigned int &num_mcmc_iters,
             const unsigned int &num_pfilters, 
             const std::string &data_file, 
@@ -45,7 +45,7 @@ public:
 template<size_t numparams, size_t dimstate, size_t dimobs, size_t numparts, typename float_t>
 univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::univ_svol_estimator(
                                                     const psv &start_trans_theta,
-                                                    const std::vector<param::trans_type>& tts,
+                                                    const param::transform_container<float_t>& tts,
                                                     const unsigned int &num_mcmc_iters,
                                                     const unsigned int &num_pfilters, 
                                                     const std::string &data_file, 
@@ -145,10 +145,10 @@ void do_ada_pmmh_univ_svol(const std::string &datafile,
 
     psv start_trans_theta;
     start_trans_theta << 1.0, rveval::twiceFisher<float_t>(.5), std::log(2.0e-4);
-    std::vector<param::trans_type> tts;
-    tts.push_back(param::trans_type::TT_null); // betas
-    tts.push_back(param::trans_type::TT_twice_fisher); // phis
-    tts.push_back(param::trans_type::TT_log); // sigma squareds
+    param::transform_container<float_t> tts;
+    tts.add_transform(param::trans_type::TT_null); // betas
+    tts.add_transform(param::trans_type::TT_twice_fisher); // phis
+    tts.add_transform(param::trans_type::TT_log); // sigma squareds
    
     // the chain's initial covariance matrix 
     psm C0 = psm::Identity()*.15;
