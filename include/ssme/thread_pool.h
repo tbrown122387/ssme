@@ -35,11 +35,11 @@ public:
  * single param writer, many concurrent parameter readers
  * output is averaged in a thread-safe way
  */
-template<typename func_input_t, typename func_output_t>
+template<typename dyn_data_t, typename static_data_t, typename func_output_t >
 class thread_pool
 {
 public:   
-    using F = std::function<func_output_t(func_input_t)>; 
+    using F = std::function<func_output_t(dyn_data_t, static_data_t)>; 
 private:
     static_assert( std::is_floating_point<func_output_t>::value,  
                    "function output type must be floating point");
@@ -56,7 +56,8 @@ private:
     join_threads m_joiner;
 
     F m_f; // same function always used
-    func_input_t m_param; // changed occasionally by a single writer    
+    dyn_data_t m_param; // changed occasionally by a single writer
+    static_data_t m_observed_data; // data you're conditioning on that never changes  
     mutable std::shared_mutex m_param_mut; // shared lock for reading input
    
 
@@ -71,7 +72,7 @@ private:
                
                 // call the expensive function
                 std::shared_lock<std::shared_mutex> param_lock(m_param_mut);
-                func_output_t val = m_f(m_param);
+                func_output_t val = m_f(m_param, m_observed_data);
 
                 // write it to the average and increment count
                 // do this in thread-safe way with mutex
@@ -99,13 +100,14 @@ public:
      * @param num_comps the number of times to call f
      * @param mt do you want multiple threads 
      */  
-    thread_pool(F f, unsigned num_comps, bool mt = true) 
+    thread_pool(F f, const static_data_t& obs_data, unsigned num_comps, bool mt = true) 
         : m_working_ave(0.0)
         , m_count(0)
         , m_total_calcs(num_comps)
         , m_done(false)
         , m_has_an_input(false)
         , m_joiner(m_threads)
+        , m_observed_data(obs_data)
         , m_f(f) 
     {
 
@@ -137,7 +139,7 @@ public:
      * resets the accumulator thing to 0, and
      * resets the promise object
      */
-    func_output_t work(func_input_t new_param) {
+    func_output_t work(dyn_data_t new_param) {
         
         {
             std::unique_lock<std::shared_mutex> param_lk(m_param_mut);
