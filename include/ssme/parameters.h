@@ -432,7 +432,9 @@ transform_container<float_t>::transform_container(const transform_container<floa
 template<typename float_t>
 transform_container<float_t>& transform_container<float_t>::operator=(const transform_container<float_t>& other)
 {
-    m_ts = other.get_transforms(); 
+    if( this != &other)
+        m_ts = other.get_transforms();
+    return *this; 
 }
 
 
@@ -513,8 +515,11 @@ pack<float_t>::pack()
 template<typename float_t>
 pack<float_t>& pack<float_t>::operator=(const pack<float_t>& other)
 {
-    m_trans_params = other.get_trans_params();
-    m_transform_functors = other.get_transforms();
+    if( this != &other ){
+        m_trans_params = other.get_trans_params();
+        m_transform_functors = other.get_transforms();
+    }
+    return *this;
 }
 
 
