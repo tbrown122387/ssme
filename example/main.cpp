@@ -6,11 +6,11 @@
 #include <cstdlib>  // atoi()
 
 
-#define NUMPARTS 100
+#define NUMPARTS 500
 #define DIMOBS 1
 #define NUMPARAMS 3
 #define DIMSTATE 1
-#define FLOATTYPE double
+#define FLOATTYPE float
 
 int main(int argc, char* argv[]){
 
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]){
                                                              messages_base_name, 
                                                              num_mcmc_iters, 
                                                              num_pfilters,
-                                                             true); // use multicore?
+                                                             false); // use multicore?
    
    
    return 0;
