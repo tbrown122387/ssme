@@ -31,40 +31,70 @@ public:
 
 
 /**
- * @brief thread_pool
- * single param writer, many concurrent parameter readers
- * output is averaged in a thread-safe way
+ * @brief A specific type of thread_pool. We have many concurrent parameter readers, but only a single parameter writer.
+ * This thread pool owns one function that returns one (random) floating point number. The pool sits ready to perform calculations
+ * on any new parameter value. Once a new parameter value is received, this pool calls its function a fixed number of times, 
+ * and all of the function output is averaged in a thread-safe way. For our particular applications, this function will also depend 
+ * on observed data that doesn't change once the thread pool has been initialized.
  */
 template<typename dyn_data_t, typename static_data_t, typename func_output_t >
 class thread_pool
 {
-public:   
+public:  
+
+    /* type alias for the type of function this thread pool owns */ 
     using F = std::function<func_output_t(dyn_data_t, static_data_t)>; 
+
 private:
     static_assert( std::is_floating_point<func_output_t>::value,  
                    "function output type must be floating point");
 
-    mutable std::mutex m_ac_mut; // locks the average and count of comps
+    /* locks the average and count of comps */
+    mutable std::mutex m_ac_mut; 
+    
+    /* the accumulated variable (working average) */
     func_output_t m_working_ave;
+
+    /* the number of calls that have been completed so far */
     std::atomic<unsigned> m_count;
+
+    /* the unchanging desired number of function calls you want for each fresh new input */
     unsigned m_total_calcs;
+
+    /* promised output of an average */
     std::promise<func_output_t> m_out;
 
+    /* flag for if pool is operational */
     std::atomic_bool m_done;
+
+    /* flag for if there is a new input */
     std::atomic_bool m_has_an_input;
+    
+    /* the raw threads */
     std::vector<std::thread> m_threads;
+    
+    /* the RAII thread killer (defined above) */
     join_threads m_joiner;
 
-    F m_f; // same function always used
-    dyn_data_t m_param; // changed occasionally by a single writer
-    static_data_t m_observed_data; // data you're conditioning on that never changes  
-    mutable std::shared_mutex m_param_mut; // shared lock for reading input
+    /* our function that gets called every time */
+    F m_f; 
+
+    /* the dynamic parameter vector that is used as an input to the function, which occasionally gets changed by a single writer  */
+    dyn_data_t m_param;
+
+    /* the unchanging observed data that is used as an input to the function */ 
+    static_data_t m_observed_data; 
+
+    /* shared lock for reading in new parameter values */  
+    mutable std::shared_mutex m_param_mut; 
  
     /* whether the observed "static" data has been added to the thread pool yet */ 
     bool m_no_data_yet; 
 
+
     /**
-     * @brief function running on all threads
+     * @brief This function runs on all threads, and continuously waits for work to do. When a new parameter comes, 
+     * calculations begin to be performed, and all their outputs are averaged together.
      */ 
     void worker_thread() {
 
@@ -95,11 +125,12 @@ private:
     }
 
 public:
-   
+  
+
     /**
-     * @brief ctor spawns working threads
-     * @param f the function that gets called a bunch of times
-     * @param num_comps the number of times to call f
+     * @brief The ctor spawns the working threads and gets ready to start doing work.
+     * @param f the function that gets called a bunch of times.
+     * @param num_comps the number of times to call f with each new parameter input.
      * @param mt do you want multiple threads 
      */  
     thread_pool(F f, unsigned num_comps, bool mt = true) 
@@ -126,6 +157,11 @@ public:
         }
     }
 
+
+    /**
+     * @brief add observed data once before any calculations are performed
+     * @param obs_data the entire collection of observed data
+     */
     void add_observed_data(const static_data_t& obs_data)
     {
         m_observed_data = obs_data;
@@ -142,10 +178,9 @@ public:
 
 
     /**
-     * @brief changes the shared data member, 
-     * resets the num_comps_left variable, 
-     * resets the accumulator thing to 0, and
-     * resets the promise object
+     * @brief changes the shared data member, then resets some variables, then starts all the work and returns the average.
+     * @param the new parameter input 
+     * @return a floating point average 
      */
     func_output_t work(dyn_data_t new_param) {
 

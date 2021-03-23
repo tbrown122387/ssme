@@ -89,7 +89,7 @@ public:
         : pool(std::bind(&MyFixture3::d, 
                          this, 
                          std::placeholders::_1,
-                         std::placeholders:: _2), 
+                         std::placeholders::_2), 
                1e4, 
                true) {
             pool.add_observed_data( std::vector<double>{999} );
