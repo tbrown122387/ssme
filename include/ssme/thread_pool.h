@@ -49,20 +49,15 @@ private:
     static_assert( std::is_floating_point<func_output_t>::value,  
                    "function output type must be floating point");
 
+
+    /* shared lock for reading in new parameter values */  
+    mutable std::shared_mutex m_param_mut; 
+
     /* locks the average and count of comps */
     mutable std::mutex m_ac_mut; 
-    
-    /* the accumulated variable (working average) */
-    func_output_t m_working_ave;
-
+ 
     /* the number of calls that have been completed so far */
     std::atomic<unsigned> m_count;
-
-    /* the unchanging desired number of function calls you want for each fresh new input */
-    unsigned m_total_calcs;
-
-    /* promised output of an average */
-    std::promise<func_output_t> m_out;
 
     /* flag for if pool is operational */
     std::atomic_bool m_done;
@@ -70,11 +65,14 @@ private:
     /* flag for if there is a new input */
     std::atomic_bool m_has_an_input;
     
-    /* the raw threads */
-    std::vector<std::thread> m_threads;
-    
-    /* the RAII thread killer (defined above) */
-    join_threads m_joiner;
+    /* the accumulated variable (working average) */
+    func_output_t m_working_ave;
+
+    /* the unchanging desired number of function calls you want for each fresh new input */
+    unsigned m_total_calcs;
+
+    /* promised output of an average */
+    std::promise<func_output_t> m_out;
 
     /* our function that gets called every time */
     F m_f; 
@@ -84,12 +82,15 @@ private:
 
     /* the unchanging observed data that is used as an input to the function */ 
     static_data_t m_observed_data; 
-
-    /* shared lock for reading in new parameter values */  
-    mutable std::shared_mutex m_param_mut; 
  
     /* whether the observed "static" data has been added to the thread pool yet */ 
     bool m_no_data_yet; 
+   
+    /* the raw threads */
+    std::vector<std::thread> m_threads;
+    
+    /* the RAII thread killer (defined above) */
+    join_threads m_joiner;
 
 
     /**
@@ -108,8 +109,8 @@ private:
 
                 // write it to the average and increment count
                 // do this in thread-safe way with mutex
-                std::lock_guard<std::mutex> out_lock{m_ac_mut};
-                if( m_count.load() < m_total_calcs ) {
+      	        std::lock_guard<std::mutex> out_lock{m_ac_mut};
+		if( m_count.load() < m_total_calcs ) {
                     m_working_ave += val / m_total_calcs;
                     m_count++;
                 }else if( m_count.load() == m_total_calcs){
@@ -134,14 +135,15 @@ public:
      * @param mt do you want multiple threads 
      */  
     thread_pool(F f, unsigned num_comps, bool mt = true) 
-        : m_working_ave(0.0)
-        , m_count(0)
-        , m_total_calcs(num_comps)
+        : m_count(0)
         , m_done(false)
         , m_has_an_input(false)
-        , m_joiner(m_threads)
+	, m_working_ave(0.0)
+        , m_total_calcs(num_comps)
         , m_f(f)
         , m_no_data_yet(true) 
+        , m_joiner(m_threads)
+
     {
 
         unsigned nt = std::thread::hardware_concurrency(); // should I subtract one?
@@ -193,7 +195,7 @@ public:
         }
 
         {
-            std::unique_lock<std::mutex> ave_lock(m_ac_mut); 
+            std::unique_lock<std::mutex> ave_lock(m_ac_mut);
             m_count = 0;
             m_working_ave = 0.0;
         }

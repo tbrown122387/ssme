@@ -139,12 +139,14 @@ void do_ada_pmmh_univ_svol(const std::string &datafile,
                            unsigned int num_pfilters,
                            bool multicore)
 {
+
     // the chain's starting parameters
     using psv = Eigen::Matrix<float_t,numparams,1>;
     using psm = Eigen::Matrix<float_t,numparams,numparams>;
 
     psv start_trans_theta;
     start_trans_theta << 1.0, rveval::twiceFisher<float_t>(.5), std::log(2.0e-4);
+
     param::transform_container<float_t> tts;
     tts.add_transform(param::trans_type::TT_null); // betas
     tts.add_transform(param::trans_type::TT_twice_fisher); // phis
