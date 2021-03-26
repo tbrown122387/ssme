@@ -125,12 +125,15 @@ public:
 
 /**
  * @class transform_container
+ * @brief holds a bunch of (pointers to) transform function objects
  */
-template<typename float_t>
+template<typename float_t, size_t numelem>
 class transform_container{
 private:
-    using vecptrs = std::vector<std::shared_ptr<transform<float_t>>>;
-    vecptrs m_ts;
+
+    using array_ptrs = std::array<std::shared_ptr<transform<float_t>>, numelem>;
+    array_ptrs m_ts;
+    unsigned m_add_idx;
 
 public:
  
@@ -142,30 +145,44 @@ public:
 
     /**
      * @brief ctor
+     * @param ts the transform container you want to copy
      */
-    transform_container(const transform_container<float_t>& ts);
+    transform_container(const transform_container<float_t,numelem>& ts);
    
 
     /**
      * @brief assignment operator
      */
-    transform_container<float_t>& operator=(const transform_container<float_t>& other);
+    transform_container<float_t,numelem>& operator=(const transform_container<float_t,numelem>& other);
    
 
     /**
-     * @brief
+     * @brief add a transform to the container
      */
     void add_transform(trans_type tt);
 
 
     /**
-     *
+     * @brief get the transforms as an array of pointers
      */
-    auto get_transforms() const -> vecptrs;
+    auto get_transforms() const -> array_ptrs;
 
 
+    /**
+     * @brief get the number of elements/transforms
+     */
     decltype(auto) size() const;
 
+
+    /**
+     * @brief get the number of elements/transforms
+     */
+    decltype(auto) capacity() const;
+
+
+    /**
+     * @brief access a specific pointer to a transform
+     */
     std::shared_ptr<transform<float_t>> operator[](unsigned int i) const; 
 };
 
@@ -176,20 +193,20 @@ public:
  * @brief Stores transformed parameters, as well as the functions 
  * that can change them to the untransformed parameters and back.
  */
-template<typename float_t>
+template<typename float_t, size_t numelem>
 class pack{
 private:
  
     // type aliases
-    using eig_dyn_vec = Eigen::Matrix<float_t,Eigen::Dynamic,1>;
+    using eig_vec = Eigen::Matrix<float_t,numelem,1>;
    
-    eig_dyn_vec m_trans_params;
-    transform_container<float_t> m_transform_functors;
+    eig_vec m_trans_params;
+    transform_container<float_t, numelem> m_transform_functors;
     
 public:
 
     // ctors
-    pack(const eig_dyn_vec &trans_params, const transform_container<float_t>& t_functors);
+    pack(const eig_vec &trans_params, const transform_container<float_t, numelem>& t_functors);
 
 
     //TODO: define brace initialization
@@ -207,7 +224,7 @@ public:
     /**
      * @brief copy ctor
      */
-    pack(const pack<float_t>& other);
+    pack(const pack<float_t,numelem>& other);
 
 
     /**
@@ -217,7 +234,7 @@ public:
 
 
     // assignment operators
-    pack<float_t>& operator=(const pack<float_t>& other);
+    pack<float_t,numelem>& operator=(const pack<float_t,numelem>& other);
 
     
     //! get number of parameters
@@ -233,7 +250,7 @@ public:
      * @brief get the transformed parameters on the unrestricted space
      * @return an Eigen::Vector of transformed parameters
      */
-    auto get_trans_params() const -> eig_dyn_vec;
+    auto get_trans_params() const -> eig_vec;
 
 
     //! get the untransformed parameters in the possibly-restricted space
@@ -241,7 +258,7 @@ public:
      * @brief get the untransformed parameters on the possibly-restricted space
      * @return an Eigen::Vector of transformed parameters
      */
-    auto get_untrans_params() const -> eig_dyn_vec;
+    auto get_untrans_params() const -> eig_vec;
 
 
     //! get a subset of the transformed parameters in the unrestricted space
@@ -252,7 +269,7 @@ public:
      * @param index of last element (not like python indexing!)
      * @return an Eigen::Vector of transformed parameters
      */ 
-    auto get_trans_params(const unsigned int& start, const unsigned int& end) const -> eig_dyn_vec;
+    auto get_trans_params(const unsigned int& start, const unsigned int& end) const -> Eigen::Matrix<float_t, Eigen::Dynamic, 1>;
 
 
     //! get a subset of the untransformed parameters in the possibly-restricted space
@@ -263,7 +280,7 @@ public:
     * @param index of last element (not like python indexing!)
     * @return an Eigen::Vector of transformed parameters
     */ 
-    auto get_untrans_params(const unsigned int& start, const unsigned int& end) const -> eig_dyn_vec;
+    auto get_untrans_params(const unsigned int& start, const unsigned int& end) const -> Eigen::Matrix<float_t, Eigen::Dynamic, 1>;
     
     
     //! get the log of the Jacobian determinant you need for the density of transformed parameters.
@@ -277,7 +294,7 @@ public:
     /**
      * @brief getter for the smooth transforms
      */
-    auto get_transforms() const -> transform_container<float_t>;
+    auto get_transforms() const -> transform_container<float_t,numelem>;
 
 
     
@@ -416,51 +433,63 @@ float_t log_trans<float_t>::log_jacobian(const float_t &trans_p){
 ////////////////////////////////////////////////////////////////////////////////////
 
 
-template<typename float_t>
-transform_container<float_t>::transform_container()
+template<typename float_t, size_t numelem>
+transform_container<float_t,numelem>::transform_container()
+    : m_add_idx(0)
 {
 }
 
 
-template<typename float_t>
-transform_container<float_t>::transform_container(const transform_container<float_t>& ts)
+template<typename float_t, size_t numelem>
+transform_container<float_t,numelem>::transform_container(const transform_container<float_t,numelem>& ts)
 {
     m_ts = ts.get_transforms();
+    m_add_idx = ts.size();
 }
 
 
-template<typename float_t>
-transform_container<float_t>& transform_container<float_t>::operator=(const transform_container<float_t>& other)
+template<typename float_t, size_t numelem>
+transform_container<float_t,numelem>& transform_container<float_t,numelem>::operator=(const transform_container<float_t,numelem>& other)
 {
-    if( this != &other)
+    if( this != &other){
         m_ts = other.get_transforms();
+        m_add_idx = other.size();
+    }
     return *this; 
 }
 
 
-template<typename float_t>
-void transform_container<float_t>::add_transform(trans_type tt)
+template<typename float_t, size_t numelem>
+void transform_container<float_t, numelem>::add_transform(trans_type tt)
 {
-    m_ts.push_back(transform<float_t>::create( tt ));
+    m_ts[m_add_idx] = transform<float_t>::create(tt);
+    m_add_idx++;
 }
 
 
-template<typename float_t>
-auto transform_container<float_t>::get_transforms() const -> vecptrs
+template<typename float_t, size_t numelem>
+auto transform_container<float_t,numelem>::get_transforms() const -> array_ptrs
 {
    return m_ts; 
 }
 
 
-template<typename float_t>
-decltype(auto) transform_container<float_t>::size() const 
+template<typename float_t, size_t numelem>
+decltype(auto) transform_container<float_t,numelem>::size() const 
 {
-   return m_ts.size(); 
+   return m_add_idx; 
 }
 
 
-template<typename float_t>
-std::shared_ptr<transform<float_t>> transform_container<float_t>::operator[](unsigned int i) const
+template<typename float_t, size_t numelem>
+decltype(auto) transform_container<float_t,numelem>::capacity() const 
+{
+   return numelem; 
+}
+
+
+template<typename float_t, size_t numelem>
+std::shared_ptr<transform<float_t>> transform_container<float_t, numelem>::operator[](unsigned int i) const
 {
    return m_ts[i]; 
 } 
@@ -468,8 +497,8 @@ std::shared_ptr<transform<float_t>> transform_container<float_t>::operator[](uns
 ////////////////////////////////////////////////////////////////////////////////////
 
 
-template<typename float_t>
-pack<float_t>::pack(const eig_dyn_vec& trans_params, const transform_container<float_t>& t_functors)
+template<typename float_t, size_t numelem>
+pack<float_t,numelem>::pack(const eig_vec& trans_params, const transform_container<float_t,numelem>& t_functors)
     : m_trans_params(trans_params), m_transform_functors(t_functors)
 {
 }
@@ -498,22 +527,22 @@ pack<float_t>::pack(const eig_dyn_vec& trans_params, const transform_container<f
 ///}
 
 
-template<typename float_t>
-pack<float_t>::pack(const pack<float_t>& other)
+template<typename float_t, size_t numelem>
+pack<float_t,numelem>::pack(const pack<float_t,numelem>& other)
 {
     m_trans_params = other.get_trans_params();
     m_transform_functors = other.get_transforms();
 }
 
     
-template<typename float_t>
-pack<float_t>::pack()
+template<typename float_t,size_t numelem>
+pack<float_t,numelem>::pack()
 {
 }
 
 
-template<typename float_t>
-pack<float_t>& pack<float_t>::operator=(const pack<float_t>& other)
+template<typename float_t, size_t numelem>
+pack<float_t,numelem>& pack<float_t,numelem>::operator=(const pack<float_t,numelem>& other)
 {
     if( this != &other ){
         m_trans_params = other.get_trans_params();
@@ -523,50 +552,53 @@ pack<float_t>& pack<float_t>::operator=(const pack<float_t>& other)
 }
 
 
-template<typename float_t>
-decltype(auto) pack<float_t>::get_num_params() const 
+template<typename float_t, size_t numelem>
+decltype(auto) pack<float_t,numelem>::get_num_params() const 
 {
     return m_transform_functors.size();
 }
 
 
-template<typename float_t>
-auto pack<float_t>::get_trans_params() const -> eig_dyn_vec 
+template<typename float_t, size_t numelem>
+auto pack<float_t,numelem>::get_trans_params() const -> eig_vec 
 {
     return m_trans_params.block(0,0,this->get_num_params(),1);
 }
 
 
-template<typename float_t>
-auto pack<float_t>::get_untrans_params() const -> eig_dyn_vec
+template<typename float_t, size_t numelem>
+auto pack<float_t,numelem>::get_untrans_params() const -> eig_vec
 {
-    auto n = this->get_num_params();
-    eig_dyn_vec params(n);
-    for(size_t i = 0; i < n; ++i)
+    eig_vec params;
+    for(size_t i = 0; i < numelem; ++i)
         params(i) = m_transform_functors[i]->inv_trans(m_trans_params(i));
     return params;    
 }
 
 
-template<typename float_t>
-auto pack<float_t>::get_trans_params(const unsigned int& start, const unsigned int& end) const -> eig_dyn_vec
+template<typename float_t,size_t numelem>
+auto pack<float_t, numelem>::get_trans_params(const unsigned int& start, const unsigned int& end) const -> Eigen::Matrix<float_t, Eigen::Dynamic, 1> 
 {
     return m_trans_params.block(start,0,(end-start+1),1);
 }
 
 
-template<typename float_t>
-auto pack<float_t>::get_untrans_params(const unsigned int& start, const unsigned int& end) const -> eig_dyn_vec
+template<typename float_t, size_t numelem>
+auto pack<float_t, numelem>::get_untrans_params(const unsigned int& start, const unsigned int& end) const -> Eigen::Matrix<float_t, Eigen::Dynamic, 1> 
 {    
-    eig_dyn_vec params(end-start+1);
-    for(size_t i = start; i < end + 1; ++i)
+    Eigen::Matrix<float_t, Eigen::Dynamic, 1> params(end - start + 1);
+    //for(size_t i = start; i < end + 1; ++i)
+    size_t i = start;
+    do {    
         params(i-start) = m_transform_functors[i]->inv_trans(m_trans_params(i));
+        i++;
+    } while( i < end);
     return params;
 }
 
 
-template<typename float_t>
-float_t pack<float_t>::get_log_jacobian() const
+template<typename float_t, size_t numelem>
+float_t pack<float_t,numelem>::get_log_jacobian() const
 {
     float_t result(0.0);
     for(size_t i = 0; i < m_transform_functors.size(); ++i){
@@ -576,8 +608,8 @@ float_t pack<float_t>::get_log_jacobian() const
 }
 
   
-template<typename float_t>
-auto pack<float_t>::get_transforms() const -> transform_container<float_t>
+template<typename float_t, size_t numelem>
+auto pack<float_t, numelem>::get_transforms() const -> transform_container<float_t,numelem>
 {
     return m_transform_functors;
 }
