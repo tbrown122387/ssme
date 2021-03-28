@@ -206,7 +206,7 @@ private:
 public:
 
     // ctors
-    pack(const eig_vec &trans_params, const transform_container<float_t, numelem>& t_functors);
+    pack(const eig_vec &trans_params, const transform_container<float_t, numelem>& t_functors, bool from_transformed = true);
 
 
     //TODO: define brace initialization
@@ -498,9 +498,17 @@ std::shared_ptr<transform<float_t>> transform_container<float_t, numelem>::opera
 
 
 template<typename float_t, size_t numelem>
-pack<float_t,numelem>::pack(const eig_vec& trans_params, const transform_container<float_t,numelem>& t_functors)
-    : m_trans_params(trans_params), m_transform_functors(t_functors)
+pack<float_t,numelem>::pack(const eig_vec& params, const transform_container<float_t,numelem>& t_functors, bool from_transformed)
+    : m_transform_functors(t_functors)
 {
+    if(from_transformed)
+        m_trans_params = params;
+    else{
+        auto ts = this->get_transforms().get_transforms();
+        for(size_t i = 0; i < numelem; ++i){
+            m_trans_params[i] = ts[i]->trans(params[i]);
+        }
+    }
 }
 
 
