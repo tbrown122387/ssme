@@ -7,6 +7,7 @@
 #include <cmath>
 #include <Eigen/Dense>
 #include <vector>
+#include <string>
 //#include <utility> // std::move
 #include <type_traits>
 
@@ -64,6 +65,12 @@ public:
      * @brief a static method to create shared pointers 
      */
     static std::shared_ptr<transform<float_t> > create(trans_type tt);
+
+
+    /**
+     * @brief a static method to create shared pointers 
+     */
+    static std::shared_ptr<transform<float_t> > create(const std::string& tt);
 };
 
 
@@ -149,6 +156,12 @@ public:
      */
     transform_container(const transform_container<float_t,numelem>& ts);
    
+
+    /**
+     * @brief ctor
+     */
+    transform_container(std::vector<std::string> trans_names);
+
 
     /**
      * @brief assignment operator
@@ -330,6 +343,33 @@ std::shared_ptr<transform<float_t> > transform<float_t>::create(trans_type tt)
     }
 }
 
+    
+template<typename float_t>
+std::shared_ptr<transform<float_t> > transform<float_t>::create(const std::string& tt)
+{
+    if(tt == "null"){
+        
+        return std::shared_ptr<transform<float_t> >(new null_trans<float_t> );
+    
+    }else if(tt == "twice_fisher"){
+        
+        return std::shared_ptr<transform<float_t> >(new twice_fisher_trans<float_t> );
+    
+    }else if(tt == "logit"){
+        
+        return std::shared_ptr<transform<float_t> >(new logit_trans<float_t> );
+    
+    }else if(tt == "log"){
+
+        return std::shared_ptr<transform<float_t> >(new log_trans<float_t> );
+    
+    }else{
+
+        throw std::invalid_argument("that transform type was not accounted for");
+    
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 
 template<typename float_t>
@@ -445,6 +485,14 @@ transform_container<float_t,numelem>::transform_container(const transform_contai
 {
     m_ts = ts.get_transforms();
     m_add_idx = ts.size();
+}
+
+
+template<typename float_t, size_t numelem>
+transform_container<float_t,numelem>::transform_container(std::vector<std::string> trans_names)
+{
+    for(auto& name : trans_names)
+        this->add_transform(transform<float_t>::create(name));
 }
 
 
