@@ -1,7 +1,7 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include <memory> // shared_ptr
+#include <memory> // unique_ptr
 #include <iostream>
 #include <stdexcept>
 #include <cmath>
@@ -62,15 +62,22 @@ public:
 
 
     /**
-     * @brief a static method to create shared pointers 
+     * @brief a clone method that helps with deep-copying transforms
      */
-    static std::shared_ptr<transform<float_t> > create(trans_type tt);
+    virtual std::unique_ptr<transform<float_t>> clone() const = 0;
 
 
     /**
-     * @brief a static method to create shared pointers 
+     * @brief a static method to create unique pointers 
      */
-    static std::shared_ptr<transform<float_t> > create(const std::string& tt);
+    static std::unique_ptr<transform<float_t> > create(trans_type tt);
+
+
+    /**
+     * @brief a static method to create unique pointers 
+     */
+    static std::unique_ptr<transform<float_t> > create(const std::string& tt);
+
 };
 
 
@@ -85,6 +92,7 @@ public:
     float_t trans(const float_t& p) override;
     float_t inv_trans(const float_t& trans_p) override;
     float_t log_jacobian(const float_t& p) override;
+    std::unique_ptr<transform<float_t>> clone() const override;
 };
 
 
@@ -99,6 +107,7 @@ public:
     float_t trans(const float_t& p) override;
     float_t inv_trans(const float_t &trans_p) override;   
     float_t log_jacobian(const float_t &p) override;
+    std::unique_ptr<transform<float_t>> clone() const override;
 };
 
 
@@ -113,6 +122,7 @@ public:
     float_t trans(const float_t& p) override;
     float_t inv_trans(const float_t &trans_p) override;
     float_t log_jacobian(const float_t &p) override;
+    std::unique_ptr<transform<float_t>> clone() const override;
 };
 
 
@@ -127,6 +137,7 @@ public:
     float_t trans(const float_t& p) override;
     float_t inv_trans(const float_t &trans_p) override;
     float_t log_jacobian(const float_t &p) override;
+    std::unique_ptr<transform<float_t>> clone() const override;
 };
 
 
@@ -138,7 +149,7 @@ template<typename float_t, size_t numelem>
 class transform_container{
 private:
 
-    using array_ptrs = std::array<std::shared_ptr<transform<float_t>>, numelem>;
+    using array_ptrs = std::array<std::unique_ptr<transform<float_t>>, numelem>;
     array_ptrs m_ts;
     unsigned m_add_idx;
 
@@ -151,7 +162,7 @@ public:
   
 
     /**
-     * @brief ctor
+     * @brief copy ctor
      * @param ts the transform container you want to copy
      */
     transform_container(const transform_container<float_t,numelem>& ts);
@@ -196,7 +207,7 @@ public:
     /**
      * @brief access a specific pointer to a transform
      */
-    std::shared_ptr<transform<float_t>> operator[](unsigned int i) const; 
+    std::unique_ptr<transform<float_t>> operator[](unsigned int i) const; 
 };
 
 
@@ -318,23 +329,23 @@ public:
 
 
 template<typename float_t>
-std::shared_ptr<transform<float_t> > transform<float_t>::create(trans_type tt)
+std::unique_ptr<transform<float_t> > transform<float_t>::create(trans_type tt)
 {
     if(tt == trans_type::TT_null){
         
-        return std::shared_ptr<transform<float_t> >(new null_trans<float_t> );
+        return std::unique_ptr<transform<float_t> >(new null_trans<float_t> );
     
     }else if(tt == trans_type::TT_twice_fisher){
         
-        return std::shared_ptr<transform<float_t> >(new twice_fisher_trans<float_t> );
+        return std::unique_ptr<transform<float_t> >(new twice_fisher_trans<float_t> );
     
     }else if(tt == trans_type::TT_logit){
         
-        return std::shared_ptr<transform<float_t> >(new logit_trans<float_t> );
+        return std::unique_ptr<transform<float_t> >(new logit_trans<float_t> );
     
     }else if(tt == trans_type::TT_log){
 
-        return std::shared_ptr<transform<float_t> >(new log_trans<float_t> );
+        return std::unique_ptr<transform<float_t> >(new log_trans<float_t> );
     
     }else{
 
@@ -345,23 +356,23 @@ std::shared_ptr<transform<float_t> > transform<float_t>::create(trans_type tt)
 
     
 template<typename float_t>
-std::shared_ptr<transform<float_t> > transform<float_t>::create(const std::string& tt)
+std::unique_ptr<transform<float_t> > transform<float_t>::create(const std::string& tt)
 {
     if(tt == "null"){
         
-        return std::shared_ptr<transform<float_t> >(new null_trans<float_t> );
+        return std::unique_ptr<transform<float_t> >(new null_trans<float_t> );
     
     }else if(tt == "twice_fisher"){
         
-        return std::shared_ptr<transform<float_t> >(new twice_fisher_trans<float_t> );
+        return std::unique_ptr<transform<float_t> >(new twice_fisher_trans<float_t> );
     
     }else if(tt == "logit"){
         
-        return std::shared_ptr<transform<float_t> >(new logit_trans<float_t> );
+        return std::unique_ptr<transform<float_t> >(new logit_trans<float_t> );
     
     }else if(tt == "log"){
 
-        return std::shared_ptr<transform<float_t> >(new log_trans<float_t> );
+        return std::unique_ptr<transform<float_t> >(new log_trans<float_t> );
     
     }else{
 
@@ -390,6 +401,14 @@ template<typename float_t>
 float_t null_trans<float_t>::log_jacobian(const float_t& trans_p)
 {
     return 0.0;
+}
+
+    
+template<typename float_t>
+std::unique_ptr<transform<float_t>> null_trans<float_t>::clone() const
+{
+    std::unique_ptr<transform<float_t>> r(new null_trans<float_t>(*this));
+    return r;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -421,6 +440,14 @@ float_t twice_fisher_trans<float_t>::log_jacobian(const float_t &trans_p){
     return std::log(2.0) + trans_p - 2.0*std::log(1.0 + std::exp(trans_p));
 }
 
+
+template<typename float_t>
+std::unique_ptr<transform<float_t>> twice_fisher_trans<float_t>::clone() const
+{
+    std::unique_ptr<transform<float_t>> r(new twice_fisher_trans<float_t>(*this));
+    return r;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 
 template<typename float_t>
@@ -448,6 +475,14 @@ float_t logit_trans<float_t>::log_jacobian(const float_t &trans_p){
     return -trans_p - 2.0*std::log(1.0 + std::exp(-trans_p));
 }
 
+
+template<typename float_t>
+std::unique_ptr<transform<float_t>> logit_trans<float_t>::clone() const
+{
+    std::unique_ptr<transform<float_t>> r(new logit_trans<float_t>(*this));
+    return r;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 
 template<typename float_t>
@@ -468,6 +503,14 @@ float_t log_trans<float_t>::inv_trans(const float_t &trans_p){
 template<typename float_t>
 float_t log_trans<float_t>::log_jacobian(const float_t &trans_p){
     return trans_p;
+}
+
+
+template<typename float_t>
+std::unique_ptr<transform<float_t>> log_trans<float_t>::clone() const
+{
+    std::unique_ptr<transform<float_t>> r(new log_trans<float_t>(*this));
+    return r;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -491,8 +534,11 @@ transform_container<float_t,numelem>::transform_container(const transform_contai
 template<typename float_t, size_t numelem>
 transform_container<float_t,numelem>::transform_container(std::vector<std::string> trans_names)
 {
-    for(auto& name : trans_names)
-        this->add_transform(transform<float_t>::create(name));
+    m_add_idx = 0;
+    for(auto& name : trans_names){
+        m_ts[m_add_idx] = transform<float_t>::create(name);
+        m_add_idx++; 
+    }
 }
 
 
@@ -518,7 +564,11 @@ void transform_container<float_t, numelem>::add_transform(trans_type tt)
 template<typename float_t, size_t numelem>
 auto transform_container<float_t,numelem>::get_transforms() const -> array_ptrs
 {
-   return m_ts; 
+    array_ptrs deep_cpy;
+    for(size_t i = 0; i < m_add_idx; ++i)
+        deep_cpy[i] = m_ts[i]->clone();
+    
+    return deep_cpy;
 }
 
 
@@ -537,9 +587,9 @@ decltype(auto) transform_container<float_t,numelem>::capacity() const
 
 
 template<typename float_t, size_t numelem>
-std::shared_ptr<transform<float_t>> transform_container<float_t, numelem>::operator[](unsigned int i) const
+std::unique_ptr<transform<float_t>> transform_container<float_t, numelem>::operator[](unsigned int i) const
 {
-   return m_ts[i]; 
+   return m_ts[i]->clone(); 
 } 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -552,7 +602,7 @@ pack<float_t,numelem>::pack(const eig_vec& params, const transform_container<flo
     if(from_transformed)
         m_trans_params = params;
     else{
-        auto ts = this->get_transforms().get_transforms();
+        auto ts = this->get_transforms();
         for(size_t i = 0; i < numelem; ++i){
             m_trans_params[i] = ts[i]->trans(params[i]);
         }
@@ -667,7 +717,7 @@ float_t pack<float_t,numelem>::get_log_jacobian() const
 template<typename float_t, size_t numelem>
 auto pack<float_t, numelem>::get_transforms() const -> transform_container<float_t,numelem>
 {
-    return m_transform_functors;
+    return transform_container<float_t,numelem>{ m_transform_functors };
 }
 
 
