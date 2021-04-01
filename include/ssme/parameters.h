@@ -142,76 +142,6 @@ public:
 
 
 /**
- * @class transform_container
- * @brief holds a bunch of (pointers to) transform function objects
- */
-template<typename float_t, size_t numelem>
-class transform_container{
-private:
-
-    using array_ptrs = std::array<std::unique_ptr<transform<float_t>>, numelem>;
-    array_ptrs m_ts;
-    unsigned m_add_idx;
-
-public:
- 
-    /**
-     * @brief ctor
-     */
-    transform_container();
-  
-
-    /**
-     * @brief copy ctor
-     * @param ts the transform container you want to copy
-     */
-    transform_container(const transform_container<float_t,numelem>& ts);
-   
-
-    /**
-     * @brief ctor
-     */
-    transform_container(std::vector<std::string> trans_names);
-
-
-    /**
-     * @brief assignment operator
-     */
-    transform_container<float_t,numelem>& operator=(const transform_container<float_t,numelem>& other);
-   
-
-    /**
-     * @brief add a transform to the container
-     */
-    void add_transform(trans_type tt);
-
-
-    /**
-     * @brief get the transforms as an array of pointers
-     */
-    auto get_transforms() const -> array_ptrs;
-
-
-    /**
-     * @brief get the number of elements/transforms
-     */
-    decltype(auto) size() const;
-
-
-    /**
-     * @brief get the number of elements/transforms
-     */
-    decltype(auto) capacity() const;
-
-
-    /**
-     * @brief access a specific pointer to a transform
-     */
-    std::unique_ptr<transform<float_t>> operator[](unsigned int i) const; 
-};
-
-
-/**
  * @class pack
  * @author Taylor
  * @brief Stores transformed parameters, as well as the functions 
@@ -223,28 +153,20 @@ private:
  
     // type aliases
     using eig_vec = Eigen::Matrix<float_t,numelem,1>;
-   
+    using array_ptrs = std::array<std::unique_ptr<transform<float_t>>, numelem>;
+  
     eig_vec m_trans_params;
-    transform_container<float_t, numelem> m_transform_functors;
+    array_ptrs m_ts;
+    unsigned m_add_idx;
+
     
 public:
 
+
     // ctors
-    pack(const eig_vec &trans_params, const transform_container<float_t, numelem>& t_functors, bool from_transformed = true);
+    pack(const eig_vec& params, const std::vector<std::string>& transform_names, bool from_transformed = true);
 
 
-    //TODO: define brace initialization
-    /**
-     * @brief ctor
-     * @param params an Eigen vector of parameters (transformed or nontransformed)
-     * @param vec_trans_types a vector of smooth transformations
-     * @param start_w_trans_params whether or not you are instantiating with (non)transformed params
-     */
-//    pack(const eig_dyn_vec &params, 
-//         const std::vector<trans_type> &vec_trans_types, 
-//         bool start_w_trans_params = true);
-   
-    
     /**
      * @brief copy ctor
      */
@@ -261,13 +183,28 @@ public:
     pack<float_t,numelem>& operator=(const pack<float_t,numelem>& other);
 
     
-    //! get number of parameters
-    /**
-     * @brief gets the number of parameters in your pack
-     * @return an unsigned integer 
-     */
-    decltype(auto) get_num_params() const;
+    void add_param_and_transform(float_t elem, trans_type tt, bool is_transformed = false);    
+    
+    void add_param_and_transform(float_t elem, const std::string& trans_name, bool is_transformed = false);
+   
 
+    /**
+     * @brief deep copy a transform
+     */
+    std::unique_ptr<transform<float_t>> clone_transform(unsigned int idx) const;
+   
+
+    /**
+     * @brief get the number of elements/transforms
+     */
+    decltype(auto) size() const;
+
+
+    /**
+     * @brief get the number of elements/transforms
+     */
+    decltype(auto) capacity() const;    
+    
 
     //! get the transformed parameters in the unrestricted space
     /**
@@ -313,13 +250,6 @@ public:
      * @return a float_t
      */
     auto get_log_jacobian() const -> float_t;
-
-
-    /**
-     * @brief getter for the smooth transforms
-     */
-    auto get_transforms() const -> transform_container<float_t,numelem>;
-
 
     
 };
@@ -517,167 +447,127 @@ std::unique_ptr<transform<float_t>> log_trans<float_t>::clone() const
 
 
 template<typename float_t, size_t numelem>
-transform_container<float_t,numelem>::transform_container()
-    : m_add_idx(0)
+pack<float_t,numelem>::pack(const eig_vec& params, const std::vector<std::string>& transform_names, bool from_transformed)
 {
-}
+    // can only create if everything is full length
+    if( (params.size() == numelem) && (numelem == transform_names.size())) {
+        
+        if( from_transformed ){
 
+            m_trans_params = params;
+            m_add_idx = numelem;
+            for(size_t i = 0; i < numelem; ++i)
+                m_ts[i] = transform<float_t>::create(transform_names[i]); 
 
-template<typename float_t, size_t numelem>
-transform_container<float_t,numelem>::transform_container(const transform_container<float_t,numelem>& ts)
-{
-    m_ts = ts.get_transforms();
-    m_add_idx = ts.size();
-}
-
-
-template<typename float_t, size_t numelem>
-transform_container<float_t,numelem>::transform_container(std::vector<std::string> trans_names)
-{
-    m_add_idx = 0;
-    for(auto& name : trans_names){
-        m_ts[m_add_idx] = transform<float_t>::create(name);
-        m_add_idx++; 
-    }
-}
-
-
-template<typename float_t, size_t numelem>
-transform_container<float_t,numelem>& transform_container<float_t,numelem>::operator=(const transform_container<float_t,numelem>& other)
-{
-    if( this != &other){
-        m_ts = other.get_transforms();
-        m_add_idx = other.size();
-    }
-    return *this; 
-}
-
-
-template<typename float_t, size_t numelem>
-void transform_container<float_t, numelem>::add_transform(trans_type tt)
-{
-    m_ts[m_add_idx] = transform<float_t>::create(tt);
-    m_add_idx++;
-}
-
-
-template<typename float_t, size_t numelem>
-auto transform_container<float_t,numelem>::get_transforms() const -> array_ptrs
-{
-    array_ptrs deep_cpy;
-    for(size_t i = 0; i < m_add_idx; ++i)
-        deep_cpy[i] = m_ts[i]->clone();
-    
-    return deep_cpy;
-}
-
-
-template<typename float_t, size_t numelem>
-decltype(auto) transform_container<float_t,numelem>::size() const 
-{
-   return m_add_idx; 
-}
-
-
-template<typename float_t, size_t numelem>
-decltype(auto) transform_container<float_t,numelem>::capacity() const 
-{
-   return numelem; 
-}
-
-
-template<typename float_t, size_t numelem>
-std::unique_ptr<transform<float_t>> transform_container<float_t, numelem>::operator[](unsigned int i) const
-{
-   return m_ts[i]->clone(); 
-} 
-
-////////////////////////////////////////////////////////////////////////////////////
-
-
-template<typename float_t, size_t numelem>
-pack<float_t,numelem>::pack(const eig_vec& params, const transform_container<float_t,numelem>& t_functors, bool from_transformed)
-    : m_transform_functors(t_functors)
-{
-    if(from_transformed)
-        m_trans_params = params;
-    else{
-        auto ts = this->get_transforms();
-        for(size_t i = 0; i < numelem; ++i){
-            m_trans_params[i] = ts[i]->trans(params[i]);
+        }else{
+            m_add_idx = numelem;
+            for(size_t i = 0; i < numelem; ++i){
+                m_ts[i] = transform<float_t>::create(transform_names[i]);
+                m_trans_params[i] = m_ts[i]->trans(params[i]); 
+            }
         }
+    }else{
+        throw std::invalid_argument("params needs to be the right length");
     }
 }
-
-
-///template<typename float_t>
-///pack<float_t>::pack(const eig_dyn_vec &params, 
-///                    const std::vector<trans_type> &vec_trans_types, 
-///                    bool start_w_trans_params)
-///{
-///    auto n = vec_trans_types.size(); 
-///    if( params.rows() != n ){
-///        throw std::invalid_argument("params and vec_trans_types have to be the same size");
-///    }
-///    
-///    for(auto & tt : vec_trans_types)
-///        m_transform_functors.add_transform(tt);
-///    
-///    if(start_w_trans_params){
-///        m_trans_params = params;
-///    }else {
-///        m_trans_params.resize(n);
-///        for(size_t i = 0; i < n; ++i)
-///            m_trans_params(i) = m_transform_functors[i]->trans(params(i));            
-///    }
-///}
 
 
 template<typename float_t, size_t numelem>
 pack<float_t,numelem>::pack(const pack<float_t,numelem>& other)
 {
-    m_trans_params = other.get_trans_params();
-    m_transform_functors = other.get_transforms();
+    if( this != &other){
+        m_add_idx = other.size();
+        m_trans_params = other.get_trans_params();
+        for(size_t i = 0; i < m_add_idx; ++i)
+            m_ts[i] = other.clone_transform(i); //TODO
+    }
 }
 
     
 template<typename float_t,size_t numelem>
-pack<float_t,numelem>::pack()
+pack<float_t,numelem>::pack() 
+    : m_add_idx(0)
 {
+}
+
+
+template<typename float_t,size_t numelem>
+void pack<float_t,numelem>::add_param_and_transform(float_t elem, trans_type tt, bool is_transformed)
+{
+    m_ts[m_add_idx] = transform<float_t>::create(tt);
+    if(is_transformed)
+        m_trans_params[m_add_idx] = elem;
+    else
+        m_trans_params[m_add_idx] = m_ts[m_add_idx]->trans(elem);
+    m_add_idx++;
+}    
+
+
+template<typename float_t,size_t numelem>
+void pack<float_t,numelem>::add_param_and_transform(float_t elem, const std::string& trans_name, bool is_transformed)
+{
+    if(m_add_idx >= numelem) throw std::length_error("can't add any more transformations");
+
+    m_ts[m_add_idx] = transform<float_t>::create(trans_name);
+    if(is_transformed)
+        m_trans_params[m_add_idx] = elem;
+    else
+        m_trans_params[m_add_idx] = m_ts[m_add_idx]->trans(elem);
+    m_add_idx++;
+}
+
+
+template<typename float_t, size_t numelem>
+std::unique_ptr<transform<float_t>> pack<float_t,numelem>::clone_transform(unsigned int idx) const
+{
+   return m_ts[idx]->clone(); 
 }
 
 
 template<typename float_t, size_t numelem>
 pack<float_t,numelem>& pack<float_t,numelem>::operator=(const pack<float_t,numelem>& other)
 {
-    if( this != &other ){
+    if( this != &other){
+        m_add_idx = other.size();
         m_trans_params = other.get_trans_params();
-        m_transform_functors = other.get_transforms();
+        for(size_t i = 0; i < m_add_idx; ++i)
+            m_ts[i] = other.clone_transform(i); //TODO
     }
     return *this;
 }
 
 
 template<typename float_t, size_t numelem>
-decltype(auto) pack<float_t,numelem>::get_num_params() const 
+decltype(auto) pack<float_t,numelem>::size() const 
 {
-    return m_transform_functors.size();
+    return m_add_idx;
+}
+
+
+template<typename float_t, size_t numelem>
+decltype(auto) pack<float_t,numelem>::capacity() const 
+{
+    return numelem;
 }
 
 
 template<typename float_t, size_t numelem>
 auto pack<float_t,numelem>::get_trans_params() const -> eig_vec 
 {
-    return m_trans_params.block(0,0,this->get_num_params(),1);
+     if(m_add_idx != numelem) throw std::length_error("the parameter container is not full");
+
+    return m_trans_params;
 }
 
 
 template<typename float_t, size_t numelem>
 auto pack<float_t,numelem>::get_untrans_params() const -> eig_vec
 {
+     if(m_add_idx != numelem) throw std::length_error("the parameter container is not full");
+
     eig_vec params;
     for(size_t i = 0; i < numelem; ++i)
-        params(i) = m_transform_functors[i]->inv_trans(m_trans_params(i));
+        params(i) = m_ts[i]->inv_trans(m_trans_params(i));
     return params;    
 }
 
@@ -692,11 +582,12 @@ auto pack<float_t, numelem>::get_trans_params(const unsigned int& start, const u
 template<typename float_t, size_t numelem>
 auto pack<float_t, numelem>::get_untrans_params(const unsigned int& start, const unsigned int& end) const -> Eigen::Matrix<float_t, Eigen::Dynamic, 1> 
 {    
+     if(m_add_idx != numelem) throw std::length_error("the parameter container is not full");
+
     Eigen::Matrix<float_t, Eigen::Dynamic, 1> params(end - start + 1);
-    //for(size_t i = start; i < end + 1; ++i)
     size_t i = start;
     do {    
-        params(i-start) = m_transform_functors[i]->inv_trans(m_trans_params(i));
+        params(i-start) = m_ts[i]->inv_trans(m_trans_params(i));
         i++;
     } while( i < end);
     return params;
@@ -706,21 +597,16 @@ auto pack<float_t, numelem>::get_untrans_params(const unsigned int& start, const
 template<typename float_t, size_t numelem>
 float_t pack<float_t,numelem>::get_log_jacobian() const
 {
+   if(m_add_idx != numelem) throw std::length_error("the parameter container is not full");
+ 
     float_t result(0.0);
-    for(size_t i = 0; i < m_transform_functors.size(); ++i){
-        result += m_transform_functors[i]->log_jacobian(m_trans_params(i));
+    for(size_t i = 0; i < m_add_idx; ++i){
+        result += m_ts[i]->log_jacobian(m_trans_params(i));
     }
     return result;
 }
 
   
-template<typename float_t, size_t numelem>
-auto pack<float_t, numelem>::get_transforms() const -> transform_container<float_t,numelem>
-{
-    return transform_container<float_t,numelem>{ m_transform_functors };
-}
-
-
 } //namespace param
 
 

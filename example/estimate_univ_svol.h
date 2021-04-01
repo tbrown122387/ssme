@@ -23,7 +23,7 @@ public:
     
     univ_svol_estimator(
             const psv &start_trans_theta,
-            const param::transform_container<float_t>& tts,
+            std::vector<std::string> tts,
             const unsigned int &num_mcmc_iters,
             const unsigned int &num_pfilters, 
             const std::string &data_file, 
@@ -36,16 +36,16 @@ public:
             bool print_to_console,
             unsigned int print_every_k);
         
-    float_t log_prior_eval(const param::pack<float_t>& theta);
+    float_t log_prior_eval(const param::pack<float_t,3>& theta);
 
-    float_t log_like_eval(const param::pack<float_t>& theta, const std::vector<osv> &data);
+    float_t log_like_eval(const param::pack<float_t,3>& theta, const std::vector<osv> &data);
 
 };
 
 template<size_t numparams, size_t dimstate, size_t dimobs, size_t numparts, typename float_t>
 univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::univ_svol_estimator(
                                                     const psv &start_trans_theta,
-                                                    const param::transform_container<float_t>& tts,
+                                                    std::vector<std::string> tts,
                                                     const unsigned int &num_mcmc_iters,
                                                     const unsigned int &num_pfilters, 
                                                     const std::string &data_file, 
@@ -75,7 +75,7 @@ univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::univ_svol_estim
 
 
 template<size_t numparams, size_t dimstate, size_t dimobs, size_t numparts, typename float_t>
-float_t univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::log_prior_eval(const param::pack<float_t>& theta)
+float_t univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::log_prior_eval(const param::pack<float_t,3>& theta)
 {
     // value to be returned
     float_t returnThis(0.0);
@@ -100,7 +100,7 @@ float_t univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::log_pri
 
 
 template<size_t numparams, size_t dimstate, size_t dimobs, size_t numparts, typename float_t>
-float_t univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::log_like_eval(const param::pack<float_t>& theta, const std::vector<osv> &data)
+float_t univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::log_like_eval(const param::pack<float_t,3>& theta, const std::vector<osv> &data)
 {
 
     // jump out if there's a problem with the data
@@ -147,11 +147,8 @@ void do_ada_pmmh_univ_svol(const std::string &datafile,
     psv start_trans_theta;
     start_trans_theta << 1.0, rveval::twiceFisher<float_t>(.5), std::log(2.0e-4);
 
-    param::transform_container<float_t> tts;
-    tts.add_transform(param::trans_type::TT_null); // betas
-    tts.add_transform(param::trans_type::TT_twice_fisher); // phis
-    tts.add_transform(param::trans_type::TT_log); // sigma squareds
-   
+    std::vector<std::string> tts {"null", "twice_fisher", "log"}; // betas phis sigma squareds 
+    
     // the chain's initial covariance matrix 
     psm C0 = psm::Identity()*.15;
     unsigned int t0 = 150;  // start adapting the covariance at this iteration

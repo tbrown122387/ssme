@@ -26,7 +26,7 @@ public:
 
     // ctors
     svol_bs(const float_t &phi, const float_t &beta, const float_t &sigma);
-    svol_bs(const param::pack<float_t>& pp); // assumes order beta, phi, ss
+    svol_bs(const param::pack<float_t,3>& pp); // assumes order beta, phi, ss
    
     // required functions defined by the state space model
     float_t logQ1Ev(const ssv &x1, const osv &y1);
@@ -47,7 +47,7 @@ svol_bs<nparts, dimx, dimy, resampT, float_t>::svol_bs(const float_t &phi, const
 
 
 template<size_t nparts, size_t dimx, size_t dimy, typename resampT, typename float_t>
-svol_bs<nparts, dimx, dimy, resampT, float_t>::svol_bs(const param::pack<float_t>& pp) 
+svol_bs<nparts, dimx, dimy, resampT, float_t>::svol_bs(const param::pack<float_t,3>& pp) 
 {
     // assumes in order beta, phi, ss
     m_beta  = pp.get_untrans_params(0,0)(0);

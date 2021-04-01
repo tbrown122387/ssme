@@ -32,7 +32,7 @@ public:
     using osv = Eigen::Matrix<float_t,dimobs,1>;
     using psv = Eigen::Matrix<float_t,numparams,1>;
     using psm = Eigen::Matrix<float_t,numparams,numparams>;
-    using dyn_data_t = param::pack<float_t>;
+    using dyn_data_t = param::pack<float_t,numparams>;
     using static_data_t = std::vector<osv>;
 
     /**
@@ -50,7 +50,7 @@ public:
      * @param print_every_k print messages and samples every (this number) iterations
      */
     ada_pmmh_mvn(const psv &start_trans_theta, 
-                 const param::transform_container<float_t>& tts,
+                 std::vector<std::string> tts,
                  const unsigned int &num_mcmc_iters,
                  const unsigned int &num_pfilters,
                  const std::string &data_file, 
@@ -83,7 +83,7 @@ public:
      * @param theta the parameters argument 
      * @return the log of the prior density
      */
-    virtual float_t log_prior_eval(const param::pack<float_t>& theta) = 0;
+    virtual float_t log_prior_eval(const param::pack<float_t,numparams>& theta) = 0;
 
 
     /**
@@ -92,13 +92,13 @@ public:
      * @param data the observed data with which to run the particle filter
      * @return the evaluation of the approx. log likelihood 
      */
-    virtual float_t log_like_eval(const param::pack<float_t>& theta, 
+    virtual float_t log_like_eval(const param::pack<float_t,numparams>& theta, 
                                   const std::vector<osv> &data) = 0;
     
              
 private:
     dyn_data_t m_current_theta;
-    param::transform_container<float_t> m_tts;
+    std::vector<std::string> m_tts;
     psm m_sigma_hat; // for transformed parameters; n-1 in the denominator.
     psv m_mean_trans_theta;
     float_t m_ma_accept_rate;
@@ -150,7 +150,7 @@ private:
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
 ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
                                             const psv &start_trans_theta, 
-                                            const param::transform_container<float_t>& tts,
+                                            std::vector<std::string> tts,
                                             const unsigned int &num_mcmc_iters,
                                             const unsigned int &num_pfilters,
                                             const std::string &data_file, 
@@ -195,7 +195,7 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
 
 
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::update_moments_and_Ct(const param::pack<float_t>& new_theta)  
+void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::update_moments_and_Ct(const param::pack<float_t,numparams>& new_theta)  
 {
     // if m_iter = 1, that means we're on iteration 2, 
     // but we're calling this based on the previous iteration, 
@@ -243,7 +243,7 @@ auto ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::get_ct() const -> psm
 
 
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-auto ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::q_samp(const param::pack<float_t>& old_params) -> psv
+auto ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::q_samp(const param::pack<float_t,numparams>& old_params) -> psv
 {
     // assumes that Ct has already been updated
     // recall that we are sampling on the transformed/unconstrained space    

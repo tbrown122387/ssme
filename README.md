@@ -26,5 +26,6 @@ For an example, navigate to the `ssme/example` directory, and type the following
 mkdir build && cd build
 cmake ..
 make
-./main spy_returns.csv univ_svol_pmmh_samples univ_svol_pmmh_messages 1000
+cd ..
+./build/ssme_example spy_returns.csv univ_svol_pmmh_samples univ_svol_pmmh_messages 100 100
 ```
