@@ -467,7 +467,7 @@ pack<float_t,numelem>::pack(const eig_vec& params, const std::vector<std::string
             }
         }
     }else{
-        throw std::invalid_argument("params needs to be the right length");
+        throw std::invalid_argument("params needs to be the right size (full)");
     }
 }
 
@@ -475,11 +475,14 @@ pack<float_t,numelem>::pack(const eig_vec& params, const std::vector<std::string
 template<typename float_t, size_t numelem>
 pack<float_t,numelem>::pack(const pack<float_t,numelem>& other)
 {
-    if( this != &other){
-        m_add_idx = other.size();
+    // can only create if everything is full length
+    if(other.size() == numelem ) {
+        m_add_idx = numelem;
         m_trans_params = other.get_trans_params();
         for(size_t i = 0; i < m_add_idx; ++i)
-            m_ts[i] = other.clone_transform(i); //TODO
+            m_ts[i] = other.clone_transform(i); 
+    }else{
+        throw std::invalid_argument("copy ctor can only work with full parameter packs");
     }
 }
 
@@ -494,26 +497,30 @@ pack<float_t,numelem>::pack()
 template<typename float_t,size_t numelem>
 void pack<float_t,numelem>::add_param_and_transform(float_t elem, trans_type tt, bool is_transformed)
 {
-    m_ts[m_add_idx] = transform<float_t>::create(tt);
-    if(is_transformed)
-        m_trans_params[m_add_idx] = elem;
-    else
-        m_trans_params[m_add_idx] = m_ts[m_add_idx]->trans(elem);
-    m_add_idx++;
+    if( m_add_idx < numelem ){
+        m_ts[m_add_idx] = transform<float_t>::create(tt);
+        if(is_transformed)
+            m_trans_params[m_add_idx] = elem;
+        else
+            m_trans_params[m_add_idx] = m_ts[m_add_idx]->trans(elem);
+        m_add_idx++;
+    }else{
+        throw std::length_error("can't add any more transformations");
+    }
 }    
 
 
 template<typename float_t,size_t numelem>
 void pack<float_t,numelem>::add_param_and_transform(float_t elem, const std::string& trans_name, bool is_transformed)
 {
-    if(m_add_idx >= numelem) throw std::length_error("can't add any more transformations");
-
-    m_ts[m_add_idx] = transform<float_t>::create(trans_name);
-    if(is_transformed)
-        m_trans_params[m_add_idx] = elem;
-    else
-        m_trans_params[m_add_idx] = m_ts[m_add_idx]->trans(elem);
-    m_add_idx++;
+    if(m_add_idx < numelem){ 
+        m_ts[m_add_idx] = transform<float_t>::create(trans_name);
+        if(is_transformed ) m_trans_params[m_add_idx] = elem;
+        else m_trans_params[m_add_idx] = m_ts[m_add_idx]->trans(elem);
+        m_add_idx++;
+    }else{
+        throw std::length_error("can't add any more transformations");
+    }
 }
 
 
@@ -527,12 +534,16 @@ std::unique_ptr<transform<float_t>> pack<float_t,numelem>::clone_transform(unsig
 template<typename float_t, size_t numelem>
 pack<float_t,numelem>& pack<float_t,numelem>::operator=(const pack<float_t,numelem>& other)
 {
-    if( this != &other){
+    // can only create if everything is full length
+    if(other.size() == numelem ) {
         m_add_idx = other.size();
         m_trans_params = other.get_trans_params();
         for(size_t i = 0; i < m_add_idx; ++i)
-            m_ts[i] = other.clone_transform(i); //TODO
+            m_ts[i] = other.clone_transform(i); 
+    }else{
+        throw std::invalid_argument("pack assignment can only work with full parameter packs");
     }
+
     return *this;
 }
 
@@ -554,8 +565,8 @@ decltype(auto) pack<float_t,numelem>::capacity() const
 template<typename float_t, size_t numelem>
 auto pack<float_t,numelem>::get_trans_params() const -> eig_vec 
 {
-     if(m_add_idx != numelem) throw std::length_error("the parameter container is not full");
-
+    if(m_add_idx  < numelem)
+        throw std::length_error("the parameter container is not full");
     return m_trans_params;
 }
 
@@ -563,8 +574,7 @@ auto pack<float_t,numelem>::get_trans_params() const -> eig_vec
 template<typename float_t, size_t numelem>
 auto pack<float_t,numelem>::get_untrans_params() const -> eig_vec
 {
-     if(m_add_idx != numelem) throw std::length_error("the parameter container is not full");
-
+    if(m_add_idx  < numelem) throw std::length_error("the parameter container is not full");
     eig_vec params;
     for(size_t i = 0; i < numelem; ++i)
         params(i) = m_ts[i]->inv_trans(m_trans_params(i));
@@ -582,7 +592,8 @@ auto pack<float_t, numelem>::get_trans_params(const unsigned int& start, const u
 template<typename float_t, size_t numelem>
 auto pack<float_t, numelem>::get_untrans_params(const unsigned int& start, const unsigned int& end) const -> Eigen::Matrix<float_t, Eigen::Dynamic, 1> 
 {    
-     if(m_add_idx != numelem) throw std::length_error("the parameter container is not full");
+
+    if(m_add_idx < numelem) throw std::length_error("the parameter container is not full");
 
     Eigen::Matrix<float_t, Eigen::Dynamic, 1> params(end - start + 1);
     size_t i = start;
@@ -597,8 +608,8 @@ auto pack<float_t, numelem>::get_untrans_params(const unsigned int& start, const
 template<typename float_t, size_t numelem>
 float_t pack<float_t,numelem>::get_log_jacobian() const
 {
-   if(m_add_idx != numelem) throw std::length_error("the parameter container is not full");
- 
+    if(m_add_idx < numelem) throw std::length_error("the parameter container is not full");
+
     float_t result(0.0);
     for(size_t i = 0; i < m_add_idx; ++i){
         result += m_ts[i]->log_jacobian(m_trans_params(i));
