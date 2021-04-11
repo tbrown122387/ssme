@@ -36,6 +36,9 @@ public:
  * on any new parameter value. Once a new parameter value is received, this pool calls its function a fixed number of times, 
  * and all of the function output is averaged in a thread-safe way. For our particular applications, this function will also depend 
  * on observed data that doesn't change once the thread pool has been initialized.
+ * @tparam dyn_data_t dynamic data type. The type of input that gets changed repeatedly.
+ * @tparam static_data_t the type of input that only gets set once
+ * @tparam the type of function output 
  */
 template<typename dyn_data_t, typename static_data_t, typename func_output_t >
 class thread_pool

@@ -325,7 +325,7 @@ protected:
     mn_resamp_states_and_params<nparts,dimx,dimparam,float_t> m_resampler;   
  
     /** a multivariate normal sampler for the parameter transitions **/
-    rvsamp::MVNSampler<dimparam,float_t> m_mvn_gen;
+    pf::rvsamp::MVNSampler<dimparam,float_t> m_mvn_gen;
 
     /** @brief expectations E[h(x_t) | y_{1:t}] for user defined "h"s */
     std::vector<Mat> m_expectations; // stores any sample averages the user wants
