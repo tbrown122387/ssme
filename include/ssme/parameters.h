@@ -355,8 +355,13 @@ float_t twice_fisher_trans<float_t>::trans(const float_t& p)
 
 template<typename float_t>
 float_t twice_fisher_trans<float_t>::inv_trans(const float_t &trans_p){
-    
-    float_t ans = 1.0 - 2.0/(1.0 + std::exp(trans_p));
+    // inverse transform 2 * invlogit(trans_p) - 1
+    float_t ans;
+    if (trans_p >= 0.0)
+        ans = 2/(1.0 + std::exp(-trans_p)) - 1.0;
+    else
+        ans = 1.0 - 2.0/(1.0 + std::exp(trans_p));
+
     if ( (ans <= -1.0) || (ans >= 1.0) )
         throw std::invalid_argument("error: there was probably overflow for exp(trans_p) \n");
     return ans;    
@@ -392,8 +397,12 @@ float_t logit_trans<float_t>::trans(const float_t& p)
 
 template<typename float_t>
 float_t logit_trans<float_t>::inv_trans(const float_t &trans_p){
-    
-    float_t ans = 1.0/( 1.0 + std::exp(-trans_p) );    
+    float_t ans;
+    if(trans_p >= 0.0)
+        ans = 1.0/( 1.0 + std::exp(-trans_p) );
+    else
+        ans = std::exp(trans_p) / ( 1.0 + std::exp(trans_p) );
+
     if ( (ans <= 0.0) || (ans >= 1.0))
         std::cerr << "error: there was probably underflow for exp(-r) \n";
     return ans;
