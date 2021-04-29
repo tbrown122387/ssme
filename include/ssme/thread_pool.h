@@ -31,7 +31,7 @@ public:
 
 
 /**
- * @brief A specific type of thread_pool. We have many concurrent parameter readers, but only a single parameter writer.
+ * @brief Here we have many concurrent parameter readers, but only a single parameter writer.
  * This thread pool owns one function that returns one (random) floating point number. The pool sits ready to perform calculations
  * on any new parameter value. Once a new parameter value is received, this pool calls its function a fixed number of times, 
  * and all of the function output is averaged in a thread-safe way. For our particular applications, this function will also depend 
@@ -113,7 +113,7 @@ private:
                 // write it to the average and increment count
                 // do this in thread-safe way with mutex
       	        std::lock_guard<std::mutex> out_lock{m_ac_mut};
-		if( m_count.load() < m_total_calcs ) {
+		        if( m_count.load() < m_total_calcs ) {
                     m_working_ave += val / m_total_calcs;
                     m_count++;
                 }else if( m_count.load() == m_total_calcs){
@@ -141,7 +141,7 @@ public:
         : m_count(0)
         , m_done(false)
         , m_has_an_input(false)
-	, m_working_ave(0.0)
+	    , m_working_ave(0.0)
         , m_total_calcs(num_comps)
         , m_f(f)
         , m_no_data_yet(true) 
@@ -150,7 +150,8 @@ public:
     {
 
         unsigned nt = std::thread::hardware_concurrency(); // should I subtract one?
-        unsigned const thread_count = ((nt > 1) && mt) ? nt : 1;
+        unsigned thread_count = ((nt > 1) && mt) ? nt : 1 ;
+        if ( thread_count > 1) thread_count -= 1;
 
         try {
             for(unsigned i=0; i< thread_count; ++i) {
@@ -208,7 +209,5 @@ public:
         return m_out.get_future().get();
     }
 };
-
-
 
 #endif // THREAD_POOL_H

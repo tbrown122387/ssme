@@ -108,3 +108,38 @@ TEST_CASE_METHOD(MyFixture3, "test thread pool with nonstatic method", "[thread_
                     - 3.0) < .001  );
     }
 }
+
+
+// tests if you can run a pool with no additional threads
+class MyFixture4 {
+public:
+
+    using param_t = std::vector<double>;
+    using obs_data_t = std::vector<double>;
+
+    static double d(param_t nums, obs_data_t obs_data) {
+        //std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        return std::accumulate(nums.begin(), nums.end(), 0.0);
+    }
+
+    thread_pool<param_t,obs_data_t,double> pool;
+    
+    MyFixture4() 
+        : pool(d, 1e4, false) { // the only difference between this and above is false!
+            pool.add_observed_data( std::vector<double>{999} );
+        }
+};
+
+
+TEST_CASE_METHOD(MyFixture4, "test thread pool with single thread", "[thread_pool]")
+{
+
+    unsigned num_tries(1e3);
+    for(unsigned i = 0; i < num_tries; ++i){
+        REQUIRE( std::abs(
+                    pool.work(
+                        std::vector<double>{1.0, 1.0, 1.0} )
+                    - 3.0) < .001  );
+    }
+}
+
