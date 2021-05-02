@@ -228,7 +228,7 @@ class split_data_thread_pool
 private: 
 
     /* type alias for the type of function this thread pool owns */ 
-    using comp_func_t    = std::function<out_t(dyn_in_t, static_in_elem_t)>;  
+    using comp_func_t    = std::function<out_t(dyn_in_t, static_in_elem_t&)>;  
     using agg_func_t     = std::function<out_t(out_t, out_t)>; 
     using reset_func_t   = std::function<out_t(void)>;
     using final_func_t   = std::function<out_t(out_t)>;
@@ -267,7 +267,7 @@ private:
     dyn_in_t m_dynamic_input;
 
     /* the container of a bunch of particle filter objects */
-    std::array<static_in_elem_t, num_static_elems> m_static_input;
+    std::array<static_in_elem_t, num_static_elems>& m_static_input;
 
     /* the raw threads */
     std::vector<std::thread> m_threads;
@@ -328,7 +328,7 @@ public:
      * @brief The ctor spawns the working threads and gets ready to start doing work.
      */  
     split_data_thread_pool(
-            const std::array<static_in_elem_t, num_static_elems>& static_container, // maybe just a pointer?
+            std::array<static_in_elem_t, num_static_elems>& static_container,
             comp_func_t comp_f, 
             agg_func_t agg_f, 
             reset_func_t reset_f, 
