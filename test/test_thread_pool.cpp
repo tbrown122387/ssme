@@ -143,3 +143,25 @@ TEST_CASE_METHOD(MyFixture4, "test thread pool with single thread", "[thread_poo
     }
 }
 
+
+int comp_func2(double di, int si){
+    return si + round(di);
+} 
+int agg_func2(int agg, int elem){ return agg + elem; }
+int reset_func2(){ return 0; }
+
+
+TEST_CASE("test new thread pool that preallocates work", "[split_data_thread_pool]")
+{
+
+    std::array<int, 100> counters {};
+    split_data_thread_pool<double,int,int,100> sdtp(
+            counters, 
+            comp_func2, 
+            agg_func2, 
+            reset_func2, 
+            [](int o){ return o;}, 
+            false);
+    int result = sdtp.work(2.1);
+    REQUIRE(result == 200);
+}
