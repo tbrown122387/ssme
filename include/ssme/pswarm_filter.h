@@ -6,6 +6,7 @@
 #include <functional>
 #include <tuple>
 #include <type_traits>
+#include <utility> // std::pair
 
 #include "thread_pool.h"
 
@@ -48,6 +49,11 @@ public:
     /* a collection of observation samples, indexed by param,time, then state particle */  // TODO do these need to be stored? or just printed?
     using obsSamples = std::array<std::vector<std::array<osv, nstateparts>>, nparamparts>; 
 
+    /* a model object along with its (parameter-dependent) filtering functions */
+    using mod_funcs_pair = std::pair<ModType, std::vector<filt_func>>;
+
+    /* a collection of expectations and a floating point for the log conditional likelihood */
+    using mats_and_loglike = std::pair<std::vector<DynMat>, float_type>;
 
     /* assert that ModType is a proper particle filter model */
     static_assert(std::is_base_of<pf::bases::pf_base<float_type,dimy,dimx>, ModType>::value, 
@@ -62,10 +68,10 @@ private:
     std::vector<state_parm_func> m_proto_funcs;
 
     /* a collection of models each with a randomly chosen parameter and a vector of functions for each model/parameter */
-    std::array<ModType,nparamparts>   m_mods;
+    std::array<mod_funcs_pair, nparamparts> m_mods_and_funcs;
 
     /* a vector of functions for each model (these functions may depend on the model's parameter)  */ //TODO, should we store parameters, or functioins?
-    std::array<std::vector<filt_func>, nparamparts> m_funcs;
+//    std::array<std::vector<filt_func>, nparamparts> m_funcs;
 
     /* log p(y_t+1 | y_{1:t}) */
     float_type m_log_cond_like;
@@ -77,10 +83,51 @@ private:
     unsigned int m_num_obs;
 
     /* thread pool for faster calculations*/
-    // TODO
-    //    thread_pool<dyn_data_t, static_data_t, float_type> m_pool;
+    split_data_thread_pool<osv, mod_funcs_pair, mats_and_loglike, nparamparts> m_tp; 
 
+    /* calls .filter() on a particle filtering object. side effects and the return object are important */
+    static mats_and_loglike comp_func(const osv& yt, mod_funcs_pair& pf_funcs){
+        pf_funcs.first.filter(yt, pf_funcs.second);
+        mats_and_loglike r;
+        r.first = pf_funcs.first.getExpectations();
+        r.second = pf_funcs.first.getLogCondLike();
+        return r; 
+    }
 
+    /* agg func = average */
+    static mats_and_loglike agg_func(const mats_and_loglike& agg, const mats_and_loglike& vec_mats_and_like){
+
+        // set up required variables 
+        mats_and_loglike res = agg;
+        float_type n = static_cast<float_type>(nparamparts);
+        bool agg_old = false;
+        for(size_t i = 0; i < n_filt_funcs; ++i){
+            if(agg.first[i].rows() > 0 || agg.first[i].cols() > 0)
+                agg_old = true;
+        }
+
+        // agg log conditional likelihood
+        res.second += vec_mats_and_like.second / n;
+
+        // aggregate expectation matrices
+        // if agg has just been initialized, it is a vector of 0X0 matrices
+        // you can't add matrices to each of these 0X0 matrices at the first time point 
+        if( agg_old ){
+            for(size_t i = 0; i < n_filt_funcs; ++i)
+                res.first[i] = res.first[i] + vec_mats_and_like.first[i]/n;
+        }else{
+            for(size_t i = 0; i < n_filt_funcs; ++i)
+                res.first[i] = vec_mats_and_like.first[i] / n;
+        }
+    }
+
+    /* initalizes empty vector of matrices */
+    static mats_and_loglike reset_func(){
+        mats_and_loglike vl;
+        vl.first.resize(n_filt_funcs);
+        vl.second = 0.0;
+        return vl;   
+    }
     // TODO how to instantiate empty array of parameter samples
     // TODO: maybe consider storing the entire evidence because it's a sum of products like IS^2 algorithm
 
@@ -94,9 +141,16 @@ public:
      * any data is seen. Perhaps you can back out the dimension earlier to de-complicate thigns
      * Recall that hte particle filter classes' filter() gets passed a vector not an array
      */
-    Swarm(const std::vector<state_parm_func>& fs) 
+    Swarm(const std::vector<state_parm_func>& fs, bool parallel = true) 
         : m_models_are_not_instantiated(true)
-        , m_num_obs(0) 
+        , m_num_obs(0)
+        , m_tp(
+                m_mods_and_funcs, 
+                &Swarm<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimparam>::comp_func, 
+                &Swarm<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimparam>::agg_func, 
+                &Swarm<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimparam>::reset_func, 
+                [](const mats_and_loglike& o){return o;}, 
+                parallel) 
     { 
         if(fs.size() == n_filt_funcs){
             m_proto_funcs = fs;
@@ -106,7 +160,7 @@ public:
         }
     } 
 
-    
+
     /**
      * @brief sample an un-transformed parameter vector from the prior
      */
@@ -134,40 +188,10 @@ public:
         // we are assuming uniform weights because they're being 
         // drawn from the prior...think about generalizing this
 
-        // zero out stuff that will get re-accumulated across parameter samples
-        setLogCondLikeToZero();
-        setExpecsToZero();
-
         // iterate over all parameter values/models
-        std::vector<DynMat> tmp_expecs_given_theta;
-        float_type Ntheta = static_cast<float_type>(nparamparts);
-        for(size_t i = 0; i < nparamparts; ++i) {
-            
-            // update a model on new data
-            // first is the model
-            // second is the vector<func>
-            m_mods[i].filter(yt, m_funcs[i]);
-
-            // update the conditional likelihood 
-            m_log_cond_like += m_mods[i].getLogCondLike();
-
-            // now that we're updated, get the model-specific 
-            // filter expectations and then average over all parameters/models
-            tmp_expecs_given_theta  = m_mods[i].getExpectations();
-            if(m_num_obs > 0 || i > 0) {
-                    
-                for(size_t j = 0; j < n_filt_funcs; ++j) {
-                    m_expectations[j] += tmp_expecs_given_theta[j] / Ntheta;
-                }
-            } else{ // first time point *and* first parameter
-
-                // m_expectations has length zero at this point
-                for(size_t j = 0; j < n_filt_funcs; ++j) { 
-                    m_expectations[j] = tmp_expecs_given_theta[j] / Ntheta;
-                }
-            }
-        }
-        m_log_cond_like /= static_cast<float_type>(nparamparts);
+        auto expecs_and_lcl = m_tp.work(yt);
+        m_expectations = expecs_and_lcl.first;
+        m_log_cond_like = expecs_and_lcl.second;
 
         // increment number of observations seen
         ++m_num_obs;
@@ -182,7 +206,7 @@ public:
     obsSamples simFutureObs(unsigned int num_future_steps){
         obsSamples returnMe;
         for(size_t paramSamp = 0; paramSamp < nparamparts; ++paramSamp){
-            returnMe[paramSamp] = m_mods[paramSamp].sim_future_obs(num_future_steps);
+            returnMe[paramSamp] = m_mods_and_funcs[paramSamp].first.sim_future_obs(num_future_steps);
         }
         return returnMe; 
     }
@@ -204,17 +228,6 @@ public:
 
 private:
    
-    /* set the above to zero so it can be re-accumulated  */
-    void setExpecsToZero() {
-        for(auto& e : m_expectations) {
-            e.setZero();
-        }
-    }
-
-    /* set log of the above to zero so it can be re-accumulated */
-    void setLogCondLikeToZero() { m_log_cond_like = 0.0; }
-
-
     /* generate a filter function so that .filter can work on each particle filter  */
     filt_func gen_filt_func(const state_parm_func& in_f, const psv& this_models_params) {
         filt_func out_f = std::bind(in_f, std::placeholders::_1, this_models_params);
@@ -235,14 +248,14 @@ private:
             untrans_params = samp_untrans_params();
 
             // instantiate a model
-            m_mods[i] = instantiate_mod(untrans_params);
+            m_mods_and_funcs[i].first = instantiate_mod(untrans_params);
             
             // now create a vector of functions for each model
             std::vector<filt_func> funcs_for_a_mod; 
             for(size_t j = 0; j < n_filt_funcs; ++j){
                 funcs_for_a_mod.push_back(gen_filt_func(m_proto_funcs[j], untrans_params));
             } 
-            m_funcs[i] = funcs_for_a_mod;
+            m_mods_and_funcs[i].second = funcs_for_a_mod;
         }
 
         // set the flag to true so it doesn't have to be done again

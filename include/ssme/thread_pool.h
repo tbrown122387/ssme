@@ -215,10 +215,11 @@ public:
 /**
  * @brief split data thread pool
  * Unlike the above thread pool, this pre-allocates work across the nodes. 
- * "work" is initiated when there is a new object f dyn_in_t, which is shared across all threads. Work is performed for every element of the 
- * array of static_in_elem_t. The same function is applied to every pair.
+ * "work" is initiated when there is a new object of type dyn_in_t, which is shared across all threads. 
+ * Work is performed for every element of the array of static_in_elem_t. The same function 
+ * is applied to every pair.
  * @tparam dyn_in_t the type of input that changes every call to work() (e.g. an Eigen::Matrix of a time series observation)
- * @tparam static_in_elem_t (e.g. a particle filter models)
+ * @tparam static_in_elem_t (e.g. a particle filter model type)
  * @tparam out_t (e.g. a vector of Eigen::MatrixXd)
  * @tparam num_static_elem the size of the array
  */
@@ -228,10 +229,10 @@ class split_data_thread_pool
 private: 
 
     /* type alias for the type of function this thread pool owns */ 
-    using comp_func_t    = std::function<out_t(dyn_in_t, static_in_elem_t&)>;  
-    using agg_func_t     = std::function<out_t(out_t, out_t)>; 
+    using comp_func_t    = std::function<out_t(const dyn_in_t&, static_in_elem_t&)>;  
+    using agg_func_t     = std::function<out_t(const out_t&, const out_t&)>; 
     using reset_func_t   = std::function<out_t(void)>;
-    using final_func_t   = std::function<out_t(out_t)>;
+    using final_func_t   = std::function<out_t(const out_t&)>;
 
     /* mutex */
     mutable std::mutex m_ave_mut;
@@ -332,7 +333,7 @@ public:
             comp_func_t comp_f, 
             agg_func_t agg_f, 
             reset_func_t reset_f, 
-            final_func_t final_f = [](out_t o){ return o;}, 
+            final_func_t final_f = [](const out_t& o){ return o;}, 
             bool mt = true) 
         : m_done(false)
         , m_comp_f(comp_f)
