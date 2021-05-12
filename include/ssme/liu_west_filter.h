@@ -142,6 +142,429 @@ void mn_resamp_states_and_params<nparts,dimx,dimparam,float_t>::resampLogWts(arr
 
 
 
+//! A base class for the Liu-West Filter.
+/**
+ * @class LWFilter
+ * @author taylor
+ * @file liu_west_filter.h
+ * @brief Liu West filter 
+ * @tparam nparts the number of particles
+ * @tparam dimx the dimension of the state's state space
+ * @tparam dimy the dimension of each observation 
+ * @tparam dimparam the dimension of the parameters
+ * @tparam float_t the floating point type
+ * @tparam debug whether or not you want to display debug messages
+ */
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug=false>
+class LWFilter 
+{
+private:
+
+    /** "state size vector" type alias for linear algebra stuff */
+    using ssv = Eigen::Matrix<float_t,dimx,1>;
+
+    /** "observation size vector" type alias for linear algebra stuff */
+    using osv = Eigen::Matrix<float_t,dimy,1>;
+
+    /** "param sized vector" type alias for linear algebra stuff **/
+    using psv         = Eigen::Matrix<float_t, dimparam,1>;    
+
+    /** "param sized matrix" type alias for linear algebra stuff**/
+    using psm	      = Eigen::Matrix<float_t, dimparam,dimparam>;
+
+    /** type alias for linear algebra stuff (dimension of the state ^2) */
+    using Mat = Eigen::Matrix<float_t,Eigen::Dynamic,Eigen::Dynamic>;
+
+    /** type alias for linear algebra stuff */
+    using arrayStates = std::array<ssv, nparts>;
+    
+    /** type alias for parameter samples **/
+    using arrayParams = std::array<param::pack<float_t,dimparam>, nparts>;
+    
+    /** type alias for array of float_ts */
+    using arrayFloats = std::array<float_t, nparts>;
+   
+    /** function type that takes in parameter and state and returns dynamically sized matrix  */ 
+    using stateParamFunc = std::function<const Mat(const ssv&, const psv&)>;
+
+    /** type alias for array of unsigned ints */
+    using arrayUInt = std::array<unsigned int, nparts>;
+
+public:
+
+    /**
+     * @brief constructs the Liu-West filter
+     * @param transforms that describe how to transform parameters so they are unconstrained
+     * @param delta adaptation rate (e.g. .95 or .9 or .99)
+     * @param rs the resampling schedule 
+     */
+    LWFilter(const std::vector<std::string>& transforms, 
+              float_t delta,
+              const unsigned int &rs=1);
+    
+    
+    /**
+     * @brief The (virtual) destructor
+     */
+    virtual ~LWFilter();
+    
+     /**
+      * @brief Get the latest log conditional likelihood.
+      * @return a float_t of the most recent conditional likelihood.
+      */
+    float_t getLogCondLike () const; 
+    
+    
+    /**
+     * @brief return all stored expectations (taken with respect to $p(x_t|y_{1:t})$
+     * @return return a std::vector<Mat> of expectations. How many depends on how many callbacks you gave to 
+     */
+    std::vector<Mat> getExpectations () const;
+    
+
+    /**
+     * @brief updates filtering distribution on a new datapoint. 
+     * Optionally stores expectations of functionals.
+     * @param data the most recent data point
+     * @param fs a vector of functions if you want to calculate expectations.
+     */
+    void filter(const osv &data, const std::vector<stateParamFunc>& fs = std::vector<stateParamFunc>());
+    
+
+    /**
+     * @brief Evaluates the log of mu.
+     * @param x1 a Eigen::Matrix<float_t,dimx,1> representing time 1's state.
+     * @return a float_t evaluation.
+     */
+    virtual float_t logMuEv (const ssv &x1, const psv& untrans_p1 ) = 0;
+    
+    
+    /**
+     * @brief "Proposes" an untransformed future state to help set up the first stage weights. A good choice is the conditional expectation. 
+     * @param xtm1 a Eigen::Matrix<float_t,dimx,1> representing the previous time's state.
+     * @param untransformed versions of the current parameter vector 
+     * @return a Eigen::Matrix<float_t,dimx,1> representing a likely current time state, to be used by the observation density.
+     */
+    virtual ssv propMu (const ssv &xtm1, const psv& untrans_p1 ) = 0;
+    
+    
+    /**
+     * @brief Samples from q1.
+     * @param y1 a Eigen::Matrix<float_t,dimy,1> representing time 1's data point.
+     * @return a Eigen::Matrix<float_t,dimx,1> sample for time 1's state.
+     */
+    virtual ssv q1Samp (const osv &y1, const psv& untrans_p1) = 0;
+    
+    
+    /**
+     * @brief Samples from f.
+     * @param xtm1 a Eigen::Matrix<float_t,dimx,1> representing the previous time's state.
+     * @return a Eigen::Matrix<float_t,dimx,1> state sample for the current time.
+     */
+    virtual ssv fSamp (const ssv &xtm1, const psv& untrans_p1) = 0;
+    
+    
+    /**
+     * @brief Evaluates the log of q1.
+     * @param x1 a Eigen::Matrix<float_t,dimx,1> representing time 1's state.
+     * @param y1 a Eigen::Matrix<float_t,dimy,1> representing time 1's data observation.
+     * @return a float_t evaluation.
+     */
+    virtual float_t logQ1Ev (const ssv &x1, const osv &y1, const psv& untrans_p1) = 0;
+    
+    
+    /**
+     * @brief Evaluates the log of g.
+     * @param yt a Eigen::Matrix<float_t,dimy,1> representing time t's data observation.
+     * @param xt a Eigen::Matrix<float_t,dimx,1> representing time t's state.
+     * @return a float_t evaluation.
+     */
+    virtual float_t logGEv (const osv &yt, const ssv &xt, const psv& untrans_p1) = 0;
+
+    /**
+     * @brief sample a non-transformed parameter vector from the prior
+     */
+    virtual psv paramPriorSamp() = 0; 
+
+protected:
+
+
+    /** @brief parameter transforms **/
+    std::vector<std::string> m_transforms;
+
+    /** @brief state samples */
+    arrayStates m_state_particles;
+
+    /** @brief param samples **/
+    arrayParams m_param_particles;    
+
+    /** @brief particle unnormalized weights */
+    arrayFloats m_logUnNormWeights;
+    
+    /** @brief curren time */
+    unsigned int m_now; 
+    
+    /** @brief log p(y_t|y_{1:t-1}) or log p(y1) */
+    float_t m_logLastCondLike; 
+    
+    /** @brief the resampling schedule */
+    unsigned int m_rs;
+    
+    /** @brief resampling object */
+    mn_resamp_states_and_params<nparts,dimx,dimparam,float_t> m_resampler;   
+ 
+    /** a multivariate normal sampler for the parameter transitions **/
+    pf::rvsamp::MVNSampler<dimparam,float_t> m_mvn_gen;
+   
+    /** @brief k generator object (default ctor'd)*/
+    pf::rvsamp::k_gen<nparts,float_t> m_kGen;
+    
+    /** @brief expectations E[h(x_t) | y_{1:t}] for user defined "h"s */
+    std::vector<Mat> m_expectations;
+   
+    /** delta, the rate of adjustment (see LW paper for more details)*/
+    float_t m_delta; 
+};
+
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::LWFilter(
+        const std::vector<std::string>& transforms, 
+        float_t delta,
+        const unsigned int &rs) 
+    : m_transforms(transforms)
+    , m_now(0)
+    , m_logLastCondLike(0.0)
+    , m_rs(rs)
+    , m_delta(delta)
+{
+    std::fill(m_logUnNormWeights.begin(), m_logUnNormWeights.end(), 0.0);
+}
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::~LWFilter() { }
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &data, const std::vector<stateParamFunc>& fs)
+{
+    
+    if(m_now > 0)
+    { 
+        
+        // set up "first stage weights" to make k index sampler 
+        arrayFloats logFirstStageUnNormWeights = m_logUnNormWeights;
+        float_t m3(-std::numeric_limits<float_t>::infinity());
+        float_t m2(-std::numeric_limits<float_t>::infinity());
+        psv old_untrans_param;
+        for(size_t ii = 0; ii < nparts; ++ii)  
+        {
+            // update m3
+            if(m_logUnNormWeights[ii] > m3)
+                m3 = m_logUnNormWeights[ii];
+            
+            // sample
+	        old_untrans_param 		        = m_param_particles[ii].get_untrans_params();
+            logFirstStageUnNormWeights[ii] += logGEv(data, propMu(m_state_particles[ii], old_untrans_param), old_untrans_param); 
+            
+            // accumulate things
+            if(logFirstStageUnNormWeights[ii] > m2)
+                m2 = logFirstStageUnNormWeights[ii];
+            
+            // print stuff if debug mode is on
+            if constexpr(debug) {
+                std::cout << "time: " << m_now 
+                          << ", first stage log unnorm weight: " << logFirstStageUnNormWeights[ii] 
+                          << "\n";
+            }
+
+        }
+               
+        // draw ks (indexes) (handles underflow issues)
+        arrayUInt myKs = m_kGen.sample(logFirstStageUnNormWeights); 
+
+    	// calculate thetabar and Vt for parameter proposal distribution
+        psv thetaBar = psv::Zero();
+        psm Vt = psm::Zero();
+        psv theta_i;
+        for(size_t i = 0; i < nparts; ++i){
+            theta_i = m_param_particles[i].get_trans_params();
+            thetaBar += theta_i / nparts;
+            Vt += (theta_i * theta_i.transpose()) / nparts;
+        }
+        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
+        float_t hSquared {1.0 - a * a};
+    	m_mvn_gen.setCovar( hSquared * Vt);
+
+        // sample parameters and states  
+        float_t m1(-std::numeric_limits<float_t>::infinity());
+        float_t first_cll_sum(0.0);
+        float_t second_cll_sum(0.0);
+        float_t third_cll_sum(0.0);
+        ssv xtm1k;
+        ssv muTk;
+        psv mtm1k;
+        arrayStates old_state_partics = m_state_particles;
+        arrayParams old_param_partics = m_param_particles;
+        for(size_t ii = 0; ii < nparts; ++ii)   
+        {
+            // calclations for log p(y_t|y_{1:t-1}) (using log-sum-exp trick)
+            second_cll_sum += std::exp( logFirstStageUnNormWeights[ii] - m2 );
+            third_cll_sum  += std::exp( m_logUnNormWeights[ii] - m3 );            
+            
+            // sample the parameter first, and get ready to sample the rest
+            xtm1k = m_state_particles[myKs[ii]];
+            mtm1k = a * old_param_partics[myKs[ii]].get_trans_params() + (1.0 - a) * thetaBar;
+            param::pack<float_t, dimparam> mtm1k_pack (mtm1k, m_transforms); 
+            m_mvn_gen.setMean(mtm1k);
+            param::pack<float_t, dimparam> newThetaSamp (m_mvn_gen.sample(), m_transforms);
+
+            // sample parameters, states, adn update unnormalized weights
+            m_param_particles[ii]   = newThetaSamp; 
+            m_state_particles[ii]   = fSamp(xtm1k, newThetaSamp.get_untrans_params());
+            muTk                    = propMu(xtm1k, old_param_partics[myKs[ii]].get_untrans_params());
+            m_logUnNormWeights[ii] += logGEv(data, m_state_particles[ii], newThetaSamp.get_untrans_params()) 
+                                    - logGEv(data, muTk, mtm1k_pack.get_untrans_params());
+
+            if constexpr(debug) {
+                std::cout << "time: " << m_now 
+                          << ", transposed state sample: " << m_state_particles[ii].transpose() 
+                          << ", transposed nontransformed param sample: " << m_param_particles[ii].get_untrans_param().transpose() 
+                          << ", log unnorm weight: " << m_logUnNormWeights[ii] 
+                          << "\n";
+            }
+
+            // update m1
+            if(m_logUnNormWeights[ii] > m1)
+                m1 = m_logUnNormWeights[ii];
+        }
+
+        // calculate estimate for log of last conditonal likelihood
+        for(size_t p = 0; p < nparts; ++p)
+             first_cll_sum += std::exp( m_logUnNormWeights[p] - m1 );
+        m_logLastCondLike = m1 + std::log(first_cll_sum) + m2 + std::log(second_cll_sum) - 2*m3 - 2*std::log(third_cll_sum);
+
+        if constexpr(debug) 
+            std::cout << "time: " << m_now << ", log cond like: " << m_logLastCondLike << "\n";
+
+        // calculate expectations before you resample
+        unsigned int fId(0);
+        for(auto & h : fs){
+    
+            Mat testOutput = h(m_state_particles[0], m_param_particles[0].get_untrans_params());
+            unsigned int rows = testOutput.rows();
+            unsigned int cols = testOutput.cols();
+            Mat numer = Mat::Zero(rows,cols);
+            float_t denom(0.0);
+            
+            for(size_t prtcl = 0; prtcl < nparts; ++prtcl){ 
+                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - m1);
+                denom += std::exp(m_logUnNormWeights[prtcl] - m1);
+            }
+            m_expectations[fId] = numer/denom;
+
+            if constexpr(debug)
+                std::cout << "transposed expectation " << fId << "; " << m_expectations[fId] << "\n";
+
+            fId++;
+        }
+
+        // if you have to resample
+        if( (m_now+1)%m_rs == 0)
+            m_resampler.resampLogWts(m_state_particles, m_param_particles, m_logUnNormWeights);
+
+        // advance time
+        m_now += 1; 
+    
+    } else { // (m_now == 0) 
+
+        float_t max(-std::numeric_limits<float_t>::infinity());
+        psv untrans_param_samp;
+        for(size_t ii = 0; ii < nparts; ++ii)
+        {
+            // sample param particles
+            untrans_param_samp = paramPriorSamp();
+            m_param_particles[ii] = param::pack<float_t,dimparam>(untrans_param_samp, m_transforms, false);
+
+            // sample particles
+            m_state_particles[ii]  = q1Samp(data, untrans_param_samp);
+            m_logUnNormWeights[ii]  = logMuEv(m_state_particles[ii], untrans_param_samp);
+            m_logUnNormWeights[ii] += logGEv(data, m_state_particles[ii], untrans_param_samp);
+            m_logUnNormWeights[ii] -= logQ1Ev(m_state_particles[ii], data, untrans_param_samp);
+
+            if constexpr(debug) {
+                std::cout << "time: " << m_now 
+                          << ", transposed state sample: " << m_state_particles[ii].transpose() 
+                          << ", transposed nontransformed param sample: " << m_param_particles[ii].get_untrans_param().transpose() 
+                          << ", log unnorm weight: " << m_logUnNormWeights[ii] 
+                          << "\n";
+            }
+
+            // update maximum
+            if( m_logUnNormWeights[ii] > max)
+                max = m_logUnNormWeights[ii];
+        }
+        
+        // calculate log-likelihood with log-exp-sum trick
+        float_t sumExp(0.0);
+        for( size_t i = 0; i < nparts; ++i){
+            sumExp += std::exp( m_logUnNormWeights[i] - max );
+        }
+        m_logLastCondLike = - std::log( static_cast<float_t>(nparts) ) + max + std::log(sumExp);
+        
+        // calculate expectations before you resample
+        m_expectations.resize(fs.size());
+        unsigned int fId(0);
+        for(auto & h : fs){
+            
+            Mat testOutput = h(m_state_particles[0], m_param_particles[0].get_untrans_params());
+            unsigned int rows = testOutput.rows();
+            unsigned int cols = testOutput.cols();
+            Mat numer = Mat::Zero(rows,cols);
+            float_t denom(0.0);
+            for(size_t prtcl = 0; prtcl < nparts; ++prtcl){ 
+                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - max);
+                denom += std::exp(m_logUnNormWeights[prtcl] - max);
+            }
+            m_expectations[fId] = numer/denom;
+
+            if constexpr(debug)
+                std::cout << "transposed expectation " << fId << "; " << m_expectations[fId] << "\n";
+
+            fId++;
+        }
+        
+        // resample if you should (automatically normalizes)
+        if( (m_now+1) % m_rs == 0)
+            m_resampler.resampLogWts(m_state_particles, m_param_particles, m_logUnNormWeights);
+
+        // advance time step
+        m_now += 1;    
+    }
+
+}
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+float_t LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::getLogCondLike() const
+{
+    return m_logLastCondLike;
+}
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+auto LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::getExpectations() const -> std::vector<Mat>
+{
+    return m_expectations;
+}
+
+
+
+
+
+
 //! A base class for a modified version of the Liu-West Filter.
 /**
  * @class LWFilter2
@@ -333,7 +756,6 @@ protected:
     /** @brief resampling schedule (e.g. resample every __ time points) */
     unsigned int m_resampSched;
    
-
     /** @brief the discount factor (e.g. .95 or .99) **/
     float_t m_delta; 
 
@@ -480,11 +902,8 @@ void LWFilter2<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const osv &data
         for(size_t ii = 0; ii < nparts; ++ii)
         {
             // sample param particles
-            psv psamp = paramPriorSamp();
-            param::pack<float_t,dimparam> thetaSamp(paramPriorSamp(), m_transforms, false); 
-            m_param_particles[ii] = thetaSamp;
-            untrans_param_samp = thetaSamp.get_untrans_params();
-            
+            untrans_param_samp= paramPriorSamp();
+            m_param_particles[ii] = param::pack<float_t,dimparam>(untrans_param_samp, m_transforms, false); 
 
             // sample state particles
             m_state_particles[ii] = q1Samp(data, untrans_param_samp);
@@ -544,12 +963,5 @@ void LWFilter2<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const osv &data
     }
 
 }
-
-
-
-
-
-
-
 
 #endif //LIU_WEST_FILTER_H
