@@ -288,7 +288,10 @@ private:
 
         while(!m_done)
         {
-            if(m_has_new_dyn_input.at(std::this_thread::get_id()) ){
+
+            auto iter = m_has_new_dyn_input.find(std::this_thread::get_id());
+            bool is_constructed_and_has_work = (iter != m_has_new_dyn_input.end()) && (iter->second);
+            if(is_constructed_and_has_work ){
               
                 // **intra-thread**
                 // call the work function on each element of the static/stable with the dynamic input shared across all calls
@@ -316,9 +319,6 @@ private:
                 std::this_thread::yield();
             }
         }
-    }
-
-    void launch_threads() {
     }
 
 
