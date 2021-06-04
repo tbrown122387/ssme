@@ -70,9 +70,6 @@ private:
     /* a collection of models each with a randomly chosen parameter and a vector of functions for each model/parameter */
     std::array<mod_funcs_pair, nparamparts> m_mods_and_funcs;
 
-    /* a vector of functions for each model (these functions may depend on the model's parameter)  */ //TODO, should we store parameters, or functioins?
-//    std::array<std::vector<filt_func>, nparamparts> m_funcs;
-
     /* log p(y_t+1 | y_{1:t}) */
     float_type m_log_cond_like;
     
@@ -119,6 +116,8 @@ private:
             for(size_t i = 0; i < n_filt_funcs; ++i)
                 res.first[i] = vec_mats_and_like.first[i] / n;
         }
+
+        return res;
     }
 
     /* initalizes empty vector of matrices */
