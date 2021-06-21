@@ -8,6 +8,7 @@
 #include <atomic>
 #include <future>
 #include <map>
+#include <array>
 
 
 /**
