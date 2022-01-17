@@ -7,7 +7,7 @@ project("ssme" VERSION 1.0.0
 include(GNUInstallDirs)
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)
-find_package(Catch2 2.9.2 REQUIRED)
+find_package(Catch2 3 REQUIRED)
 find_package( Threads REQUIRED )
 find_package(pf CONFIG REQUIRED)
 
@@ -19,7 +19,7 @@ target_include_directories(
 target_link_libraries(${PROJECT_NAME} 
     INTERFACE 
         Eigen3::Eigen 
-        Catch2::Catch2
+	Catch2::Catch2WithMain
         Threads::Threads
         pf::pf)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
