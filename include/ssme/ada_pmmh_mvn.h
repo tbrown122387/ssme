@@ -13,6 +13,8 @@
 #include <ssme/thread_pool.h>
 
 
+using namespace pf;
+
 /**
  * @class ada_pmmh_mvn
  * @author Taylor

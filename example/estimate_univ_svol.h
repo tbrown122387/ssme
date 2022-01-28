@@ -11,6 +11,8 @@
 #include "univ_svol_bootstrap_filter.h"
 
 
+using namespace pf::resamplers;
+
 
 template<size_t numparams, size_t dimstate, size_t dimobs, size_t numparts, typename float_t>
 class univ_svol_estimator : public ada_pmmh_mvn<numparams,dimobs,numparts,float_t>
