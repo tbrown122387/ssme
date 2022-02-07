@@ -6,6 +6,7 @@
 
 #include <pf/rv_samp.h>
 
+#include "utils.h" // for csv_param_sampler
 #include "parameters.h"
 
 
@@ -17,6 +18,8 @@
  * For justification, see page 244 of "Inference in Hidden Markov Models"
  * @tparam nparts the number of particles.
  * @tparam dimx the dimension of each state sample.
+ * @tparam dimparam the dimension of the parameter samples
+ * @tparam float_t the floating point type
  */
 template<size_t nparts, size_t dimx, size_t dimparam, typename float_t>
 class mn_resamp_states_and_params
@@ -1792,5 +1795,10 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const o
     }
 
 }
+
+
+
+
+
 
 #endif //LIU_WEST_FILTER_H

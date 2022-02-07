@@ -74,6 +74,85 @@ namespace utils{
         
         return data;
     } 
+    
+    
+    /**
+ * @class csv_param_sampler
+ * @author taylor
+ * @file utils.h
+ * @brief Class that samples parameters from a csv file. File must not have header, and be comma separated.
+ * @tparam dimparam the dimension of a parameter vector (also the number of columns in the csv file)
+ * @tparam float_t the type of floating point
+ */
+template<size_t dimparam, typename float_t>
+class csv_param_sampler
+{
+public:
+
+    /** "param sized vector" type alias for linear algebra stuff **/
+    using psv         = Eigen::Matrix<float_t, dimparam,1>;
+
+    
+    /**
+     * @brief Default constructor is deleted because you need a file location. 
+     */
+    csv_param_sampler() = delete; 
+
+    /**
+     * @brief ctor 1
+     * @param the name of the csv of parameter samples (must be headerless and comma separated)
+     */
+    csv_param_sampler(const std::string &param_csv_filename); 
+
+
+    /**
+     * @brief constructor with seed
+     * @param the name of the csv of parameter samples (must be headerless and comma separated)
+
+     */
+    csv_param_sampler(const std::string &param_csv_filename, unsigned long seed);
+    
+    
+    /**
+     * @brief draw random (re-)sample parameter vector
+     */
+    psv samp();
+
+
+private:
+
+    std::mt19937 m_gen; 
+
+    std::uniform_int_distribution<int> m_idx_sampler; //(0,9);
+    
+    std::vector<psv> m_param_samps;
+};
+
+
+template<size_t nparts, size_t dimx, size_t dimparam, typename float_t>
+csv_param_sampler<nparts,dimx,dimparam,float_t>::csv_param_sampler(const std::string &param_csv_filename)
+    : m_gen{static_cast<std::uint32_t>(
+                    std::chrono::high_resolution_clock::now().time_since_epoch().count() )}
+{
+    m_param_samps = read_data(param_csv_filename);
+    m_idx_sampler = std::uniform_int_distribution<int>(0, m_param_samps.size() - 1);
+}
+
+
+template<size_t nparts, size_t dimx, size_t dimparam, typename float_t>
+csv_param_sampler<nparts,dimx,dimparam,float_t>:: mn_resamp_states_and_params(const std::string &param_csv_filename, unsigned long seed)
+    : m_gen{static_cast<std::uint32_t>(seed)}
+{
+    m_param_samps = read_data(param_csv_filename);
+    m_idx_sampler = std::uniform_int_distribution<int>(0, m_param_samps.size() - 1);
+}
+
+
+template<size_t nparts, size_t dimx, size_t dimparam, typename float_t>
+auto samp() -> psv
+{
+    return m_param_samps[m_idx_sampler(m_gen)];
+}
 
 } // namespace utils
 
