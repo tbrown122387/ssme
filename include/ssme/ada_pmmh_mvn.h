@@ -292,8 +292,11 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_iter_num()
 template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
 void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_messages()
 {
-    // format: 
-    // iter number, acceptance rate, old_ll, new_ll, old log prior, new log prior, accept probability, outcome
+    if(m_iter == 0){
+	m_message_stream << "iter number, accept rate, old_ll, new_ll, old_lprior, new_lprior, accept prob, outcome\n";
+	if(m_print_to_console) std::cout << "iter number, accept rate, old_ll, new_ll, old_lprior, new_lprior, accept prob, outcome\n";
+    }
+
     m_message_stream << m_iter+1 << ", " << m_ma_accept_rate << ", " << m_old_log_like << ", " 
                      << m_new_log_like << ", " << m_old_log_prior << ", " << m_new_log_prior << ", "
                      << m_log_accept_prob << ", " << m_accepted << "\n";
