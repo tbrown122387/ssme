@@ -279,6 +279,9 @@ public:
     /* the observation sized vector */
     using csv             = Eigen::Matrix<float_type,dimcov,1>;
 
+    /* vector to store both observed and covariate. Need this because we need to bundle data for thread pool */
+    using ocsv             = Eigen::Matrix<float_type,dimcov+dimy,1>;
+
     /* the state sized vector */
     using ssv             = Eigen::Matrix<float_type,dimx,1>;
 
@@ -309,7 +312,7 @@ public:
 
 private:
   
-    /* Models must be instantiated witha  virtual function, so models cannot be instantiated in the Swarm constructor. This flags whether we have done that.*/
+    /* Models must be instantiated with a virtual function, so models cannot be instantiated in the Swarm constructor. This flags whether we have done that.*/
     bool m_models_are_not_instantiated;
 
     /* this is the vector of functions that generates all models' filtering functions*/
@@ -328,11 +331,12 @@ private:
     unsigned int m_num_obs;
 
     /* thread pool for faster calculations*/
-    split_data_thread_pool<osv, mod_funcs_pair, mats_and_loglike, nparamparts> m_tp; 
+    split_data_thread_pool<ocsv, mod_funcs_pair, mats_and_loglike, nparamparts> m_tp; 
 
     /* calls .filter() on a particle filtering object. side effects and the return object are important */
+    // first element of yt_then_zt is the observation, and then it's the covariate, in that order
     // TODO change
-    static mats_and_loglike comp_func(const osv& yt, mod_funcs_pair& pf_funcs){
+    static mats_and_loglike comp_func(const ocsv& yt_then_zt, mod_funcs_pair& pf_funcs){
         pf_funcs.first.filter(yt, pf_funcs.second);
         mats_and_loglike r;
         r.first = pf_funcs.first.getExpectations();

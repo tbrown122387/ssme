@@ -614,7 +614,7 @@ private:
     using arrayFloats = std::array<float_t, nparts>;
    
     /** function type that takes in parameter and state and returns dynamically sized matrix  */ 
-    using stateParamFunc = std::function<const Mat(const ssv&, const psv&)>;
+    using stateCovParamFunc = std::function<const Mat(const ssv&, const csv&, const psv&)>;
 
     /** type alias for array of unsigned ints */
     using arrayUInt = std::array<unsigned int, nparts>;
@@ -657,7 +657,7 @@ public:
      * @param data the most recent data point
      * @param fs a vector of functions if you want to calculate expectations.
      */
-    void filter(const osv &obs_data, const csv &cov_data, const std::vector<stateParamFunc>& fs = std::vector<stateParamFunc>());
+    void filter(const osv &obs_data, const csv &cov_data, const std::vector<stateCovParamFunc>& fs = std::vector<stateCovParamFunc>());
     
 
     /**
@@ -781,7 +781,7 @@ LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::~LWFilterWithCov
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-void LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &obs_data, const csv &cov_data, const std::vector<stateParamFunc>& fs)
+void LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &obs_data, const csv &cov_data, const std::vector<stateCovParamFunc>& fs)
 {
     
     if(m_now > 0)
@@ -886,14 +886,14 @@ void LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::filter(cons
         unsigned int fId(0);
         for(auto & h : fs){
     
-            Mat testOutput = h(m_state_particles[0], m_param_particles[0].get_untrans_params());
+            Mat testOutput = h(m_state_particles[0], m_param_particles[0].get_untrans_params()); //TODO
             unsigned int rows = testOutput.rows();
             unsigned int cols = testOutput.cols();
             Mat numer = Mat::Zero(rows,cols);
             float_t denom(0.0);
             
             for(size_t prtcl = 0; prtcl < nparts; ++prtcl){ 
-                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - m1);
+                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - m1);//TODO
                 denom += std::exp(m_logUnNormWeights[prtcl] - m1);
             }
             m_expectations[fId] = numer/denom;
@@ -952,13 +952,13 @@ void LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::filter(cons
         unsigned int fId(0);
         for(auto & h : fs){
             
-            Mat testOutput = h(m_state_particles[0], m_param_particles[0].get_untrans_params());
+            Mat testOutput = h(m_state_particles[0], m_param_particles[0].get_untrans_params()); // TODO
             unsigned int rows = testOutput.rows();
             unsigned int cols = testOutput.cols();
             Mat numer = Mat::Zero(rows,cols);
             float_t denom(0.0);
             for(size_t prtcl = 0; prtcl < nparts; ++prtcl){ 
-                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - max);
+                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - max);//TODO
                 denom += std::exp(m_logUnNormWeights[prtcl] - max);
             }
             m_expectations[fId] = numer/denom;
@@ -1179,7 +1179,7 @@ protected:
     /** a multivariate normal sampler for the parameter transitions **/
     pf::rvsamp::MVNSampler<dimparam,float_t> m_mvn_gen;
 
-    /** @brief expectations E[h(x_t) | y_{1:t}] for user defined "h"s */
+    /** @brief expectations E[h(x_t) | y_{1:t}] for user defined "h"s */ // TODO does this depend on zt as well?
     std::vector<Mat> m_expectations; // stores any sample averages the user wants
     
     /** @brief resampling schedule (e.g. resample every __ time points) */
@@ -1441,7 +1441,7 @@ public:
     using arrayFloats = std::array<float_t, nparts>;
    
     /** function type that takes in parameter and state and returns dynamically sized matrix  */ 
-    using stateParamFunc = std::function<const Mat(const ssv&, const psv&)>;
+    using stateCovParamFunc = std::function<const Mat(const ssv&, const csv&, const psv&)>;
 
     /**
      * @brief constructs the Liu-West filter
@@ -1479,7 +1479,7 @@ public:
      * @param data the most recent data point
      * @param fs a vector of functions if you want to calculate expectations.
      */
-    void filter(const osv &obs_data, const csv &cov_data, const std::vector<stateParamFunc>& fs = std::vector<stateParamFunc>());
+    void filter(const osv &obs_data, const csv &cov_data, const std::vector<stateCovParamFunc>& fs = std::vector<stateCovParamFunc>());
     
     
     /**
@@ -1631,7 +1631,7 @@ auto LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t,debug>::getExpectations
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-void LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const osv &obs_data, const csv &cov_data, const std::vector<stateParamFunc>& fs)
+void LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const osv &obs_data, const csv &cov_data, const std::vector<stateCovParamFunc>& fs)
 {
     if(m_now > 0)
     {
@@ -1699,14 +1699,14 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const o
         float_t weightNormConst(0.0);
         for(auto & h : fs){ // iterate over all functions
 
-            Mat testOut = h(m_state_particles[0], m_param_particles[0].get_untrans_params());
+            Mat testOut = h(m_state_particles[0], m_param_particles[0].get_untrans_params()); // TODO, dpend on zt?
             unsigned int rows = testOut.rows();
             unsigned int cols = testOut.cols();
             Mat numer = Mat::Zero(rows,cols);
             float_t denom(0.0);
 
             for(size_t prtcl = 0; prtcl < nparts; ++prtcl){ // iterate over all particles
-                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - maxNumer );
+                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - maxNumer ); // TODO, dpend on zt?
                 denom += std::exp(m_logUnNormWeights[prtcl] - maxNumer);
             }
             m_expectations[fId] = numer/denom;
@@ -1767,14 +1767,14 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const o
         unsigned int fId(0);
         for(auto & h : fs){
             
-            Mat testOut = h(m_state_particles[0], m_param_particles[0].get_untrans_params());
+            Mat testOut = h(m_state_particles[0], m_param_particles[0].get_untrans_params()); // TODO, dpend on zt?
             unsigned int rows = testOut.rows();
             unsigned int cols = testOut.cols();
             Mat numer = Mat::Zero(rows,cols);
             float_t denom(0.0);
 
             for(size_t prtcl = 0; prtcl < nparts; ++prtcl){ 
-                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - max);
+                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - max); // TODO, dpend on zt?
                 denom += std::exp(m_logUnNormWeights[prtcl] - max);
             }
             m_expectations[fId] = numer/denom;
