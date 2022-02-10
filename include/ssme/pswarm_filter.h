@@ -335,9 +335,10 @@ private:
 
     /* calls .filter() on a particle filtering object. side effects and the return object are important */
     // first element of yt_then_zt is the observation, and then it's the covariate, in that order
-    // TODO change
     static mats_and_loglike comp_func(const ocsv& yt_then_zt, mod_funcs_pair& pf_funcs){
-        pf_funcs.first.filter(yt, pf_funcs.second);
+    	osv yt = yt_then_zt(0,0,dimy,1);
+    	csv zt = yt_then_zt(dimy,0,dimcov,1);
+        pf_funcs.first.filter(yt, zt, pf_funcs.second);
         mats_and_loglike r;
         r.first = pf_funcs.first.getExpectations();
         r.second = pf_funcs.first.getLogCondLike();
@@ -350,14 +351,17 @@ private:
         // set up required variables 
         mats_and_loglike res = agg;
         float_type n = static_cast<float_type>(nparamparts);
+
+        // agg log conditional likelihood
+        res.second += vec_mats_and_like.second / n;
+        
+        // check if agg has at least one term in it
+        // if so, agg is "old"
         bool agg_old = false;
         for(size_t i = 0; i < n_filt_funcs; ++i){
             if(agg.first[i].rows() > 0 || agg.first[i].cols() > 0)
                 agg_old = true;
         }
-
-        // agg log conditional likelihood
-        res.second += vec_mats_and_like.second / n;
 
         // aggregate expectation matrices
         // if agg has just been initialized, it is a vector of 0X0 matrices

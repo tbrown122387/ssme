@@ -761,8 +761,8 @@ protected:
 
 
 
-template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::LWFilterWithCovs(
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+LWFilterWithCovs<nparts, dimx, dimy, dimcov, dimparam, float_t, debug>::LWFilterWithCovs(
         const std::vector<std::string>& transforms, 
         float_t delta,
         const unsigned int &rs) 
@@ -776,12 +776,12 @@ LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::LWFilterWithCovs
 }
 
 
-template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::~LWFilterWithCovs() { }
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::~LWFilterWithCovs() { }
 
 
-template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-void LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &obs_data, const csv &cov_data, const std::vector<stateCovParamFunc>& fs)
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+void LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::filter(const osv &obs_data, const csv &cov_data, const std::vector<stateCovParamFunc>& fs)
 {
     
     if(m_now > 0)
@@ -800,7 +800,7 @@ void LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::filter(cons
             
             // sample
 	    old_untrans_param 		     = m_param_particles[ii].get_untrans_params();
-            logFirstStageUnNormWeights[ii] += logGEv(data, propMu(m_state_particles[ii], old_untrans_param), old_untrans_param); 
+            logFirstStageUnNormWeights[ii] += logGEv(obs_data, propMu(m_state_particles[ii], old_untrans_param), old_untrans_param); 
             
             // accumulate things
             if(logFirstStageUnNormWeights[ii] > m2)
@@ -922,10 +922,10 @@ void LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::filter(cons
             m_param_particles[ii] = param::pack<float_t,dimparam>(untrans_param_samp, m_transforms, false);
 
             // sample particles
-            m_state_particles[ii]  = q1Samp(data, untrans_param_samp);
+            m_state_particles[ii]   = q1Samp(obs_data, untrans_param_samp);
             m_logUnNormWeights[ii]  = logMuEv(m_state_particles[ii], untrans_param_samp);
-            m_logUnNormWeights[ii] += logGEv(data, m_state_particles[ii], untrans_param_samp);
-            m_logUnNormWeights[ii] -= logQ1Ev(m_state_particles[ii], data, untrans_param_samp);
+            m_logUnNormWeights[ii] += logGEv(obs_data, m_state_particles[ii], untrans_param_samp);
+            m_logUnNormWeights[ii] -= logQ1Ev(m_state_particles[ii], obs_data, untrans_param_samp);
 
             if constexpr(debug) {
                 std::cout << "time: " << m_now 
@@ -980,15 +980,15 @@ void LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::filter(cons
 }
 
 
-template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-float_t LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::getLogCondLike() const
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+float_t LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::getLogCondLike() const
 {
     return m_logLastCondLike;
 }
 
 
-template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-auto LWFilterWithCovs<nparts, dimx, dimy, dimparam, float_t, debug>::getExpectations() const -> std::vector<Mat>
+template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typename float_t,bool debug>
+auto LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::getExpectations() const -> std::vector<Mat>
 {
     return m_expectations;
 }
@@ -1598,8 +1598,8 @@ protected:
 };
 
 
-template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilter2WithCovs(const std::vector<std::string>& transforms, 
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::LWFilter2WithCovs(const std::vector<std::string>& transforms, 
                                                               float_t delta,
                                                               const unsigned int &rs)
                 : m_transforms(transforms)
@@ -1612,26 +1612,26 @@ LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilter2WithCovs(co
 }
 
 
-template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t,debug>::~LWFilter2WithCovs() {}
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::~LWFilter2WithCovs() {}
 
     
-template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-float_t LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t,debug>::getLogCondLike() const
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+float_t LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::getLogCondLike() const
 {
     return m_logLastCondLike;
 }
     
 
-template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-auto LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t,debug>::getExpectations() const -> std::vector<Mat> 
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+auto LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::getExpectations() const -> std::vector<Mat> 
 {
     return m_expectations;
 }
 
 
-template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug=false>
-void LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const osv &obs_data, const csv &cov_data, const std::vector<stateCovParamFunc>& fs)
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(const osv &obs_data, const csv &cov_data, const std::vector<stateCovParamFunc>& fs)
 {
     if(m_now > 0)
     {
@@ -1738,10 +1738,10 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const o
             m_param_particles[ii] = param::pack<float_t,dimparam>(untrans_param_samp, m_transforms, false); 
 
             // sample state particles
-            m_state_particles[ii] = q1Samp(data, untrans_param_samp);
+            m_state_particles[ii] = q1Samp(obs_data, untrans_param_samp);
             m_logUnNormWeights[ii]  = logMuEv(m_state_particles[ii], untrans_param_samp);
-            m_logUnNormWeights[ii] += logGEv(data, m_state_particles[ii], untrans_param_samp);
-            m_logUnNormWeights[ii] -= logQ1Ev(m_state_particles[ii], data, untrans_param_samp);
+            m_logUnNormWeights[ii] += logGEv(obs_data, m_state_particles[ii], untrans_param_samp);
+            m_logUnNormWeights[ii] -= logQ1Ev(m_state_particles[ii], obs_data, untrans_param_samp);
 
             if constexpr(debug) {
                 std::cout << "time: " << m_now 
