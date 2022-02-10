@@ -249,7 +249,7 @@ public:
      * @param untransformed versions of the current parameter vector 
      * @return a Eigen::Matrix<float_t,dimx,1> representing a likely current time state, to be used by the observation density.
      */
-    virtual ssv propMu (const ssv &xtm1, const psv& untrans_p1 ) = 0;
+    virtual ssv propMu (const ssv &xtm1, const psv& untrans_old_param ) = 0;
     
     
     /**
@@ -674,7 +674,7 @@ public:
      * @param untransformed versions of the current parameter vector 
      * @return a Eigen::Matrix<float_t,dimx,1> representing a likely current time state, to be used by the observation density.
      */
-    virtual ssv propMu (const ssv &xtm1, const csv &cov_data, const psv& untrans_p1 ) = 0;
+    virtual ssv propMu (const ssv &xtm1, const csv &cov_data, const psv& untrans_old_param ) = 0;
     
     
     /**
