@@ -265,7 +265,7 @@ public:
      * @param xtm1 a Eigen::Matrix<float_t,dimx,1> representing the previous time's state.
      * @return a Eigen::Matrix<float_t,dimx,1> state sample for the current time.
      */
-    virtual ssv fSamp (const ssv &xtm1, const psv& untrans_p1) = 0;
+    virtual ssv fSamp (const ssv &xtm1, const psv& untrans_new_param) = 0;
     
     
     /**
@@ -692,7 +692,7 @@ public:
      * @param untrans_p1 the untransformed parameters 
      * @return a Eigen::Matrix<float_t,dimx,1> state sample for the current time.
      */
-    virtual ssv fSamp (const ssv &xtm1, const csv &zt, const psv& untrans_p1) = 0;
+    virtual ssv fSamp (const ssv &xtm1, const csv &zt, const psv& untrans_new_param) = 0;
     
     
     /**
