@@ -307,8 +307,8 @@ public:
     using mats_and_loglike = std::pair<std::vector<DynMat>, float_type>;
 
     /* assert that ModType is a proper particle filter model */
-    static_assert(std::is_base_of<pf::bases::pf_base<float_type,dimy,dimx>, ModType>::value, 
-            "ModType must inherit from a particle filter class.");
+    static_assert(std::is_base_of<pf::bases::pf_withcov_base<float_type,dimy,dimx,dimcov>, ModType>::value, 
+            "ModType must inherit from the appropriate particle filter class.");
 
 private:
   
@@ -402,9 +402,9 @@ public:
         , m_num_obs(0)
         , m_tp(
                 m_mods_and_funcs, 
-                &Swarm<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimparam>::comp_func, 
-                &Swarm<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimparam>::agg_func, 
-                &Swarm<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimparam>::reset_func, 
+                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::comp_func, 
+                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::agg_func, 
+                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::reset_func, 
                 [](const mats_and_loglike& o){return o;}, 
                 parallel) 
     { 
