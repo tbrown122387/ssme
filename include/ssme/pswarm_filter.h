@@ -202,7 +202,7 @@ public:
      * The index ordering is param,time,particle
      * @param the number of steps into the future you want to simulate observations
      */
-    obsSamples simFutureObs(unsigned int num_future_steps){
+    obsSamples simFutureObs(unsigned int num_future_steps) const{
         obsSamples returnMe;
         for(size_t paramSamp = 0; paramSamp < nparamparts; ++paramSamp){
             returnMe[paramSamp] = m_mods_and_funcs[paramSamp].first.sim_future_obs(num_future_steps);
@@ -459,7 +459,7 @@ public:
      * The index ordering is param,time,particle
      * @param the number of steps into the future you want to simulate observations
      */
-    obsSamples simFutureObs(unsigned int num_future_steps){
+    obsSamples simFutureObs(unsigned int num_future_steps) const{
         obsSamples returnMe;
         for(size_t paramSamp = 0; paramSamp < nparamparts; ++paramSamp){
             returnMe[paramSamp] = m_mods_and_funcs[paramSamp].first.sim_future_obs(num_future_steps);

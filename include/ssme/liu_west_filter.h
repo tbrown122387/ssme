@@ -169,7 +169,6 @@ private:
     /** "observation size vector" type alias for linear algebra stuff */
     using osv = Eigen::Matrix<float_t,dimy,1>;
 
-
     /** "param sized vector" type alias for linear algebra stuff **/
     using psv         = Eigen::Matrix<float_t, dimparam,1>;    
 
@@ -193,6 +192,9 @@ private:
 
     /** type alias for array of unsigned ints */
     using arrayUInt = std::array<unsigned int, nparts>;
+
+    /** future observation samples--indexed by time then state */
+    using obsSamples = std::vector<std::array<osv, nparts> >;
 
 public:
 
@@ -268,6 +270,8 @@ public:
     virtual ssv fSamp (const ssv &xtm1, const psv& untrans_new_param) = 0;
     
     
+ 
+
     /**
      * @brief Evaluates the log of q1.
      * @param x1 a Eigen::Matrix<float_t,dimx,1> representing time 1's state.
@@ -328,6 +332,12 @@ protected:
    
     /** delta, the rate of adjustment (see LW paper for more details)*/
     float_t m_delta; 
+
+    /** average of current parameter samples */
+    psv m_thetaBar;
+
+    /** updates some state (m_thetaBar and m_mvn_gen) so that sampling parameters can be done quickly */
+    void update_parameter_proposal_components();
 };
 
 
@@ -390,17 +400,7 @@ void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &d
         arrayUInt myKs = m_kGen.sample(logFirstStageUnNormWeights); 
 
     	// calculate thetabar and Vt for parameter proposal distribution
-        psv thetaBar = psv::Zero();
-        psm Vt = psm::Zero();
-        psv theta_i;
-        for(size_t i = 0; i < nparts; ++i){
-            theta_i = m_param_particles[i].get_trans_params();
-            thetaBar += theta_i / nparts;
-            Vt += (theta_i * theta_i.transpose()) / nparts;
-        }
-        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
-        float_t hSquared {1.0 - a * a};
-    	m_mvn_gen.setCovar( hSquared * Vt);
+        update_parameter_proposal_components();
 
         // sample parameters and states  
         float_t m1(-std::numeric_limits<float_t>::infinity());
@@ -420,7 +420,8 @@ void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &d
             
             // sample the parameter first, and get ready to sample the rest
             xtm1k = m_state_particles[myKs[ii]];
-            mtm1k = a * old_param_partics[myKs[ii]].get_trans_params() + (1.0 - a) * thetaBar;
+            float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
+            mtm1k = a * old_param_partics[myKs[ii]].get_trans_params() + (1.0 - a) * m_thetaBar;
             param::pack<float_t, dimparam> mtm1k_pack (mtm1k, m_transforms); 
             m_mvn_gen.setMean(mtm1k);
             param::pack<float_t, dimparam> newThetaSamp (m_mvn_gen.sample(), m_transforms);
@@ -564,6 +565,179 @@ auto LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::getExpectations() c
     return m_expectations;
 }
 
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::update_parameter_proposal_components()
+{
+        m_thetaBar = psv::Zero();
+        psm Vt = psm::Zero();
+        psv theta_i;
+        for(size_t i = 0; i < nparts; ++i){
+            theta_i = m_param_particles[i].get_trans_params();
+            m_thetaBar += theta_i / nparts;
+            Vt += (theta_i * theta_i.transpose()) / nparts;
+        }
+        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
+        float_t hSquared {1.0 - a * a};
+    	m_mvn_gen.setCovar( hSquared * Vt);
+
+}
+
+
+
+//! An add-on for the Liu-West Filter that simulates future observations.
+/**
+ * @class LWFilterFutureSimulator
+ * @author taylor
+ * @file liu_west_filter.h
+ * @brief Liu West filter future simulator add-on
+ * @tparam nparts the number of particles
+ * @tparam dimx the dimension of the state's state space
+ * @tparam dimy the dimension of each observation 
+ * @tparam dimparam the dimension of the parameters
+ * @tparam float_t the floating point type
+ * @tparam debug whether or not you want to display debug messages
+ */
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug=false>
+class LWFilterFutureSimulator : public LWFilter<nparts,dimx,dimy,dimparam,float_t,debug>
+{
+private:
+
+    /** "state size vector" type alias for linear algebra stuff */
+    using ssv = Eigen::Matrix<float_t,dimx,1>;
+
+    /** "observation size vector" type alias for linear algebra stuff */
+    using osv = Eigen::Matrix<float_t,dimy,1>;
+
+    /** "param sized vector" type alias for linear algebra stuff **/
+    using psv         = Eigen::Matrix<float_t, dimparam,1>;    
+
+    /** "parameter sized matrix" */
+    using psm = Eigen::Matrix<float_t,dimparam,dimparam>;
+
+    /** type alias for linear algebra stuff (dimension of the state ^2) */
+    using Mat = Eigen::Matrix<float_t,Eigen::Dynamic,Eigen::Dynamic>;
+
+    /** type alias for linear algebra stuff */
+    using arrayStates = std::array<ssv, nparts>;
+    
+    /** type alias for parameter samples **/
+    using arrayParams = std::array<param::pack<float_t,dimparam>, nparts>;
+    
+    /** type alias for array of float_ts */
+    using arrayFloats = std::array<float_t, nparts>;
+   
+    /** function type that takes in parameter and state and returns dynamically sized matrix  */ 
+    using stateParamFunc = std::function<const Mat(const ssv&, const psv&)>;
+
+    /** type alias for array of unsigned ints */
+    using arrayUInt = std::array<unsigned int, nparts>;
+
+    /** future observation samples--indexed by time then state */
+    using obsSamples = std::vector<std::array<osv, nparts> >;
+  
+public:
+
+
+    /**
+     * @brief need parameters 
+     */
+    LWFilterFutureSimulator() = delete;
+
+
+    /**
+     * @brief need parameters 
+     */
+    LWFilterFutureSimulator(const std::vector<std::string>& transforms,
+    			     float_t delta,
+    			     const unsigned int &rs = 1);
+
+    
+    /**
+     * @brief virtual destructor
+     */
+    virtual ~LWFilterFutureSimulator();
+   
+
+    /**
+     * @brief Sample y_t| x_t, theta_t
+     * @param xt the current state
+     * @param untrans_new_param the current parameter sample
+    */
+    virtual osv gSamp(const ssv &xt, const psv &untrans_new_param) = 0; 
+
+
+    /**
+     * @brief sample future observations. Note that this changes m_mvn_gen
+     * Note: this algorithm is not provided in the paper.
+     * @param num_steps the number of steps into the future
+     * @return some samples of the observations
+     */
+    obsSamples sim_future_obs(unsigned num_steps);
+};
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+LWFilterFutureSimulator<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilterFutureSimulator(
+                const std::vector<std::string>& transforms, 
+                float_t delta,
+                const unsigned int &rs)
+    			     : LWFilter<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilter(transforms, delta, rs) {}
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+LWFilterFutureSimulator<nparts,dimx,dimy,dimparam,float_t,debug>::~LWFilterFutureSimulator()
+{
+}
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+auto LWFilterFutureSimulator<nparts,dimx,dimy,dimparam,float_t,debug>::sim_future_obs(unsigned num_steps) -> obsSamples
+{
+    // things that get modified many times
+    // this function attempts not to change any weights or samples of the underlying particle filter
+    // ideally this function should be const
+    // TODO: perhaps there should be segregation of variables so that it can be made const
+    obsSamples returnMe;
+    arrayParams current_params;
+    arrayStates old_state_partics = this->m_state_particles;
+    arrayParams old_param_partics = this->m_param_particles;
+    arrayParams new_param_partics;
+    arrayStates new_state_partics;
+
+    for(size_t time = 0; time < num_steps; ++time){
+
+        // TODO this function has side effects, but it won't matter unless
+        // it always gets called before using thetaBar and m_mvn_gen
+        this->update_parameter_proposal_components();
+
+        // step 2: sample new parameters then sample states with new parameters
+        psv mtm1i, mti;
+        std::array<osv, nparts> new_obs;
+        for(size_t ii = 0; ii < nparts; ++ii)   
+        {
+            
+            // sample the parameter first, and get ready to sample the rest
+            float_t a { (3.0*this->m_delta - 1.0)/(2.0*this->m_delta)};
+            mtm1i = a * old_param_partics[ii].get_trans_params() + (1.0 - a) * this->m_thetaBar;
+            this->m_mvn_gen.setMean(mtm1i);
+            param::pack<float_t, dimparam> newThetaSamp (this->m_mvn_gen.sample(), this->m_transforms);
+
+
+            // sample parameters, states, and then observations
+            new_param_partics[ii] = newThetaSamp; 
+            new_state_partics[ii] = fSamp(old_state_partics[ii], newThetaSamp.get_untrans_params());
+            new_obs[ii] = gSamp(new_state_partics[ii], newThetaSamp.get_untrans_params());
+
+        }
+        // save progress ad update variables for next iteration
+        returnMe.push_back(new_obs);
+        old_param_partics = new_param_partics;
+        old_state_partics = new_state_partics;
+    }
+
+    return returnMe;
+}
 
 
 
@@ -757,6 +931,12 @@ protected:
    
     /** delta, the rate of adjustment (see LW paper for more details)*/
     float_t m_delta; 
+    
+    /** average of current parameter samples */
+    psv m_thetaBar;
+
+    /** updates some state (m_thetaBar and m_mvn_gen) so that sampling parameters can be done quickly */
+    void update_parameter_proposal_components();
 };
 
 
@@ -819,17 +999,8 @@ void LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::filter(co
         arrayUInt myKs = m_kGen.sample(logFirstStageUnNormWeights); 
 
     	// calculate thetabar and Vt for parameter proposal distribution
-        psv thetaBar = psv::Zero();
-        psm Vt = psm::Zero();
-        psv theta_i;
-        for(size_t i = 0; i < nparts; ++i){
-            theta_i = m_param_particles[i].get_trans_params();
-            thetaBar += theta_i / nparts;
-            Vt += (theta_i * theta_i.transpose()) / nparts;
-        }
-        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
-        float_t hSquared {1.0 - a * a};
-    	m_mvn_gen.setCovar( hSquared * Vt);
+    	// updates m_mvn_gen and m_thetaBar
+	    update_parameter_proposal_components();
 
         // sample parameters and states  
         float_t m1(-std::numeric_limits<float_t>::infinity());
@@ -849,7 +1020,8 @@ void LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::filter(co
             
             // sample the parameter first, and get ready to sample the rest
             xtm1k = m_state_particles[myKs[ii]];
-            mtm1k = a * old_param_partics[myKs[ii]].get_trans_params() + (1.0 - a) * thetaBar;
+            float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
+            mtm1k = a * old_param_partics[myKs[ii]].get_trans_params() + (1.0 - a) * m_thetaBar;
             param::pack<float_t, dimparam> mtm1k_pack (mtm1k, m_transforms); 
             m_mvn_gen.setMean(mtm1k);
             param::pack<float_t, dimparam> newThetaSamp (m_mvn_gen.sample(), m_transforms);
@@ -991,6 +1163,193 @@ template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typ
 auto LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::getExpectations() const -> std::vector<Mat>
 {
     return m_expectations;
+}
+
+
+template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typename float_t,bool debug>
+void LWFilterWithCovs<nparts, dimx, dimy, dimcov,dimparam, float_t, debug>::update_parameter_proposal_components()
+{
+        m_thetaBar = psv::Zero();
+        psm Vt = psm::Zero();
+        psv theta_i;
+        for(size_t i = 0; i < nparts; ++i){
+            theta_i = m_param_particles[i].get_trans_params();
+            m_thetaBar += theta_i / nparts;
+            Vt += (theta_i * theta_i.transpose()) / nparts;
+        }
+        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
+        float_t hSquared {1.0 - a * a};
+    	m_mvn_gen.setCovar( hSquared * Vt);
+}
+
+
+//! An add-on for the Liu-West Filter that simulates future observations. 
+/**
+ * @class LWFilterWithCovsFutureSimulator
+ * @author taylor
+ * @file liu_west_filter.h
+ * @brief Liu West filter with covariates future simulator add-on. THESE COVARIATES HAVE TO BE PAST OBSERVATIONS!
+ * @tparam nparts the number of particles
+ * @tparam dimx the dimension of the state's state space
+ * @tparam dimy the dimension of each observation 
+ * @tparam dimparam the dimension of the parameters
+ * @tparam float_t the floating point type
+ * @tparam debug whether or not you want to display debug messages
+ */
+template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typename float_t,bool debug=false>
+class LWFilterWithCovsFutureSimulator : public LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>
+{
+private:
+
+    /** "state size vector" type alias for linear algebra stuff */
+    using ssv = Eigen::Matrix<float_t,dimx,1>;
+
+    /** "observation size vector" type alias for linear algebra stuff */
+    using osv = Eigen::Matrix<float_t,dimy,1>;
+
+    /** "param sized vector" type alias for linear algebra stuff **/
+    using psv         = Eigen::Matrix<float_t, dimparam,1>;    
+
+    /** "covariate size vector" type alias for linear algebra stuff */
+    using csv         = Eigen::Matrix<float_t, dimcov, 1>; // obs size vec
+
+    /** "parameter sized matrix" */
+    using psm = Eigen::Matrix<float_t,dimparam,dimparam>;
+
+    /** type alias for linear algebra stuff */
+    using Mat         = Eigen::Matrix<float_t,Eigen::Dynamic,Eigen::Dynamic>;
+
+    /** type alias for linear algebra stuff */
+    using arrayStates = std::array<ssv, nparts>;
+    
+    /** type alias for parameter samples **/
+    using arrayParams = std::array<param::pack<float_t,dimparam>, nparts>;
+    
+    /** type alias for array of float_ts */
+    using arrayFloats = std::array<float_t, nparts>;
+   
+    /** function type that takes in parameter and state and returns dynamically sized matrix  */ 
+    using stateParamFunc = std::function<const Mat(const ssv&, const psv&)>;
+
+    /** type alias for array of unsigned ints */
+    using arrayUInt = std::array<unsigned int, nparts>;
+
+    /** future observation samples--indexed by time then state */
+    using obsSamples = std::vector<std::array<osv, nparts> >;
+  
+    /** this only works when covariates are lagged observations, so verify types match */
+    static_assert(std::is_same<osv, csv>::value, "covariates must be lagged observations otherwise this won't simulate forward in time.");
+
+public:
+
+
+    LWFilterWithCovs(const std::vector<std::string>& transforms, 
+              float_t delta,
+              const unsigned int &rs=1);
+    /**
+     * @brief need parameters
+     */
+    LWFilterWithCovsFutureSimulator() = delete;
+
+
+    /**
+     * @brief need parameters
+     */
+    LWFilterWithCovsFutureSimulator(
+        const std::vector<std::string>& transforms, 
+        float_t delta,
+        const unsigned int &rs=1);
+
+
+    /**
+     * @brief virtual destructor
+     */
+    virtual ~LWFilterWithCovsFutureSimulator();
+   
+
+    /**
+     * @brief Sample y_t| x_t, theta_t
+     * @param xt the current state
+     * @param untrans_new_param the current parameter sample
+    */
+    virtual osv gSamp(const ssv &xt, const psv &untrans_new_param) = 0; 
+
+
+    /**
+     * @brief sample future observations. Note that this changes m_mvn_gen
+     * Note: this algorithm is not provided in the paper.
+     * @param num_steps the number of steps into the future
+     * @return some samples of the observations
+     */
+    obsSamples sim_future_obs(unsigned num_steps, const osv &last_obs);
+};
+
+
+template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typename float_t,bool debug>
+LWFilterWithCovsFutureSimulator<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::LWFilterWithCovsFutureSimulator(
+	const std::vector<std::string>& transforms, 
+        float_t delta,
+        const unsigned int &rs)
+        : LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::LWFilterWithCovs(transforms, delta, rs)
+{
+}
+
+
+template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typename float_t,bool debug>
+LWFilterWithCovsFutureSimulator<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::~LWFilterWithCovsFutureSimulator()
+{
+}
+
+
+template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam, typename float_t, bool debug>
+auto LWFilterWithCovsFutureSimulator<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::sim_future_obs(unsigned num_steps, const osv& last_obs) -> obsSamples
+{
+    // things that get modified many times
+    // this function attempts not to change any weights or samples of the underlying particle filter
+    // ideally this function should be const
+    // TODO: perhaps there should be segregation of variables so that it can be made const
+    obsSamples returnMe;
+    arrayParams current_params;
+    arrayStates old_state_partics = this->m_state_particles;
+    arrayParams old_param_partics = this->m_param_particles;
+    arrayParams new_param_partics;
+    arrayStates new_state_partics;
+    std::array<osv, nparts> predictors;
+    predictors.fill(last_obs);
+
+    for(size_t time = 0; time < num_steps; ++time){
+
+        // TODO this function has side effects, but it won't matter unless
+        // it always gets called before using thetaBar and m_mvn_gen
+        this->update_parameter_proposal_components();
+
+        // step 2: sample new parameters then sample states with new parameters
+        psv mtm1i, mti;
+        std::array<osv, nparts> new_obs;
+        for(size_t ii = 0; ii < nparts; ++ii)   
+        {
+            
+            // sample the parameter first, and get ready to sample the rest
+            float_t a { (3.0*this->m_delta - 1.0)/(2.0*this->m_delta)};
+            mtm1i = a * old_param_partics[ii].get_trans_params() + (1.0 - a) * this->m_thetaBar;
+            this->m_mvn_gen.setMean(mtm1i);
+            param::pack<float_t, dimparam> newThetaSamp (this->m_mvn_gen.sample(), this->m_transforms);
+
+            // sample parameters, states, and then observations
+            new_param_partics[ii] = newThetaSamp; 
+            new_state_partics[ii] = fSamp(old_state_partics[ii], predictors[ii], newThetaSamp.get_untrans_params());
+            new_obs[ii] = gSamp(new_state_partics[ii], newThetaSamp.get_untrans_params());
+
+        }
+        // save progress and update variables for next iteration
+        returnMe.push_back(new_obs);
+        predictors = new_obs;
+        old_param_partics = new_param_partics;
+        old_state_partics = new_state_partics;
+        
+    }
+
+    return returnMe;
 }
 
 
@@ -1151,6 +1510,14 @@ public:
      * @brief sample a non-transformed parameter vector from the prior
      */
     virtual psv paramPriorSamp() = 0; 
+    
+    
+    /** average of current parameter samples */
+    psv m_thetaBar;
+
+
+    /** updates some state (m_thetaBar and m_mvn_gen) so that sampling parameters can be done quickly */
+    void update_parameter_proposal_components();
  
 protected:
 
@@ -1234,17 +1601,7 @@ void LWFilter2<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const osv &data
     {
 
         // get ready to simulate vector of transformed parameters
-    	psv thetaBar = psv::Zero();
-    	psm Vt = psm::Zero();	
-    	psv theta_i;
-    	for(size_t i = 0; i < nparts; ++i){
-    	    theta_i = m_param_particles[i].get_trans_params();
-    	    thetaBar += theta_i / nparts;
-    	    Vt += (theta_i * theta_i.transpose() ) / nparts;
-    	}
-        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
-        float_t hSquared {1.0 - a * a};
-    	m_mvn_gen.setCovar( hSquared * Vt);
+	    update_parameter_proposal_components();
     
     	// sample parameters and states 
     	ssv newStateSamp;
@@ -1258,7 +1615,8 @@ void LWFilter2<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const osv &data
                 maxOldLogUnNormWts = m_logUnNormWeights[ii];
                 
             // sample transformed parameter
-    	    m_mvn_gen.setMean(a * m_param_particles[ii].get_trans_params() + (1.0 - a) * thetaBar);
+    	    float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
+            m_mvn_gen.setMean(a * m_param_particles[ii].get_trans_params() + (1.0 - a) * m_thetaBar);
     	    param::pack<float_t, dimparam> newThetaSamp (m_mvn_gen.sample(), m_transforms);
     
     	    // sample state 
@@ -1391,6 +1749,178 @@ void LWFilter2<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const osv &data
         m_now += 1;   
     }
 
+}
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+void LWFilter2<nparts,dimx,dimy,dimparam,float_t, debug>::update_parameter_proposal_components()
+{
+        m_thetaBar = psv::Zero();
+        psm Vt = psm::Zero();
+        psv theta_i;
+        for(size_t i = 0; i < nparts; ++i){
+            theta_i = m_param_particles[i].get_trans_params();
+            m_thetaBar += theta_i / nparts;
+            Vt += (theta_i * theta_i.transpose()) / nparts;
+        }
+        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
+        float_t hSquared {1.0 - a * a};
+    	m_mvn_gen.setCovar( hSquared * Vt);
+}
+
+
+//! An add-on for the Liu-West (version 2) Filter that simulates future observations.
+/**
+ * @class LWFilter2FutureSimulator
+ * @author taylor
+ * @file liu_west_filter.h
+ * @brief Liu West (version 2) filter future simulator add-on
+ * @tparam nparts the number of particles
+ * @tparam dimx the dimension of the state's state space
+ * @tparam dimy the dimension of each observation 
+ * @tparam dimparam the dimension of the parameters
+ * @tparam float_t the floating point type
+ * @tparam debug whether or not you want to display debug messages
+ */
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug=false>
+class LWFilter2FutureSimulator : public LWFilter2<nparts,dimx,dimy,dimparam,float_t,debug>
+{
+private:
+
+    /** "state size vector" type alias for linear algebra stuff */
+    using ssv = Eigen::Matrix<float_t,dimx,1>;
+
+    /** "observation size vector" type alias for linear algebra stuff */
+    using osv = Eigen::Matrix<float_t,dimy,1>;
+
+    /** "param sized vector" type alias for linear algebra stuff **/
+    using psv         = Eigen::Matrix<float_t, dimparam,1>;    
+
+    /** "parameter sized matrix" */
+    using psm = Eigen::Matrix<float_t,dimparam,dimparam>;
+
+    /** type alias for linear algebra stuff */
+    using Mat         = Eigen::Matrix<float_t,Eigen::Dynamic,Eigen::Dynamic>;
+
+    /** type alias for linear algebra stuff */
+    using arrayStates = std::array<ssv, nparts>;
+    
+    /** type alias for parameter samples **/
+    using arrayParams = std::array<param::pack<float_t,dimparam>, nparts>;
+    
+    /** type alias for array of float_ts */
+    using arrayFloats = std::array<float_t, nparts>;
+   
+    /** function type that takes in parameter and state and returns dynamically sized matrix  */ 
+    using stateParamFunc = std::function<const Mat(const ssv&, const psv&)>;
+
+    /** type alias for array of unsigned ints */
+    using arrayUInt = std::array<unsigned int, nparts>;
+
+    /** future observation samples--indexed by time then state */
+    using obsSamples = std::vector<std::array<osv, nparts> >;
+  
+public:
+
+    /**
+     * @brief need parameters
+     */
+    LWFilter2() = delete;
+
+
+    /**
+     * @brief constructs the Liu-West filter with future simulation capabilities
+     * @param transforms that describe how to transform parameters so they are unconstrained
+     * @param delta adaptation rate (e.g. .95 or .9 or .99)
+     * @param rs the resampling schedule 
+     */
+    LWFilter2FutureSimulator(const std::vector<std::string>& transforms, float_t delta,
+              const unsigned int &rs=1);
+
+
+    /**
+     * @brief virtual destructor
+     */
+    virtual ~LWFilter2FutureSimulator();
+   
+
+    /**
+     * @brief Sample y_t| x_t, theta_t
+     * @param xt the current state
+     * @param untrans_new_param the current parameter sample
+    */
+    virtual osv gSamp(const ssv &xt, const psv &untrans_new_param) = 0; 
+
+
+    /**
+     * @brief sample future observations. Note that this changes m_mvn_gen
+     * Note: this algorithm is not provided in the paper.
+     * @param num_steps the number of steps into the future
+     * @return some samples of the observations
+     */
+    obsSamples sim_future_obs(unsigned num_steps);
+};
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+LWFilter2FutureSimulator<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilter2FutureSimulator(const std::vector<std::string>& transforms, float_t delta,
+              const unsigned int &rs)
+              : LWFilter2<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilter2(transforms, delta, rs)
+{
+}
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+LWFilter2FutureSimulator<nparts,dimx,dimy,dimparam,float_t,debug>::~LWFilter2FutureSimulator()
+{
+}
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
+auto LWFilter2FutureSimulator<nparts,dimx,dimy,dimparam,float_t,debug>::sim_future_obs(unsigned num_steps) -> obsSamples
+{
+    // things that get modified many times
+    // this function attempts not to change any weights or samples of the underlying particle filter
+    // ideally this function should be const
+    // TODO: perhaps there should be segregation of variables so that it can be made const
+    obsSamples returnMe;
+    arrayParams current_params;
+    arrayStates old_state_partics = this->m_state_particles;
+    arrayParams old_param_partics = this->m_param_particles;
+    arrayParams new_param_partics;
+    arrayStates new_state_partics;
+
+    for(size_t time = 0; time < num_steps; ++time){
+
+        // TODO this function has side effects, but it won't matter unless
+        // it always gets called before using thetaBar and m_mvn_gen
+        this->update_parameter_proposal_components();
+
+        // step 2: sample new parameters then sample states with new parameters
+        psv mtm1i, mti;
+        std::array<osv, nparts> new_obs;
+        for(size_t ii = 0; ii < nparts; ++ii)   
+        {
+            
+            // sample the parameter first, and get ready to sample the rest
+            float_t a { (3.0*this->m_delta - 1.0)/(2.0*this->m_delta)};
+            mtm1i = a * old_param_partics[ii].get_trans_params() + (1.0 - a) * this->m_thetaBar;
+            this->m_mvn_gen.setMean(mtm1i);
+            param::pack<float_t, dimparam> newThetaSamp (this->m_mvn_gen.sample(), this->m_transforms);
+
+            // sample parameters, states, and then observations
+            new_param_partics[ii] = newThetaSamp; 
+            new_state_partics[ii] = fSamp(old_state_partics[ii], newThetaSamp.get_untrans_params());
+            new_obs[ii] = gSamp(new_state_partics[ii], newThetaSamp.get_untrans_params());
+
+        }
+        // save progress ad update variables for next iteration
+        returnMe.push_back(new_obs);
+        old_param_partics = new_param_partics;
+        old_state_partics = new_state_partics;
+    }
+
+    return returnMe;
 }
 
 
@@ -1594,6 +2124,12 @@ protected:
     /**
      * @todo implement ESS stuff
      */
+       
+    /** average of current parameter samples */
+    psv m_thetaBar;
+
+    /** updates some state (m_thetaBar and m_mvn_gen) so that sampling parameters can be done quickly */
+    void update_parameter_proposal_components();
   
 };
 
@@ -1637,12 +2173,12 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(
     {
 
         // get ready to simulate vector of transformed parameters
-    	psv thetaBar = psv::Zero();
+    	m_thetaBar = psv::Zero();
     	psm Vt = psm::Zero();	
     	psv theta_i;
     	for(size_t i = 0; i < nparts; ++i){
     	    theta_i = m_param_particles[i].get_trans_params();
-    	    thetaBar += theta_i / nparts;
+    	    m_thetaBar += theta_i / nparts;
     	    Vt += (theta_i * theta_i.transpose() ) / nparts;
     	}
         float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
@@ -1661,7 +2197,7 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(
                 maxOldLogUnNormWts = m_logUnNormWeights[ii];
                 
             // sample transformed parameter
-    	    m_mvn_gen.setMean(a * m_param_particles[ii].get_trans_params() + (1.0 - a) * thetaBar);
+    	    m_mvn_gen.setMean(a * m_param_particles[ii].get_trans_params() + (1.0 - a) * m_thetaBar);
     	    param::pack<float_t, dimparam> newThetaSamp (m_mvn_gen.sample(), m_transforms);
     
     	    // sample state 
@@ -1797,8 +2333,189 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(
 }
 
 
+template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typename float_t,bool debug>
+void LWFilter2WithCovs<nparts, dimx, dimy, dimcov,dimparam, float_t, debug>::update_parameter_proposal_components()
+{
+        m_thetaBar = psv::Zero();
+        psm Vt = psm::Zero();
+        psv theta_i;
+        for(size_t i = 0; i < nparts; ++i){
+            theta_i = m_param_particles[i].get_trans_params();
+            m_thetaBar += theta_i / nparts;
+            Vt += (theta_i * theta_i.transpose()) / nparts;
+        }
+        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
+        float_t hSquared {1.0 - a * a};
+    	m_mvn_gen.setCovar( hSquared * Vt);
+}
 
 
+
+//! An add-on for the Liu-West Filter (version 2 and with covariates) that simulates future observations. 
+/**
+ * @class LWFilterWithCovsFutureSimulator
+ * @author taylor
+ * @file liu_west_filter.h
+ * @brief Liu West filter with covariates future simulator add-on. THESE COVARIATES HAVE TO BE PAST OBSERVATIONS!
+ * @tparam nparts the number of particles
+ * @tparam dimx the dimension of the state's state space
+ * @tparam dimy the dimension of each observation 
+ * @tparam dimparam the dimension of the parameters
+ * @tparam float_t the floating point type
+ * @tparam debug whether or not you want to display debug messages
+ */
+template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typename float_t,bool debug=false>
+class LWFilter2WithCovsFutureSimulator : public LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>
+{
+private:
+
+    /** "state size vector" type alias for linear algebra stuff */
+    using ssv = Eigen::Matrix<float_t,dimx,1>;
+
+    /** "observation size vector" type alias for linear algebra stuff */
+    using osv = Eigen::Matrix<float_t,dimy,1>;
+
+    /** "param sized vector" type alias for linear algebra stuff **/
+    using psv         = Eigen::Matrix<float_t, dimparam,1>;    
+
+    /** "covariate size vector" type alias for linear algebra stuff */
+    using csv = Eigen::Matrix<float_t,dimcov,1>;
+
+    /** "parameter sized matrix" */
+    using psm = Eigen::Matrix<float_t,dimparam,dimparam>;
+
+    /** type alias for linear algebra stuff (dimension of the state ^2) */
+    using Mat = Eigen::Matrix<float_t,Eigen::Dynamic,Eigen::Dynamic>;
+
+    /** type alias for linear algebra stuff */
+    using arrayStates = std::array<ssv, nparts>;
+    
+    /** type alias for parameter samples **/
+    using arrayParams = std::array<param::pack<float_t,dimparam>, nparts>;
+    
+    /** type alias for array of float_ts */
+    using arrayFloats = std::array<float_t, nparts>;
+   
+    /** function type that takes in parameter and state and returns dynamically sized matrix  */ 
+    using stateParamFunc = std::function<const Mat(const ssv&, const psv&)>;
+
+    /** type alias for array of unsigned ints */
+    using arrayUInt = std::array<unsigned int, nparts>;
+
+    /** future observation samples--indexed by time then state */
+    using obsSamples = std::vector<std::array<osv, nparts> >;
+  
+    /** this only works when covariates are lagged observations, so verify types match */
+    static_assert(std::is_same<osv, csv>::value, "covariates must be lagged observations otherwise this won't simulate forward in time.");
+
+public:
+
+
+    /**
+     * @brief need arguments
+     */
+    LWFilterWithCovsFutureSimulator() = delete;
+
+
+    /**
+     * @brief constructs the Liu-West filter (v2, with covs, and with future simulator)
+     * @param transforms that describe how to transform parameters so they are unconstrained
+     * @param delta adaptation rate (e.g. .95 or .9 or .99)
+     * @param rs the resampling schedule 
+     */
+    LWFilter2WithCovsFutureSimulator(const std::vector<std::string>& transforms, 
+              float_t delta,
+              const unsigned int &rs=1);
+
+
+    /**
+     * @brief virtual destructor
+     */
+    virtual ~LWFilter2WithCovsFutureSimulator();
+   
+
+    /**
+     * @brief Sample y_t| x_t, theta_t
+     * @param xt the current state
+     * @param untrans_new_param the current parameter sample
+    */
+    virtual osv gSamp(const ssv &xt, const psv &untrans_new_param) = 0; 
+
+
+    /**
+     * @brief sample future observations. Note that this changes m_mvn_gen
+     * Note: this algorithm is not provided in the paper.
+     * @param num_steps the number of steps into the future
+     * @return some samples of the observations
+     */
+    obsSamples sim_future_obs(unsigned num_steps, const osv &last_obs);
+};
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+LWFilter2WithCovsFutureSimulator<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::LWFilter2WithCovsFutureSimulator(
+                    const std::vector<std::string>& transforms, 
+                    float_t delta,
+                    const unsigned int &rs)
+                : LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::LWFilter2WithCovs(transforms, delta, rs)
+{
+}
+
+
+template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typename float_t,bool debug>
+LWFilter2WithCovsFutureSimulator<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::~LWFilter2WithCovsFutureSimulator() {}
+
+
+template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam, typename float_t, bool debug>
+auto LWFilter2WithCovsFutureSimulator<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::sim_future_obs(unsigned num_steps, const osv& last_obs) -> obsSamples
+{
+    // things that get modified many times
+    // this function attempts not to change any weights or samples of the underlying particle filter
+    // ideally this function should be const
+    // TODO: perhaps there should be segregation of variables so that it can be made const
+    obsSamples returnMe;
+    arrayParams current_params;
+    arrayStates old_state_partics = this->m_state_particles;
+    arrayParams old_param_partics = this->m_param_particles;
+    arrayParams new_param_partics;
+    arrayStates new_state_partics;
+    std::array<osv, nparts> predictors;
+    predictors.fill(last_obs);
+
+    for(size_t time = 0; time < num_steps; ++time){
+
+        // TODO this function has side effects, but it won't matter unless
+        // it always gets called before using thetaBar and m_mvn_gen
+        this->update_parameter_proposal_components();
+
+        // step 2: sample new parameters then sample states with new parameters
+        psv mtm1i, mti;
+        std::array<osv, nparts> new_obs;
+        for(size_t ii = 0; ii < nparts; ++ii)   
+        {
+            
+            // sample the parameter first, and get ready to sample the rest
+            float_t a { (3.0*this->m_delta - 1.0)/(2.0*this->m_delta)};
+            mtm1i = a * old_param_partics[ii].get_trans_params() + (1.0 - a) * this->m_thetaBar;
+            this->m_mvn_gen.setMean(mtm1i);
+            param::pack<float_t, dimparam> newThetaSamp (this->m_mvn_gen.sample(), this->m_transforms);
+
+
+            // sample parameters, states, and then observations
+            new_param_partics[ii] = newThetaSamp; 
+            new_state_partics[ii] = fSamp(old_state_partics[ii], predictors[ii], newThetaSamp.get_untrans_params());
+            new_obs[ii] = gSamp(new_state_partics[ii], newThetaSamp.get_untrans_params());
+
+        }
+        // save progress and update variables for next iteration
+        returnMe.push_back(new_obs);
+        predictors = new_obs;
+        old_param_partics = new_param_partics;
+        old_state_partics = new_state_partics;
+    }
+
+    return returnMe;
+}
 
 
 #endif //LIU_WEST_FILTER_H
