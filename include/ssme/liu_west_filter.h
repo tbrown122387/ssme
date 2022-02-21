@@ -170,10 +170,10 @@ private:
     using osv = Eigen::Matrix<float_t,dimy,1>;
 
     /** "param sized vector" type alias for linear algebra stuff **/
-    using psv         = Eigen::Matrix<float_t, dimparam,1>;    
+    using psv = Eigen::Matrix<float_t, dimparam,1>;    
 
     /** "param sized matrix" type alias for linear algebra stuff**/
-    using psm	      = Eigen::Matrix<float_t, dimparam,dimparam>;
+    using psm = Eigen::Matrix<float_t, dimparam,dimparam>;
 
     /** type alias for linear algebra stuff (dimension of the state ^2) */
     using Mat = Eigen::Matrix<float_t,Eigen::Dynamic,Eigen::Dynamic>;
@@ -419,7 +419,7 @@ void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &d
             third_cll_sum  += std::exp( m_logUnNormWeights[ii] - m3 );            
             
             // sample the parameter first, and get ready to sample the rest
-            xtm1k = m_state_particles[myKs[ii]];
+            xtm1k = old_state_partics[myKs[ii]];
             float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
             mtm1k = a * old_param_partics[myKs[ii]].get_trans_params() + (1.0 - a) * m_thetaBar;
             param::pack<float_t, dimparam> mtm1k_pack (mtm1k, m_transforms); 
@@ -610,7 +610,7 @@ private:
     using osv = Eigen::Matrix<float_t,dimy,1>;
 
     /** "param sized vector" type alias for linear algebra stuff **/
-    using psv         = Eigen::Matrix<float_t, dimparam,1>;    
+    using psv = Eigen::Matrix<float_t, dimparam,1>;    
 
     /** "parameter sized matrix" */
     using psm = Eigen::Matrix<float_t,dimparam,dimparam>;
@@ -979,8 +979,8 @@ void LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::filter(co
                 m3 = m_logUnNormWeights[ii];
             
             // sample
-	    old_untrans_param 		     = m_param_particles[ii].get_untrans_params();
-            logFirstStageUnNormWeights[ii] += logGEv(obs_data, propMu(m_state_particles[ii], old_untrans_param), old_untrans_param); 
+	        old_untrans_param 		        = m_param_particles[ii].get_untrans_params();
+            logFirstStageUnNormWeights[ii] += logGEv(obs_data, propMu(m_state_particles[ii], cov_data, old_untrans_param), old_untrans_param); 
             
             // accumulate things
             if(logFirstStageUnNormWeights[ii] > m2)
@@ -1019,7 +1019,7 @@ void LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::filter(co
             third_cll_sum  += std::exp( m_logUnNormWeights[ii] - m3 );            
             
             // sample the parameter first, and get ready to sample the rest
-            xtm1k = m_state_particles[myKs[ii]];
+            xtm1k = old_state_partics[myKs[ii]];
             float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
             mtm1k = a * old_param_partics[myKs[ii]].get_trans_params() + (1.0 - a) * m_thetaBar;
             param::pack<float_t, dimparam> mtm1k_pack (mtm1k, m_transforms); 
@@ -1058,14 +1058,14 @@ void LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::filter(co
         unsigned int fId(0);
         for(auto & h : fs){
     
-            Mat testOutput = h(m_state_particles[0], m_param_particles[0].get_untrans_params()); //TODO
+            Mat testOutput = h(m_state_particles[0], cov_data, m_param_particles[0].get_untrans_params()); //TODO
             unsigned int rows = testOutput.rows();
             unsigned int cols = testOutput.cols();
             Mat numer = Mat::Zero(rows,cols);
             float_t denom(0.0);
             
             for(size_t prtcl = 0; prtcl < nparts; ++prtcl){ 
-                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - m1);//TODO
+                numer += h(m_state_particles[prtcl], cov_data, m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - m1);//TODO
                 denom += std::exp(m_logUnNormWeights[prtcl] - m1);
             }
             m_expectations[fId] = numer/denom;
@@ -1124,13 +1124,13 @@ void LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::filter(co
         unsigned int fId(0);
         for(auto & h : fs){
             
-            Mat testOutput = h(m_state_particles[0], m_param_particles[0].get_untrans_params()); // TODO
+            Mat testOutput = h(m_state_particles[0], cov_data, m_param_particles[0].get_untrans_params()); // TODO
             unsigned int rows = testOutput.rows();
             unsigned int cols = testOutput.cols();
             Mat numer = Mat::Zero(rows,cols);
             float_t denom(0.0);
             for(size_t prtcl = 0; prtcl < nparts; ++prtcl){ 
-                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - max);//TODO
+                numer += h(m_state_particles[prtcl], cov_data, m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - max);//TODO
                 denom += std::exp(m_logUnNormWeights[prtcl] - max);
             }
             m_expectations[fId] = numer/denom;
@@ -1243,9 +1243,6 @@ private:
 public:
 
 
-    LWFilterWithCovs(const std::vector<std::string>& transforms, 
-              float_t delta,
-              const unsigned int &rs=1);
     /**
      * @brief need parameters
      */
@@ -1253,12 +1250,12 @@ public:
 
 
     /**
-     * @brief need parameters
+     * @brief ctor
+     * @param transformations for parameters so that they're unbounded and a random walk will work on them
+     * @param delta e.g. .99 or .95 (see paper for details)
+     * @param rs the resampling schedule (e.g. 1 every time, 2 is every other time)
      */
-    LWFilterWithCovsFutureSimulator(
-        const std::vector<std::string>& transforms, 
-        float_t delta,
-        const unsigned int &rs=1);
+    LWFilterWithCovsFutureSimulator(const std::vector<std::string>& transforms, float_t delta, const unsigned int &rs=1);
 
 
     /**
@@ -1825,7 +1822,7 @@ public:
     /**
      * @brief need parameters
      */
-    LWFilter2() = delete;
+    LWFilter2FutureSimulator() = delete;
 
 
     /**
@@ -2173,17 +2170,8 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(
     {
 
         // get ready to simulate vector of transformed parameters
-    	m_thetaBar = psv::Zero();
-    	psm Vt = psm::Zero();	
-    	psv theta_i;
-    	for(size_t i = 0; i < nparts; ++i){
-    	    theta_i = m_param_particles[i].get_trans_params();
-    	    m_thetaBar += theta_i / nparts;
-    	    Vt += (theta_i * theta_i.transpose() ) / nparts;
-    	}
-        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
-        float_t hSquared {1.0 - a * a};
-    	m_mvn_gen.setCovar( hSquared * Vt);
+        // changed m_mvn_gen and m_thetaBar 
+        update_parameter_proposal_components();
     
     	// sample parameters and states 
     	ssv newStateSamp;
@@ -2197,7 +2185,8 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(
                 maxOldLogUnNormWts = m_logUnNormWeights[ii];
                 
             // sample transformed parameter
-    	    m_mvn_gen.setMean(a * m_param_particles[ii].get_trans_params() + (1.0 - a) * m_thetaBar);
+    	    float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
+            m_mvn_gen.setMean(a * m_param_particles[ii].get_trans_params() + (1.0 - a) * m_thetaBar);
     	    param::pack<float_t, dimparam> newThetaSamp (m_mvn_gen.sample(), m_transforms);
     
     	    // sample state 
@@ -2235,14 +2224,14 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(
         float_t weightNormConst(0.0);
         for(auto & h : fs){ // iterate over all functions
 
-            Mat testOut = h(m_state_particles[0], m_param_particles[0].get_untrans_params()); // TODO, dpend on zt?
+            Mat testOut = h(m_state_particles[0], cov_data, m_param_particles[0].get_untrans_params()); // TODO, dpend on zt?
             unsigned int rows = testOut.rows();
             unsigned int cols = testOut.cols();
             Mat numer = Mat::Zero(rows,cols);
             float_t denom(0.0);
 
             for(size_t prtcl = 0; prtcl < nparts; ++prtcl){ // iterate over all particles
-                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - maxNumer ); // TODO, dpend on zt?
+                numer += h(m_state_particles[prtcl], cov_data, m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - maxNumer ); // TODO, dpend on zt?
                 denom += std::exp(m_logUnNormWeights[prtcl] - maxNumer);
             }
             m_expectations[fId] = numer/denom;
@@ -2303,14 +2292,14 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(
         unsigned int fId(0);
         for(auto & h : fs){
             
-            Mat testOut = h(m_state_particles[0], m_param_particles[0].get_untrans_params()); // TODO, dpend on zt?
+            Mat testOut = h(m_state_particles[0], cov_data, m_param_particles[0].get_untrans_params()); // TODO, dpend on zt?
             unsigned int rows = testOut.rows();
             unsigned int cols = testOut.cols();
             Mat numer = Mat::Zero(rows,cols);
             float_t denom(0.0);
 
             for(size_t prtcl = 0; prtcl < nparts; ++prtcl){ 
-                numer += h(m_state_particles[prtcl], m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - max); // TODO, dpend on zt?
+                numer += h(m_state_particles[prtcl], cov_data, m_param_particles[prtcl].get_untrans_params()) * std::exp(m_logUnNormWeights[prtcl] - max); // TODO, dpend on zt?
                 denom += std::exp(m_logUnNormWeights[prtcl] - max);
             }
             m_expectations[fId] = numer/denom;
@@ -2414,7 +2403,7 @@ public:
     /**
      * @brief need arguments
      */
-    LWFilterWithCovsFutureSimulator() = delete;
+    LWFilter2WithCovsFutureSimulator() = delete;
 
 
     /**

@@ -295,7 +295,7 @@ public:
     using filt_func       = typename ModType::func;
 
     /* the function that will perform filtering but has a specific parameter */
-    using state_parm_func = std::function<const DynMat(const ssv&, const psv&)>;
+    using state_cov_parm_func = std::function<const DynMat(const ssv&, const csv&, const psv&)>;
 
     /* a collection of observation samples, indexed by param,time, then state particle */  // TODO do these need to be stored? or just printed?
     using obsSamples = std::array<std::vector<std::array<osv, nstateparts>>, nparamparts>; 
@@ -316,7 +316,7 @@ private:
     bool m_models_are_not_instantiated;
 
     /* this is the vector of functions that generates all models' filtering functions*/
-    std::vector<state_parm_func> m_proto_funcs;
+    std::vector<state_cov_parm_func> m_proto_funcs;
 
     /* a collection of models each with a randomly chosen parameter and a vector of functions for each model/parameter */
     std::array<mod_funcs_pair, nparamparts> m_mods_and_funcs;
@@ -397,7 +397,7 @@ public:
      * any data is seen. Perhaps you can back out the dimension earlier to de-complicate thigns
      * Recall that hte particle filter classes' filter() gets passed a vector not an array
      */
-    SwarmWithCovs(const std::vector<state_parm_func>& fs, bool parallel = true) 
+    SwarmWithCovs(const std::vector<state_cov_parm_func>& fs, bool parallel = true) 
         : m_models_are_not_instantiated(true)
         , m_num_obs(0)
         , m_tp(
@@ -483,9 +483,9 @@ public:
 
 
 private:
-   
+   //TODO
     /* generate a filter function so that .filter can work on each particle filter  */
-    filt_func gen_filt_func(const state_parm_func& in_f, const psv& this_models_params) {
+    filt_func gen_filt_func(const state_cov_parm_func& in_f, const psv& this_models_params) {
         filt_func out_f = std::bind(in_f, std::placeholders::_1, this_models_params);
         return out_f;
     }

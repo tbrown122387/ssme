@@ -1,5 +1,5 @@
-#ifndef UTILIS_H
-#define UTILIS_H
+#ifndef UTILS_H
+#define UTILS_H
 
 #include <Eigen/Dense>
 #include <fstream>
@@ -16,19 +16,6 @@
 namespace utils{
 
 
-    /**
-     * @brief return string with format is YYYY-MM-DD.HH:mm:ss
-     */
-    std::string gen_string_with_time(const std::string& str) {
-        time_t     now = time(0);
-        struct tm  tstruct;
-        char       buf[80];
-        tstruct = *localtime(&now);
-        strftime(buf, sizeof(buf), "%Y-%m-%d.%H-%M-%S", &tstruct);
-        return str + "_" + buf;
-    }
-
-    
     /**
      * @brief reads in data in a csv file with no header and separated by commas.
      * @tparam nc the number of columns.
@@ -155,4 +142,4 @@ auto csv_param_sampler<dimparam,float_t>::samp() -> psv
 } // namespace utils
 
 
-#endif // UTILIS_H
+#endif // UTILS_H

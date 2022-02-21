@@ -146,6 +146,12 @@ private:
     {
         return log_like_eval(param, obs_data); 
     }
+
+ 
+    /**
+     * @brief return string with format is YYYY-MM-DD.HH:mm:ss
+     */
+    std::string gen_string_with_time(const std::string& str);
 };
 
 
@@ -188,10 +194,10 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
     static_data_t tmp_data = utils::read_data<dimobs,float_t>(data_file);
     m_pool.add_observed_data( tmp_data );
 
-    std::string samples_file = utils::gen_string_with_time(sample_file_base_name);
+    std::string samples_file = gen_string_with_time(sample_file_base_name);
     m_samples_file_stream.open(samples_file); 
     
-    std::string messages_file = utils::gen_string_with_time(message_file_base_name);
+    std::string messages_file = gen_string_with_time(message_file_base_name);
     m_message_stream.open(messages_file);  
 }
 
@@ -358,6 +364,17 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
 
     } // while(m_iter < m_num_mcmc_iters) // every iteration
 }
+    
 
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
+std::string ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::gen_string_with_time(const std::string& str) {
+
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%H-%M-%S", &tstruct);
+    return str + "_" + buf;
+}
 
 #endif //ADA_PMMH_MVN_H
