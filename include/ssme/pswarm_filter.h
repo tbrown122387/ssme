@@ -336,8 +336,8 @@ private:
     /* calls .filter() on a particle filtering object. side effects and the return object are important */
     // first element of yt_then_zt is the observation, and then it's the covariate, in that order
     static mats_and_loglike comp_func(const ocsv& yt_then_zt, mod_funcs_pair& pf_funcs){
-    	osv yt = yt_then_zt(0,0,dimy,1);
-    	csv zt = yt_then_zt(dimy,0,dimcov,1);
+    	osv yt = yt_then_zt.block(0,0,dimy,1);
+    	csv zt = yt_then_zt.block(dimy,0,dimcov,1);
         pf_funcs.first.filter(yt, zt, pf_funcs.second);
         mats_and_loglike r;
         r.first = pf_funcs.first.getExpectations();
@@ -433,9 +433,10 @@ public:
     
     /**
      * @brief update the model on a new time point's observation
-     * @param the most recent observation
+     * @param the most recent time series observation
+     * @param the most recent covariate observation
      */
-    void update(const osv& yt)  {
+    void update(const osv& yt, const csv& zt)  {
      
         // instantiate the models if you don't already have them 
         if ( m_models_are_not_instantiated )  finish_construction();
@@ -445,7 +446,10 @@ public:
         // drawn from the prior...think about generalizing this
 
         // iterate over all parameter values/models
-        auto expecs_and_lcl = m_tp.work(yt);
+        ocsv yt_then_zt;
+        yt_then_zt.block(0,0,dimy,1) = yt;
+        yt_then_zt.block(dimy,0,dimcov,1) = zt;
+        auto expecs_and_lcl = m_tp.work(yt_then_zt);
         m_expectations = expecs_and_lcl.first;
         m_log_cond_like = expecs_and_lcl.second;
 
@@ -483,10 +487,10 @@ public:
 
 
 private:
-   //TODO
+    
     /* generate a filter function so that .filter can work on each particle filter  */
     filt_func gen_filt_func(const state_cov_parm_func& in_f, const psv& this_models_params) {
-        filt_func out_f = std::bind(in_f, std::placeholders::_1, this_models_params);
+        filt_func out_f = std::bind(in_f, std::placeholders::_1, std::placeholders::_2, this_models_params);
         return out_f;
     }
 

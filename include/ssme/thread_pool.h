@@ -227,6 +227,7 @@ public:
 template<typename dyn_in_t, typename static_in_elem_t, typename out_t, size_t num_static_elems >
 class split_data_thread_pool
 {
+
 private: 
 
     /* type alias for the type of function this thread pool owns */ 
@@ -280,48 +281,11 @@ private:
     /* key: thread id; val: a vector if indexes to iterate over to get work */ 
     std::map<std::thread::id, std::vector<unsigned>> m_work_schedule;
 
+    /* true if m_work_schedule is completely made*/
+    bool m_all_work_distributed;
 
-    /**
-     * @brief This function runs on all threads, and continuously waits for work to do. When a new input comes, 
-     * calculations begin to be performed, and all their outputs are averaged together.
-     */ 
-    void worker_thread() {
-
-        while(!m_done)
-        {
-
-            auto iter = m_has_new_dyn_input.find(std::this_thread::get_id());
-            bool is_constructed_and_has_work = (iter != m_has_new_dyn_input.end()) && (iter->second);
-            if(is_constructed_and_has_work ){
-              
-                // **intra-thread**
-                // call the work function on each element of the static/stable with the dynamic input shared across all calls
-                std::vector<unsigned> work_indexes = m_work_schedule.at(std::this_thread::get_id());
-                out_t this_threads_ave = m_reset_f();
-                for(const auto& idx : work_indexes){
-                    this_threads_ave = m_agg_f(
-                            this_threads_ave, 
-                            m_comp_f(m_dynamic_input, m_static_input[idx]));
-                }
-
-                // **inter-thread** averaging
-      	        std::lock_guard<std::mutex> ave_lock{m_ave_mut};
-                m_working_agg = m_agg_f(m_working_agg, this_threads_ave);
-                m_has_new_dyn_input.at(std::this_thread::get_id()) = false;
-                
-
-                // finalize average if you're the last thread
-                if( (--m_work_schedule.end())->first  == std::this_thread::get_id() ){
-                    m_working_agg = m_final_f(m_working_agg);
-                    m_out.set_value(m_working_agg);
-                }             
-
-            }else{
-                std::this_thread::yield();
-            }
-        }
-    }
-
+    /* if true, then no thread has done started work on the aggregate quantity*/
+    std::atomic_bool m_agg_qty_fresh;
 
 public:
   
@@ -343,6 +307,8 @@ public:
         , m_final_f(final_f)
         , m_static_input(static_container)
         , m_joiner(m_threads)
+        , m_all_work_distributed(false)
+        , m_agg_qty_fresh(true)
     {  
         unsigned nt = std::thread::hardware_concurrency(); 
         m_num_threads = ((nt > 1) && mt) ? nt : 1;
@@ -358,12 +324,13 @@ public:
                 m_has_new_dyn_input.insert(std::pair<std::thread::id, bool>(most_recent_id, false));
             }
 
-            // distribute work as evenly as possibel
+            // distribute work as evenly as possible
             for(size_t i = 0; i < num_static_elems; ++i){
                 unsigned thread_idx = i % m_num_threads; 
                 std::thread::id thread_id = m_threads[thread_idx].get_id();
                 m_work_schedule.at(thread_id).push_back((unsigned)i);
             }
+            m_all_work_distributed = true;                    
 
         } catch(...) {
             m_done=true;
@@ -397,6 +364,7 @@ public:
         {
         std::unique_lock<std::mutex> ave_lock(m_ave_mut);
         m_working_agg = m_reset_f();
+        m_agg_qty_fresh = true;
         }
 
         // start doing work and wait for output to be "returned"
@@ -407,6 +375,63 @@ public:
 
         return m_out.get_future().get();
     }
+
+
+private:
+
+    /**
+     * @brief This function runs on all threads, and continuously waits for work to do. When a new input comes, 
+     * calculations begin to be performed, and all their outputs are averaged together. When all the threads have
+     * finished their work, the final thread performs finalization.
+     */ 
+    void worker_thread() {
+
+        while(!m_done)
+        {
+
+            auto iter = m_has_new_dyn_input.find(std::this_thread::get_id());
+            bool this_thread_has_work = (iter != m_has_new_dyn_input.end()) && (iter->second);
+            bool last_thread = std::prev(m_work_schedule.end())->first  == std::this_thread::get_id(); 
+            bool all_threads_finished = !m_agg_qty_fresh; // if agg qty is fresh, then no work has even **started** 
+            if( all_threads_finished) { // check all thread work lists
+                for(auto & [key,val] : m_has_new_dyn_input){
+                    if( val == true) all_threads_finished = false;
+                }
+            }
+
+            if( m_all_work_distributed && this_thread_has_work ){
+
+                // **intra-thread**
+                // call the work function on each element of the static/stable with the dynamic input shared across all calls
+                std::vector<unsigned> work_indexes = m_work_schedule.at(std::this_thread::get_id());
+                out_t this_threads_ave = m_reset_f();
+                for(const auto& idx : work_indexes){
+                    this_threads_ave = m_agg_f(
+                            this_threads_ave, 
+                            m_comp_f(m_dynamic_input, m_static_input[idx]));
+                }
+
+                // **inter-thread** averaging
+      	        std::lock_guard<std::mutex> ave_lock{m_ave_mut};
+                m_working_agg = m_agg_f(m_working_agg, this_threads_ave);
+                m_has_new_dyn_input.at(std::this_thread::get_id()) = false;
+                m_agg_qty_fresh = false;
+
+            }else if( m_all_work_distributed && last_thread && all_threads_finished ){
+                
+                // finalize average if you're the last thread and all other threads are finished
+      	        std::lock_guard<std::mutex> ave_lock{m_ave_mut};
+                m_working_agg = m_final_f(m_working_agg);
+                m_out.set_value(m_working_agg);
+                m_agg_qty_fresh = true;
+
+            }else{
+                std::this_thread::yield();
+            }
+        }
+    }
+
+
 };
 
 #endif // THREAD_POOL_H
