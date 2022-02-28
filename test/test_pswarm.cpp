@@ -248,6 +248,7 @@ TEST_CASE("test filter with funcs for pswarm filter with covariates instantiated
     mod.update(y1, z1);
 
     REQUIRE(std::pow(mod.getLogCondLike(),2) > 0.0);
+    REQUIRE(std::abs(mod.getExpectations()[0](0,0) - 42.0) < PREC);
     // check some output TODO more!
 }
 
@@ -340,7 +341,8 @@ TEST_CASE("test filter without funcs for pswarm filter with covariates instantia
     csv z1;
     mod.update(y1,z1);
     REQUIRE(std::pow(mod.getLogCondLike(),2) > 0.0);
-
+    REQUIRE(std::abs(mod.getExpectations()[0](0,0) - 42.0) < PREC);
+    std::cout << "expectation...." << mod.getExpectations()[0](0,0) << "\n";
     // check some output TODO more!
 }
 

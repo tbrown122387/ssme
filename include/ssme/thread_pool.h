@@ -10,7 +10,7 @@
 #include <map>
 #include <array>
 
-
+#include <iostream>
 /**
  * @class join_threads
  * @brief RAII thread killer
@@ -232,7 +232,8 @@ private:
 
     /* type alias for the type of function this thread pool owns */ 
     using comp_func_t    = std::function<out_t(const dyn_in_t&, static_in_elem_t&)>;  
-    using agg_func_t     = std::function<out_t(const out_t&, const out_t&)>; 
+    using inter_agg_func_t = std::function<out_t(const out_t&, const out_t&, unsigned num_threads, unsigned num_terms_in_thread)>; 
+    using intra_agg_func_t = std::function<out_t(const out_t&, const out_t&, unsigned num_terms_in_thread)>; 
     using reset_func_t   = std::function<out_t(void)>;
     using final_func_t   = std::function<out_t(const out_t&)>;
 
@@ -258,7 +259,10 @@ private:
     comp_func_t m_comp_f;
 
     /* our aggregating function. First arg is working aggregate, second arg is the value being "added" in*/
-    agg_func_t m_agg_f; 
+    inter_agg_func_t m_inter_agg_f; 
+
+    /* our aggregating function. First arg is working aggregate, second arg is the value being "added" in*/
+    intra_agg_func_t m_intra_agg_f; 
 
     /* function that resets the average/aggregate quantity*/
     reset_func_t m_reset_f;
@@ -296,13 +300,15 @@ public:
     split_data_thread_pool(
             std::array<static_in_elem_t, num_static_elems>& static_container,
             comp_func_t comp_f, 
-            agg_func_t agg_f, 
+            inter_agg_func_t inter_agg_f,
+            intra_agg_func_t intra_agg_f,
             reset_func_t reset_f, 
             final_func_t final_f = [](const out_t& o){ return o;}, 
             bool mt = true) 
         : m_done(false)
         , m_comp_f(comp_f)
-        , m_agg_f(agg_f)
+        , m_inter_agg_f(inter_agg_f)
+        , m_intra_agg_f(intra_agg_f)
         , m_reset_f(reset_f)
         , m_final_f(final_f)
         , m_static_input(static_container)
@@ -406,14 +412,18 @@ private:
                 std::vector<unsigned> work_indexes = m_work_schedule.at(std::this_thread::get_id());
                 out_t this_threads_ave = m_reset_f();
                 for(const auto& idx : work_indexes){
-                    this_threads_ave = m_agg_f(
+                    this_threads_ave = m_intra_agg_f(
                             this_threads_ave, 
-                            m_comp_f(m_dynamic_input, m_static_input[idx]));
+                            m_comp_f(m_dynamic_input, m_static_input[idx]),
+                            work_indexes.size());
                 }
 
                 // **inter-thread** averaging
       	        std::lock_guard<std::mutex> ave_lock{m_ave_mut};
-                m_working_agg = m_agg_f(m_working_agg, this_threads_ave);
+                m_working_agg = m_inter_agg_f(m_working_agg, 
+                                             this_threads_ave, 
+                                             m_num_threads, 
+                                             work_indexes.size());
                 m_has_new_dyn_input.at(std::this_thread::get_id()) = false;
                 m_agg_qty_fresh = false;
 

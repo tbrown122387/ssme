@@ -149,7 +149,8 @@ int comp_func2(const double& di, int& si){
     si++;
     return result;
 } 
-int agg_func2(const int& agg, const int& elem){ return agg + elem; }
+int inter_agg_func2(const int& agg, const int& elem, unsigned num_threads, unsigned num_terms_in_thread){ return agg + elem; }
+int intra_agg_func2(const int& agg, const int& elem, unsigned num_terms_in_thread){ return agg + elem; }
 int reset_func2(){ return 0; }
 
 
@@ -160,7 +161,8 @@ TEST_CASE("test new thread pool that preallocates work", "[split_data_thread_poo
     split_data_thread_pool<double,int,int,100> sdtp(
             counters, 
             comp_func2, 
-            agg_func2, 
+            inter_agg_func2, 
+            intra_agg_func2,
             reset_func2, 
             [](const int& o){ return o;}, 
             false);
