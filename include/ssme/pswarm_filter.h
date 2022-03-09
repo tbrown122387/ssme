@@ -376,7 +376,6 @@ private:
         }
 
         //std::cerr << num_threads << ", " << num_terms_in_thread << ", " << vec_mats_and_like.first[0] <<  "\n";
-        std::cerr << vec_mats_and_like.first[0] / num_threads << " <- inter \n";
         return res;
     }
 

@@ -30,7 +30,8 @@ namespace utils{
         
         // start reading
         std::string line;
-        std::ifstream ifs(file_loc);
+        std::ifstream ifs;
+        ifs.open(file_loc);
         std::string one_number;    
         if(!ifs.is_open()){     // check if we can open inFile
             std::cerr << "readInData() failed to read data from: " << file_loc << "\n";
