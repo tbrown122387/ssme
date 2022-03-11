@@ -24,9 +24,9 @@ public:
         : m_threads(threads_) {}
 
     ~join_threads() {
-        for(unsigned long i=0; i < m_threads.size(); ++i) {
-            if(m_threads[i].joinable())
-                m_threads[i].join();
+        for(auto & m_thread : m_threads) {
+            if(m_thread.joinable())
+                m_thread.join();
         }
     }
 };
@@ -401,7 +401,7 @@ private:
             bool all_threads_finished = !m_agg_qty_fresh; // if agg qty is fresh, then no work has even **started** 
             if( all_threads_finished) { // check all thread work lists
                 for(auto & [key,val] : m_has_new_dyn_input){
-                    if( val == true) all_threads_finished = false;
+                    if(val) all_threads_finished = false;
                 }
             }
 

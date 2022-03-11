@@ -90,7 +90,7 @@ public:
      * @brief ctor 1
      * @param the name of the csv of parameter samples (must be headerless and comma separated)
      */
-    csv_param_sampler(const std::string &param_csv_filename); 
+    explicit csv_param_sampler(const std::string &param_csv_filename);
 
 
     /**

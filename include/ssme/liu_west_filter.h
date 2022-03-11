@@ -3,6 +3,7 @@
 
 #include <array>
 #include <Eigen/Dense>
+#include <utility>
 
 #include <pf/rv_samp.h>
 
@@ -48,7 +49,7 @@ public:
     /**
      * @brief 
      */
-    mn_resamp_states_and_params(unsigned long seed);
+    explicit mn_resamp_states_and_params(unsigned long seed);
     
 
     /**
@@ -204,7 +205,7 @@ public:
      * @param delta adaptation rate (e.g. .95 or .9 or .99)
      * @param rs the resampling schedule 
      */
-    LWFilter(const std::vector<std::string>& transforms, 
+    LWFilter(std::vector<std::string>  transforms,
               float_t delta,
               const unsigned int &rs=1);
     
@@ -344,10 +345,10 @@ protected:
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
 LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::LWFilter(
-        const std::vector<std::string>& transforms, 
+        std::vector<std::string>  transforms,
         float_t delta,
         const unsigned int &rs) 
-    : m_transforms(transforms)
+    : m_transforms(std::move(transforms))
     , m_now(0)
     , m_logLastCondLike(0.0)
     , m_rs(rs)
@@ -358,7 +359,7 @@ LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::LWFilter(
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
-LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::~LWFilter() { }
+LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::~LWFilter() = default;
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
@@ -376,8 +377,7 @@ void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &d
         for(size_t ii = 0; ii < nparts; ++ii)  
         {
             // update m3
-            if(m_logUnNormWeights[ii] > m3)
-                m3 = m_logUnNormWeights[ii];
+            if(m_logUnNormWeights[ii] > m3) m3 = m_logUnNormWeights[ii];
             
             // sample
 	        old_untrans_param 		        = m_param_particles[ii].get_untrans_params();
@@ -687,8 +687,7 @@ LWFilterFutureSimulator<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilterFuture
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
 LWFilterFutureSimulator<nparts,dimx,dimy,dimparam,float_t,debug>::~LWFilterFutureSimulator()
-{
-}
+= default;
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
@@ -801,7 +800,7 @@ public:
      * @param delta adaptation rate (e.g. .95 or .9 or .99)
      * @param rs the resampling schedule 
      */
-    LWFilterWithCovs(const std::vector<std::string>& transforms, 
+    LWFilterWithCovs(std::vector<std::string>  transforms,
               float_t delta,
               const unsigned int &rs=1);
     
@@ -943,10 +942,10 @@ protected:
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
 LWFilterWithCovs<nparts, dimx, dimy, dimcov, dimparam, float_t, debug>::LWFilterWithCovs(
-        const std::vector<std::string>& transforms, 
+        std::vector<std::string>  transforms,
         float_t delta,
         const unsigned int &rs) 
-    : m_transforms(transforms)
+    : m_transforms(std::move(transforms))
     , m_now(0)
     , m_logLastCondLike(0.0)
     , m_rs(rs)
@@ -957,7 +956,7 @@ LWFilterWithCovs<nparts, dimx, dimy, dimcov, dimparam, float_t, debug>::LWFilter
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
-LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::~LWFilterWithCovs() { }
+LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::~LWFilterWithCovs() = default;
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
@@ -975,8 +974,7 @@ void LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::filter(co
         for(size_t ii = 0; ii < nparts; ++ii)  
         {
             // update m3
-            if(m_logUnNormWeights[ii] > m3)
-                m3 = m_logUnNormWeights[ii];
+            if(m_logUnNormWeights[ii] > m3) m3 = m_logUnNormWeights[ii];
             
             // sample
 	        old_untrans_param 		        = m_param_particles[ii].get_untrans_params();
@@ -1294,8 +1292,7 @@ LWFilterWithCovsFutureSimulator<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>:
 
 template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typename float_t,bool debug>
 LWFilterWithCovsFutureSimulator<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::~LWFilterWithCovsFutureSimulator()
-{
-}
+= default;
 
 
 template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam, typename float_t, bool debug>
@@ -1401,7 +1398,7 @@ public:
      * @param delta adaptation rate (e.g. .95 or .9 or .99)
      * @param rs the resampling schedule 
      */
-    LWFilter2(const std::vector<std::string>& transforms, 
+    LWFilter2(std::vector<std::string>  transforms,
               float_t delta,
               const unsigned int &rs=1);
     
@@ -1560,10 +1557,10 @@ protected:
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
-LWFilter2<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilter2(const std::vector<std::string>& transforms, 
+LWFilter2<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilter2(std::vector<std::string>  transforms,
                                                               float_t delta,
                                                               const unsigned int &rs)
-                : m_transforms(transforms)
+                : m_transforms(std::move(transforms))
                 , m_now(0)
                 , m_logLastCondLike(0.0)
                 , m_resampSched(rs)
@@ -1574,7 +1571,7 @@ LWFilter2<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilter2(const std::vector<
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
-LWFilter2<nparts,dimx,dimy,dimparam,float_t,debug>::~LWFilter2() {}
+LWFilter2<nparts,dimx,dimy,dimparam,float_t,debug>::~LWFilter2() = default;
 
     
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
@@ -1869,8 +1866,7 @@ LWFilter2FutureSimulator<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilter2Futu
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
 LWFilter2FutureSimulator<nparts,dimx,dimy,dimparam,float_t,debug>::~LWFilter2FutureSimulator()
-{
-}
+= default;
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
@@ -1976,7 +1972,7 @@ public:
      * @param delta adaptation rate (e.g. .95 or .9 or .99)
      * @param rs the resampling schedule 
      */
-    LWFilter2WithCovs(const std::vector<std::string>& transforms, 
+    LWFilter2WithCovs(std::vector<std::string>  transforms,
               float_t delta,
               const unsigned int &rs=1);
     
@@ -2132,10 +2128,10 @@ protected:
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
-LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::LWFilter2WithCovs(const std::vector<std::string>& transforms, 
+LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::LWFilter2WithCovs(std::vector<std::string>  transforms,
                                                               float_t delta,
                                                               const unsigned int &rs)
-                : m_transforms(transforms)
+                : m_transforms(std::move(transforms))
                 , m_now(0)
                 , m_logLastCondLike(0.0)
                 , m_resampSched(rs)
@@ -2146,7 +2142,7 @@ LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::LWFilter2With
 
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
-LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::~LWFilter2WithCovs() {}
+LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::~LWFilter2WithCovs() = default;
 
     
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
@@ -2452,7 +2448,7 @@ LWFilter2WithCovsFutureSimulator<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>
 
 
 template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typename float_t,bool debug>
-LWFilter2WithCovsFutureSimulator<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::~LWFilter2WithCovsFutureSimulator() {}
+LWFilter2WithCovsFutureSimulator<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::~LWFilter2WithCovsFutureSimulator() = default;
 
 
 template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam, typename float_t, bool debug>

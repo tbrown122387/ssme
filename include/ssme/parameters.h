@@ -42,7 +42,7 @@ public:
     /**
      * @brief a virtual destructor
      */
-    virtual ~transform() {}
+    virtual ~transform() = default;
 
 
     /**
@@ -329,7 +329,10 @@ float_t null_trans<float_t>::inv_trans(const float_t& trans_p)
 
 
 template<typename float_t>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
 float_t null_trans<float_t>::log_jacobian(const float_t& trans_p)
+#pragma clang diagnostic pop
 {
     return 0.0;
 }

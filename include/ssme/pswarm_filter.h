@@ -96,7 +96,7 @@ private:
 
         // set up required variables 
         mats_and_loglike res = agg;
-        float_type n = static_cast<float_type>(nparamparts);
+        auto n = static_cast<float_type>(nparamparts);
         bool agg_old = false;
         for(size_t i = 0; i < n_filt_funcs; ++i){
             if(agg.first[i].rows() > 0 || agg.first[i].cols() > 0)
@@ -140,7 +140,7 @@ public:
      * any data is seen. Perhaps you can back out the dimension earlier to de-complicate thigns
      * Recall that hte particle filter classes' filter() gets passed a vector not an array
      */
-    Swarm(const std::vector<state_parm_func>& fs, bool parallel = true) 
+    explicit Swarm(const std::vector<state_parm_func>& fs, bool parallel = true)
         : m_models_are_not_instantiated(true)
         , m_num_obs(0)
         , m_tp(
@@ -348,7 +348,8 @@ private:
 
 
     /* inter-thread aggregation mean = inter_thread_agg(intra_thread_aves)) */
-    static mats_and_loglike inter_agg_func(const mats_and_loglike& agg, const mats_and_loglike& vec_mats_and_like, unsigned num_threads, unsigned num_terms_in_thread){
+    static mats_and_loglike inter_agg_func(const mats_and_loglike& agg, const mats_and_loglike& vec_mats_and_like, unsigned num_threads,
+                                           [[maybe_unused]] unsigned num_terms_in_thread){
 
         // set up required variables 
         mats_and_loglike res = agg;
@@ -434,25 +435,25 @@ public:
      * any data is seen. Perhaps you can back out the dimension earlier to de-complicate thigns
      * Recall that hte particle filter classes' filter() gets passed a vector not an array
      */
-    SwarmWithCovs(const std::vector<state_cov_parm_func>& fs, bool parallel = true) 
+    explicit SwarmWithCovs(const std::vector<state_cov_parm_func>& fs, bool parallel = true)
         : m_models_are_not_instantiated(true)
         , m_num_obs(0)
         , m_tp(
-                m_mods_and_funcs, 
-                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::comp_func, 
-                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::inter_agg_func, 
-                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::intra_agg_func, 
-                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::reset_func, 
-                [](const mats_and_loglike& o){return o;}, 
-                parallel) 
-    { 
+                m_mods_and_funcs,
+                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::comp_func,
+                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::inter_agg_func,
+                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::intra_agg_func,
+                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::reset_func,
+                [](const mats_and_loglike& o){return o;},
+                parallel)
+    {
         if(fs.size() == n_filt_funcs){
             m_proto_funcs = fs;
             m_expectations.resize(n_filt_funcs);
         }else{
             throw std::invalid_argument("the length of fs needs to agree with the corresponding template parameter");
         }
-    } 
+    }
 
 
     /**
