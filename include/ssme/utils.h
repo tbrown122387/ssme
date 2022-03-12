@@ -34,7 +34,7 @@ namespace utils{
         ifs.open(file_loc);
         std::string one_number;    
         if(!ifs.is_open()){     // check if we can open inFile
-            std::cerr << "readInData() failed to read data from: " << file_loc << "\n";
+            std::cerr << "utils::read_data() failed to read data from: " << file_loc << "\n";
         }
         
         // didn't fail...keep going
