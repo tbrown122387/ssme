@@ -91,34 +91,74 @@ private:
         return r; 
     }
 
-    /* agg func = average */
-    static mats_and_loglike agg_func(const mats_and_loglike& agg, const mats_and_loglike& vec_mats_and_like){
+
+    /* inter-thread aggregation mean = inter_thread_agg(intra_thread_aves)) */
+    static mats_and_loglike inter_agg_func(const mats_and_loglike& agg, const mats_and_loglike& vec_mats_and_like, unsigned num_threads,
+                                           [[maybe_unused]] unsigned num_terms_in_thread){
 
         // set up required variables 
         mats_and_loglike res = agg;
-        auto n = static_cast<float_type>(nparamparts);
+
+        // agg log conditional likelihood
+        res.second += vec_mats_and_like.second / static_cast<float_t>(num_threads);
+
+        // check if agg has at least one term in it
+        // if so, agg is "old"
         bool agg_old = false;
         for(size_t i = 0; i < n_filt_funcs; ++i){
             if(agg.first[i].rows() > 0 || agg.first[i].cols() > 0)
                 agg_old = true;
         }
 
+        // aggregate expectation matrices
+        // if agg has just been initialized, it is a vector of 0X0 matrices
+        // you can't add matrices to each of these 0X0 matrices at the first time point 
+        if( agg_old ){
+            for(size_t i = 0; i < n_filt_funcs; ++i)
+                res.first[i] = res.first[i] + vec_mats_and_like.first[i]/ static_cast<float_t>(num_threads);
+        }else{
+            for(size_t i = 0; i < n_filt_funcs; ++i)
+                res.first[i] = vec_mats_and_like.first[i] / static_cast<float_t>(num_threads);
+        }
+
+        //std::cerr << num_threads << ", " << num_terms_in_thread << ", " << vec_mats_and_like.first[0] <<  "\n";
+        return res;
+    }
+
+
+    /* agg func = average */
+    static mats_and_loglike intra_agg_func(const mats_and_loglike& agg, const mats_and_loglike& vec_mats_and_like, unsigned num_terms_in_thread){
+
+        // set up required variables 
+        mats_and_loglike res = agg;
+
         // agg log conditional likelihood
-        res.second += vec_mats_and_like.second / n;
+        res.second += vec_mats_and_like.second / static_cast<float_t>(num_terms_in_thread);
+        
+        // check if agg has at least one term in it
+        // if so, agg is "old"
+        bool agg_old = false;
+        for(size_t i = 0; i < n_filt_funcs; ++i){
+            if(agg.first[i].rows() > 0 || agg.first[i].cols() > 0)
+                agg_old = true;
+        }
 
         // aggregate expectation matrices
         // if agg has just been initialized, it is a vector of 0X0 matrices
         // you can't add matrices to each of these 0X0 matrices at the first time point 
         if( agg_old ){
             for(size_t i = 0; i < n_filt_funcs; ++i)
-                res.first[i] = res.first[i] + vec_mats_and_like.first[i]/n;
+                res.first[i] = res.first[i] + vec_mats_and_like.first[i] / static_cast<float_t>(num_terms_in_thread);
         }else{
             for(size_t i = 0; i < n_filt_funcs; ++i)
-                res.first[i] = vec_mats_and_like.first[i] / n;
+                res.first[i] = vec_mats_and_like.first[i] / static_cast<float_t>(num_terms_in_thread);
         }
-        
+
+
+        //std::cerr << vec_mats_and_like.first[0] / static_cast<float_t>(num_terms_in_thread ) << " intra \n";
         return res;
     }
+
 
     /* initalizes empty vector of matrices */
     static mats_and_loglike reset_func(){
