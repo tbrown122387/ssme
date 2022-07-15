@@ -268,9 +268,7 @@ public:
      * @param xtm1 a Eigen::Matrix<float_t,dimx,1> representing the previous time's state.
      * @return a Eigen::Matrix<float_t,dimx,1> state sample for the current time.
      */
-    virtual ssv fSamp (const ssv &xtm1, const psv& untrans_new_param) = 0;
-    
-    
+    virtual ssv fSamp (const ssv &xtm1, const psv& untrans_new_param) = 0;    
  
 
     /**
@@ -289,6 +287,7 @@ public:
      * @return a float_t evaluation.
      */
     virtual float_t logGEv (const osv &yt, const ssv &xt, const psv& untrans_p1) = 0;
+
 
     /**
      * @brief sample a non-transformed parameter vector from the prior
@@ -331,8 +330,8 @@ protected:
     /** @brief expectations E[h(x_t) | y_{1:t}] for user defined "h"s */
     std::vector<Mat> m_expectations;
    
-    /** delta, the rate of adjustment (see LW paper for more details)*/
-    float_t m_delta; 
+    /** a, related to delta...don't want to recalculate every iteration (see LW paper for more details)*/
+    float_t m_a; 
 
     /** average of current parameter samples */
     psv m_thetaBar;
@@ -352,7 +351,7 @@ LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::LWFilter(
     , m_now(0)
     , m_logLastCondLike(0.0)
     , m_rs(rs)
-    , m_delta(delta)
+    , m_a( (3.0*delta - 1.0)/(2.0*delta))
 {
     std::fill(m_logUnNormWeights.begin(), m_logUnNormWeights.end(), 0.0);
 }
@@ -368,7 +367,10 @@ void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &d
     
     if(m_now > 0)
     { 
-        
+     	// update m_thetaBar and m_mvn_gen (with Vt)
+	    // references m_param_particles and m_logUnNormWeights  
+        update_parameter_proposal_components();
+       
         // set up "first stage weights" to make k index sampler 
         arrayFloats logFirstStageUnNormWeights = m_logUnNormWeights;
         float_t m3(-std::numeric_limits<float_t>::infinity());
@@ -381,7 +383,9 @@ void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &d
             
             // sample
 	        old_untrans_param 		        = m_param_particles[ii].get_untrans_params();
-            logFirstStageUnNormWeights[ii] += logGEv(data, propMu(m_state_particles[ii], old_untrans_param), old_untrans_param); 
+            logFirstStageUnNormWeights[ii] += logGEv(data,  
+                                                     propMu(m_state_particles[ii], old_untrans_param), 
+                                                     m_a * old_untrans_param * (1.0-m_a) * m_thetaBar);
             
             // accumulate things
             if(logFirstStageUnNormWeights[ii] > m2)
@@ -399,9 +403,6 @@ void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &d
         // draw ks (indexes) (handles underflow issues)
         arrayUInt myKs = m_kGen.sample(logFirstStageUnNormWeights); 
 
-    	// calculate thetabar and Vt for parameter proposal distribution
-        update_parameter_proposal_components();
-
         // sample parameters and states  
         float_t m1(-std::numeric_limits<float_t>::infinity());
         float_t first_cll_sum(0.0);
@@ -409,19 +410,18 @@ void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &d
         float_t third_cll_sum(0.0);
         ssv xtm1k;
         ssv muTk;
-        psv mtm1k;
+        psv mtm1k; // maybe don't need
         arrayStates old_state_partics = m_state_particles;
         arrayParams old_param_partics = m_param_particles;
         for(size_t ii = 0; ii < nparts; ++ii)   
         {
-            // calclations for log p(y_t|y_{1:t-1}) (using log-sum-exp trick)
+            // calculations for log p(y_t|y_{1:t-1}) (using log-sum-exp trick)
             second_cll_sum += std::exp( logFirstStageUnNormWeights[ii] - m2 );
             third_cll_sum  += std::exp( m_logUnNormWeights[ii] - m3 );            
             
             // sample the parameter first, and get ready to sample the rest
             xtm1k = old_state_partics[myKs[ii]];
-            float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
-            mtm1k = a * old_param_partics[myKs[ii]].get_trans_params() + (1.0 - a) * m_thetaBar;
+            mtm1k = m_a * old_param_partics[myKs[ii]].get_trans_params() + (1.0 - m_a) * m_thetaBar;
             param::pack<float_t, dimparam> mtm1k_pack (mtm1k, m_transforms); 
             m_mvn_gen.setMean(mtm1k);
             param::pack<float_t, dimparam> newThetaSamp (m_mvn_gen.sample(), m_transforms);
@@ -430,7 +430,7 @@ void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &d
             m_param_particles[ii]   = newThetaSamp; 
             m_state_particles[ii]   = fSamp(xtm1k, newThetaSamp.get_untrans_params());
             muTk                    = propMu(xtm1k, old_param_partics[myKs[ii]].get_untrans_params());
-            m_logUnNormWeights[ii] += logGEv(data, m_state_particles[ii], newThetaSamp.get_untrans_params()) 
+            m_logUnNormWeights[ii]  = logGEv(data, m_state_particles[ii], newThetaSamp.get_untrans_params()) 
                                     - logGEv(data, muTk, mtm1k_pack.get_untrans_params());
 
             if constexpr(debug) {
@@ -494,7 +494,7 @@ void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::filter(const osv &d
             m_param_particles[ii] = param::pack<float_t,dimparam>(untrans_param_samp, m_transforms, false);
 
             // sample particles
-            m_state_particles[ii]  = q1Samp(data, untrans_param_samp);
+            m_state_particles[ii]   = q1Samp(data, untrans_param_samp);
             m_logUnNormWeights[ii]  = logMuEv(m_state_particles[ii], untrans_param_samp);
             m_logUnNormWeights[ii] += logGEv(data, m_state_particles[ii], untrans_param_samp);
             m_logUnNormWeights[ii] -= logQ1Ev(m_state_particles[ii], data, untrans_param_samp);
@@ -569,18 +569,17 @@ auto LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::getExpectations() c
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
 void LWFilter<nparts, dimx, dimy, dimparam, float_t, debug>::update_parameter_proposal_components()
 {
-        m_thetaBar = psv::Zero();
-        psm Vt = psm::Zero();
-        psv theta_i;
-        for(size_t i = 0; i < nparts; ++i){
-            theta_i = m_param_particles[i].get_trans_params();
-            m_thetaBar += theta_i / nparts;
-            Vt += (theta_i * theta_i.transpose()) / nparts;
-        }
-        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
-        float_t hSquared {1.0 - a * a};
-    	m_mvn_gen.setCovar( hSquared * Vt);
-
+    m_thetaBar = psv::Zero();
+    psm Vt = psm::Zero();
+    psv theta_i;
+    for(size_t i = 0; i < nparts; ++i){
+        theta_i = m_param_particles[i].get_trans_params();
+        m_thetaBar += theta_i / nparts;
+        Vt += (theta_i * theta_i.transpose()) / nparts;
+    }
+    Vt -= ( m_thetaBar * m_thetaBar.transpose() );
+    float_t hSquared {1.0 - m_a * m_a};
+    m_mvn_gen.setCovar( hSquared * Vt);
 }
 
 
