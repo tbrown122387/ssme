@@ -1547,8 +1547,8 @@ protected:
     /** @brief resampling schedule (e.g. resample every __ time points) */
     unsigned int m_resampSched;
    
-    /** @brief the discount factor (e.g. .95 or .99) **/
-    float_t m_delta; 
+    /** @brief the shrinkage factor **/
+    float_t m_a; 
 
     /**
      * @todo implement ESS stuff
@@ -1565,7 +1565,7 @@ LWFilter2<nparts,dimx,dimy,dimparam,float_t,debug>::LWFilter2(std::vector<std::s
                 , m_now(0)
                 , m_logLastCondLike(0.0)
                 , m_resampSched(rs)
-                , m_delta(delta)
+                , m_a((3.0*delta - 1.0)/(2.0*delta))
 {
     std::fill(m_logUnNormWeights.begin(), m_logUnNormWeights.end(), 0.0); // log(1) = 0
 }
@@ -1610,8 +1610,7 @@ void LWFilter2<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const osv &data
                 maxOldLogUnNormWts = m_logUnNormWeights[ii];
                 
             // sample transformed parameter
-    	    float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
-            m_mvn_gen.setMean(a * m_param_particles[ii].get_trans_params() + (1.0 - a) * m_thetaBar);
+            m_mvn_gen.setMean(m_a * m_param_particles[ii].get_trans_params() + (1.0 - m_a) * m_thetaBar);
     	    param::pack<float_t, dimparam> newThetaSamp (m_mvn_gen.sample(), m_transforms);
     
     	    // sample state 
@@ -1688,7 +1687,7 @@ void LWFilter2<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const osv &data
             m_param_particles[ii] = param::pack<float_t,dimparam>(untrans_param_samp, m_transforms, false); 
 
             // sample state particles
-            m_state_particles[ii] = q1Samp(data, untrans_param_samp);
+            m_state_particles[ii]   = q1Samp(data, untrans_param_samp);
             m_logUnNormWeights[ii]  = logMuEv(m_state_particles[ii], untrans_param_samp);
             m_logUnNormWeights[ii] += logGEv(data, m_state_particles[ii], untrans_param_samp);
             m_logUnNormWeights[ii] -= logQ1Ev(m_state_particles[ii], data, untrans_param_samp);
@@ -1750,17 +1749,17 @@ void LWFilter2<nparts,dimx,dimy,dimparam,float_t, debug>::filter(const osv &data
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimparam, typename float_t, bool debug>
 void LWFilter2<nparts,dimx,dimy,dimparam,float_t, debug>::update_parameter_proposal_components()
 {
-        m_thetaBar = psv::Zero();
-        psm Vt = psm::Zero();
-        psv theta_i;
-        for(size_t i = 0; i < nparts; ++i){
-            theta_i = m_param_particles[i].get_trans_params();
-            m_thetaBar += theta_i / nparts;
-            Vt += (theta_i * theta_i.transpose()) / nparts;
-        }
-        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
-        float_t hSquared {1.0 - a * a};
-    	m_mvn_gen.setCovar( hSquared * Vt);
+    m_thetaBar = psv::Zero();
+    psm Vt = psm::Zero();
+    psv theta_i;
+    for(size_t i = 0; i < nparts; ++i){
+        theta_i = m_param_particles[i].get_trans_params();
+        m_thetaBar += theta_i / nparts;
+        Vt += (theta_i * theta_i.transpose()) / nparts;
+    }
+    Vt -= ( m_thetaBar * m_thetaBar.transpose() );
+    float_t hSquared {1.0 - m_a * m_a};
+    m_mvn_gen.setCovar( hSquared * Vt);
 }
 
 
@@ -2112,19 +2111,19 @@ protected:
     /** @brief resampling schedule (e.g. resample every __ time points) */
     unsigned int m_resampSched;
    
-    /** @brief the discount factor (e.g. .95 or .99) **/
-    float_t m_delta; 
-
-    /**
-     * @todo implement ESS stuff
-     */
-       
+    /** @brief the shrinkage factor **/
+    float_t m_a; 
+    
     /** average of current parameter samples */
     psv m_thetaBar;
 
     /** updates some state (m_thetaBar and m_mvn_gen) so that sampling parameters can be done quickly */
     void update_parameter_proposal_components();
-  
+    
+   
+    /**
+     * @todo implement ESS stuff
+     */
 };
 
 
@@ -2136,7 +2135,7 @@ LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::LWFilter2With
                 , m_now(0)
                 , m_logLastCondLike(0.0)
                 , m_resampSched(rs)
-                , m_delta(delta)
+                , m_a( (3.0*delta - 1.0)/(2.0*delta))
 {
     std::fill(m_logUnNormWeights.begin(), m_logUnNormWeights.end(), 0.0); // log(1) = 0
 }
@@ -2182,8 +2181,7 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(
                 maxOldLogUnNormWts = m_logUnNormWeights[ii];
                 
             // sample transformed parameter
-    	    float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
-            m_mvn_gen.setMean(a * m_param_particles[ii].get_trans_params() + (1.0 - a) * m_thetaBar);
+            m_mvn_gen.setMean(m_a * m_param_particles[ii].get_trans_params() + (1.0 - m_a) * m_thetaBar);
     	    param::pack<float_t, dimparam> newThetaSamp (m_mvn_gen.sample(), m_transforms);
     
     	    // sample state 
@@ -2260,7 +2258,7 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(
             m_param_particles[ii] = param::pack<float_t,dimparam>(untrans_param_samp, m_transforms, false); 
 
             // sample state particles
-            m_state_particles[ii] = q1Samp(obs_data, untrans_param_samp);
+            m_state_particles[ii]   = q1Samp(obs_data, untrans_param_samp);
             m_logUnNormWeights[ii]  = logMuEv(m_state_particles[ii], untrans_param_samp);
             m_logUnNormWeights[ii] += logGEv(obs_data, m_state_particles[ii], untrans_param_samp);
             m_logUnNormWeights[ii] -= logQ1Ev(m_state_particles[ii], obs_data, untrans_param_samp);
@@ -2272,8 +2270,6 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(
                           << ", log unnorm weight: " << m_logUnNormWeights[ii] 
                           << "\n";
             }
-
-
         }
        
         // calculate log cond likelihood with log-exp-sum trick
@@ -2322,17 +2318,17 @@ void LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t, debug>::filter(
 template<size_t nparts,size_t dimx,size_t dimy,size_t dimcov,size_t dimparam,typename float_t,bool debug>
 void LWFilter2WithCovs<nparts, dimx, dimy, dimcov,dimparam, float_t, debug>::update_parameter_proposal_components()
 {
-        m_thetaBar = psv::Zero();
-        psm Vt = psm::Zero();
-        psv theta_i;
-        for(size_t i = 0; i < nparts; ++i){
-            theta_i = m_param_particles[i].get_trans_params();
-            m_thetaBar += theta_i / nparts;
-            Vt += (theta_i * theta_i.transpose()) / nparts;
-        }
-        float_t a { (3.0*m_delta - 1.0)/(2.0*m_delta)};
-        float_t hSquared {1.0 - a * a};
-    	m_mvn_gen.setCovar( hSquared * Vt);
+    m_thetaBar = psv::Zero();
+    psm Vt = psm::Zero();
+    psv theta_i;
+    for(size_t i = 0; i < nparts; ++i){
+        theta_i = m_param_particles[i].get_trans_params();
+        m_thetaBar += theta_i / nparts;
+        Vt += (theta_i * theta_i.transpose()) / nparts;
+    }
+    Vt -= ( m_thetaBar * m_thetaBar.transpose() );
+    float_t hSquared {1.0 - m_a * m_a};
+    m_mvn_gen.setCovar( hSquared * Vt);
 }
 
 
