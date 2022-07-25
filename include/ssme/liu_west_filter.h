@@ -808,14 +808,22 @@ public:
      * @brief The (virtual) destructor
      */
     virtual ~LWFilterWithCovs();
-    
+
+
      /**
       * @brief Get the latest log conditional likelihood.
       * @return a float_t of the most recent conditional likelihood.
       */
     float_t getLogCondLike () const; 
     
-    
+ 
+    /**
+      * @brief Get the latest set of parameter samples.
+      * @return all the samples in an array
+      */
+    arrayParams getParamSamples () const; 
+
+
     /**
      * @brief return all stored expectations (taken with respect to $p(x_t|y_{1:t})$
      * @return return a std::vector<Mat> of expectations. How many depends on how many callbacks you gave to 
@@ -1155,6 +1163,13 @@ template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam
 float_t LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::getLogCondLike() const
 {
     return m_logLastCondLike;
+}
+
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+auto LWFilterWithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::getParamSamples() const -> arrayParams
+{
+    return m_param_particles;    
 }
 
 
@@ -1988,7 +2003,13 @@ public:
      */ 
     float_t getLogCondLike() const; 
     
-    
+ 
+    /**
+     * @brief returns latest posterior samples
+     */ 
+    arrayParams getParamSamples() const; 
+
+
     /**
      * @brief return all stored expectations (taken with respect to $p(x_t,theta|y_{1:t})$
      * @return return a std::vector<Mat> of expectations. How many depends on how many callbacks you gave to 
@@ -2151,6 +2172,13 @@ float_t LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::getLo
     return m_logLastCondLike;
 }
     
+
+template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
+auto LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::getParamSamples() const -> arrayParams
+{
+    return m_param_particles;
+}
+
 
 template<size_t nparts, size_t dimx, size_t dimy, size_t dimcov, size_t dimparam, typename float_t, bool debug>
 auto LWFilter2WithCovs<nparts,dimx,dimy,dimcov,dimparam,float_t,debug>::getExpectations() const -> std::vector<Mat> 
