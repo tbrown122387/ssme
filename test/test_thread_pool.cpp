@@ -31,7 +31,7 @@ TEST_CASE_METHOD(MyFixture, "test thread pool", "[thread_pool]")
     for(unsigned i = 0; i < num_tries; ++i){
         REQUIRE( std::abs(
                     pool.work(std::vector<double>{1.0, 1.0, 1.0}) 
-                    - 3.0) < .001  
+                    - 3.0*1e4) < .001  
                 );
     }
 }
@@ -69,7 +69,7 @@ TEST_CASE_METHOD(MyFixture2, "test thread pool with lambda", "[thread_pool]")
         REQUIRE( std::abs(
                     pool.work(
                         std::vector<double>{1.0, 1.0, 1.0} )
-                    - 3.0) < .001  );
+                    - 3.0*1e4) < .001  );
     }
 }
 
@@ -105,7 +105,7 @@ TEST_CASE_METHOD(MyFixture3, "test thread pool with nonstatic method", "[thread_
         REQUIRE( std::abs(
                     pool.work(
                         std::vector<double>{1.0, 1.0, 1.0} )
-                    - 3.0) < .001  );
+                    - 3.0*1e4) < .001  );
     }
 }
 
@@ -139,7 +139,7 @@ TEST_CASE_METHOD(MyFixture4, "test thread pool with single thread", "[thread_poo
         REQUIRE( std::abs(
                     pool.work(
                         std::vector<double>{1.0, 1.0, 1.0} )
-                    - 3.0) < .001  );
+                    - 3.0*1e4) < .001  );
     }
 }
 

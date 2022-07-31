@@ -50,6 +50,7 @@ public:
      * @param C0 initial covariance matrix for proposal distribution.
      * @param print_to_console true if you want to see messages in real time
      * @param print_every_k print messages and samples every (this number) iterations
+     * @param approx_max_ll the approximate maximum log-likelihood. if left at 0, changed to-.5*datasize
      */
     ada_pmmh_mvn(const psv &start_trans_theta, 
                  std::vector<std::string> tts,
@@ -63,7 +64,8 @@ public:
                  const unsigned int &t1,
                  const psm &C0,
                  bool print_to_console,
-                 unsigned int print_every_k);
+                 unsigned int print_every_k,
+                 float_t approx_max_ll = 0.0); // CHANGED
              
     // TODO: describe formatting rules (e.g. column orders, column names, etc.
     // )
@@ -119,6 +121,9 @@ private:
     
     /* thread pool (its function can only take one parameter) */
     thread_pool<dyn_data_t, static_data_t, float_t> m_pool; 
+    float_t m_approx_max_ll; // CHANGED
+    unsigned int m_data_size; // CHANGED
+    const unsigned int m_num_pfilters; // CHANGED
 
     /* changing MCMC state variables */
     float_t m_old_log_like;
@@ -144,7 +149,7 @@ private:
 
     float_t pool_func(dyn_data_t param, static_data_t obs_data)
     {
-        return log_like_eval(param, obs_data); 
+        return std::exp(log_like_eval(param, obs_data) - m_approx_max_ll); // CHANGED 
     }
 
  
@@ -169,7 +174,8 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
                                             const unsigned int &t1,
                                             const psm &C0,
                                             bool print_to_console,
-                                            unsigned int print_every_k)
+                                            unsigned int print_every_k,
+                                            float_t approx_max_ll)
  : m_current_theta(start_trans_theta, tts)
  , m_tts(tts)
  , m_sigma_hat(psm::Zero())
@@ -190,15 +196,22 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
          num_pfilters, 
          mc)
  , m_log_accept_prob(-std::numeric_limits<float_t>::infinity())
+ , m_approx_max_ll(approx_max_ll)
+ , m_num_pfilters(num_pfilters)
 {
     static_data_t tmp_data = utils::read_data<dimobs,float_t>(data_file);
     m_pool.add_observed_data( tmp_data );
+    m_data_size = tmp_data.size(); 
 
     std::string samples_file = gen_string_with_time(sample_file_base_name);
     m_samples_file_stream.open(samples_file); 
     
     std::string messages_file = gen_string_with_time(message_file_base_name);
     m_message_stream.open(messages_file);  
+
+    // change m_approx_max_ll to default if it's unchanged from 0
+    // TODO: how to use type traits to check that tmp_data has size() method
+    if( std::abs(m_approx_max_ll) < .001) m_approx_max_ll = -.5 * m_data_size; 
 }
 
 
@@ -335,7 +348,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
             dyn_data_t proposed_theta(proposed_trans_theta, m_tts);
             
             m_new_log_prior = log_prior_eval(proposed_theta) + proposed_theta.get_log_jacobian();
-            m_new_log_like = m_pool.work(proposed_theta); 
+            m_new_log_like = std::log(m_pool.work(proposed_theta)) - std::log(m_num_pfilters) + m_approx_max_ll;  //CHANGED https://github.com/tbrown122387/ssme/issues/18#issuecomment-1200450044 
 
             // decide whether to accept or reject
             m_log_accept_prob = m_new_log_prior + m_new_log_like - m_old_log_prior - m_old_log_like;                
@@ -354,7 +367,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
             }
            
         }else{ // first iteration
-            m_old_log_like = m_pool.work(m_current_theta); 
+            m_old_log_like = std::log( m_pool.work(m_current_theta) ) - std::log(m_num_pfilters) + m_approx_max_ll; // CHANGED https://github.com/tbrown122387/ssme/issues/18#issuecomment-1200450044
             m_old_log_prior = log_prior_eval(m_current_theta) + m_current_theta.get_log_jacobian();
         } 
             

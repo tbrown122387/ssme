@@ -70,10 +70,10 @@ private:
     /* flag for if there is a new input */
     std::atomic_bool m_has_an_input;
     
-    /* the accumulated variable (working average) */
-    func_output_t m_working_ave;
+    /* the accumulated variable (working sum) */
+    func_output_t m_working_sum;
 
-    /* the unchanging desired number of function calls you want for each fresh new input */
+    /* the unchanging m_outdesired number of function calls you want for each fresh new input */
     unsigned m_total_calcs;
 
     /* promised output of an average */
@@ -112,14 +112,14 @@ private:
                 std::shared_lock<std::shared_mutex> param_lock(m_param_mut);
                 func_output_t val = m_f(m_param, m_observed_data);
 
-                // write it to the average and increment count
+                // write it to the sum and increment count
                 // do this in thread-safe way with mutex
       	        std::lock_guard<std::mutex> out_lock{m_ac_mut};
-		        if( m_count.load() < m_total_calcs ) {
-                    m_working_ave += val / m_total_calcs;
+                if( m_count.load() < m_total_calcs ) {
+                    m_working_sum += val; //https://github.com/tbrown122387/ssme/issues/18#issuecomment-1200450044
                     m_count++;
                 }else if( m_count.load() == m_total_calcs){
-                    m_out.set_value(m_working_ave);
+                    m_out.set_value(m_working_sum);
                     m_has_an_input = false;
                     m_count++;
                 }
@@ -143,7 +143,7 @@ public:
         : m_count(0)
         , m_done(false)
         , m_has_an_input(false)
-	    , m_working_ave(0.0)
+        , m_working_sum(0.0)
         , m_total_calcs(num_comps)
         , m_f(f)
         , m_no_data_yet(true) 
@@ -203,7 +203,7 @@ public:
         {
             std::unique_lock<std::mutex> ave_lock(m_ac_mut);
             m_count = 0;
-            m_working_ave = 0.0;
+            m_working_sum = 0.0;
         }
 
         m_out = std::promise<func_output_t>();
