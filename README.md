@@ -1,4 +1,4 @@
-# SSME: a c++ static library for the estimation of state space models
+# SSME: a c++ static library for state space model forecasting and estimation
 
 [![DOI](https://zenodo.org/badge/154373836.svg)](https://zenodo.org/badge/latestdoi/154373836)
 

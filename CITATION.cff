@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Brown"
+  given-names: "Taylor"
+  orcid: "https://orcid.org/0000-0003-4972-6251"
+title: "SSME: a c++ static library for state space model forecasting and estimation"
+version: 1.0.1
+doi: 10.5281/zenodo.2633292
+date-released: 2022-08-04
+url: "https://github.com/tbrown122387/ssme"
