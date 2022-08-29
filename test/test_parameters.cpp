@@ -120,6 +120,22 @@ TEST_CASE("test transformations", "[pack]"){
         REQUIRE( std::abs(ideal_un_trans_params(i) - pp.get_untrans_params()(i)) < .0001);
 }
 
+TEST_CASE("test transformations pt 2", "[pack]"){
+ 
+    // same as above
+    Eigen::Matrix<double,4,1> ideal_un_trans_params = {1.0, 0.2725318, 0.9999252, 0.4177803};
+    Eigen::Matrix<double,4,1> trans_params;
+    trans_params << 1.0, -1.3, 9.5, .89;
+    std::vector<std::string> ts {"null", "log", "logit", "twice_fisher"};
+    param::pack<double,4> pp(trans_params, ts);
+
+    // first three
+    auto first_three = pp.get_untrans_params(0,2);
+    for(size_t i = 0; i < 3; ++i){
+        REQUIRE( std::abs(ideal_un_trans_params(i) - first_three(i) ) < .0001);
+    }
+}
+
 TEST_CASE("test LogJacobians", "[pack]"){
     
     Eigen::Matrix<double,4,1> trans_params;

@@ -613,7 +613,7 @@ auto pack<float_t, numelem>::get_untrans_params(const unsigned int& start, const
     do {    
         params(i-start) = m_ts[i]->inv_trans(m_trans_params(i));
         i++;
-    } while( i < end);
+    } while( i <= end);
     return params;
 }
 
