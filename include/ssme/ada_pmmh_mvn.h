@@ -201,7 +201,10 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
 {
     static_data_t tmp_data = utils::read_data<dimobs,float_t>(data_file);
     m_pool.add_observed_data( tmp_data );
-    m_data_size = tmp_data.size(); 
+    m_data_size = tmp_data.size();
+   //print out first row just to make sure it looks good
+   std::cerr << "first row of data: \n";
+   std::cerr << tmp_data[0].transpose() << "\n";  
 
     std::string samples_file = gen_string_with_time(sample_file_base_name);
     m_samples_file_stream.open(samples_file); 
