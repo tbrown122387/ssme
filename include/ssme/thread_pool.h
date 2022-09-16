@@ -11,6 +11,8 @@
 #include <array>
 
 #include <iostream>
+
+
 /**
  * @class join_threads
  * @brief RAII thread killer
@@ -36,7 +38,8 @@ public:
  * @brief Here we have many concurrent parameter readers, but only a single parameter writer.
  * This thread pool owns one function that returns one (random) floating point number. The pool sits ready to perform calculations
  * on any new parameter value. Once a new parameter value is received, this pool calls its function a fixed number of times, 
- * and all of the function output is averaged in a thread-safe way. For our particular applications, this function will also depend 
+ * and all of the function output is averaged in a thread-safe way. Actually, these function evals are expected to be in the log
+ * space, and the log average is calculatd using the log-sum-exp trick. For our particular applications, this function will also depend 
  * on observed data that doesn't change once the thread pool has been initialized.
  * @tparam dyn_data_t dynamic data type. The type of input that gets changed repeatedly.
  * @tparam static_data_t the type of input that only gets set once
@@ -70,11 +73,14 @@ private:
     /* flag for if there is a new input */
     std::atomic_bool m_has_an_input;
     
-    /* the accumulated variable (working sum) */
+    /* the accumulated variable (working sum of exp(log_like - max) ) */
     func_output_t m_working_sum;
 
+    /* function is expected to output a log-likelihood and we're using the first one to approx. the max*/
+    func_output_t m_working_log_max;
+
     /* the unchanging m_outdesired number of function calls you want for each fresh new input */
-    unsigned m_total_calcs;
+    const unsigned m_total_calcs;
 
     /* promised output of an average */
     std::promise<func_output_t> m_out;
@@ -108,18 +114,26 @@ private:
         {
             if(m_has_an_input){
                
-                // call the expensive function
+                // call the expensive function that returns a approximate log-likelihood
                 std::shared_lock<std::shared_mutex> param_lock(m_param_mut);
                 func_output_t val = m_f(m_param, m_observed_data);
-
-                // write it to the sum and increment count
+                
+                // m_f is expected to be log-likelihood
+                // write it to the sum of exponentials and 
+                // increment count
                 // do this in thread-safe way with mutex
+                // use first log-like to approximate max of all log-likes
       	        std::lock_guard<std::mutex> out_lock{m_ac_mut};
-                if( m_count.load() < m_total_calcs ) {
-                    m_working_sum += val; //https://github.com/tbrown122387/ssme/issues/18#issuecomment-1200450044
+                if( m_count.load() == 0 ){
+                    m_working_log_max = val;
+                    m_working_sum += 1.0; // exp(ll - ll) 
+                    m_count++;
+                } else if ( m_count.load() < m_total_calcs ) {
+                    m_working_sum += std::exp(val - m_working_log_max); 
                     m_count++;
                 }else if( m_count.load() == m_total_calcs){
-                    m_out.set_value(m_working_sum);
+                    // finalize log-sum-exp value
+                    m_out.set_value(m_working_log_max + std::log(m_working_sum) - std::log(m_total_calcs) );
                     m_has_an_input = false;
                     m_count++;
                 }
@@ -131,7 +145,8 @@ private:
     }
 
 public:
-  
+
+    thread_pool() = delete;  
 
     /**
      * @brief The ctor spawns the working threads and gets ready to start doing work.
@@ -150,7 +165,6 @@ public:
         , m_joiner(m_threads)
 
     {
-
         unsigned nt = std::thread::hardware_concurrency(); 
         unsigned thread_count = ((nt > 1) && mt) ? nt : 1 ;
         if ( thread_count > 1) thread_count -= 1;
@@ -207,7 +221,7 @@ public:
         }
 
         m_out = std::promise<func_output_t>();
-        m_has_an_input = true; 
+        m_has_an_input = true;
         return m_out.get_future().get();
     }
 };

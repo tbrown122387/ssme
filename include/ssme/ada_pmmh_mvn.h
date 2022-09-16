@@ -64,9 +64,9 @@ public:
                  const unsigned int &t1,
                  const psm &C0,
                  bool print_to_console,
-                 unsigned int print_every_k,
-                 float_t approx_max_ll = 0.0); // CHANGED
-             
+                 unsigned int print_every_k);
+            
+
     // TODO: describe formatting rules (e.g. column orders, column names, etc.
     // )
     /**
@@ -121,9 +121,6 @@ private:
     
     /* thread pool (its function can only take one parameter) */
     thread_pool<dyn_data_t, static_data_t, float_t> m_pool; 
-    float_t m_approx_max_ll; // CHANGED
-    unsigned int m_data_size; // CHANGED
-    const unsigned int m_num_pfilters; // CHANGED
 
     /* changing MCMC state variables */
     float_t m_old_log_like;
@@ -149,7 +146,7 @@ private:
 
     float_t pool_func(dyn_data_t param, static_data_t obs_data)
     {
-        return std::exp(log_like_eval(param, obs_data) - m_approx_max_ll); // CHANGED 
+        return log_like_eval(param, obs_data);
     }
 
  
@@ -196,12 +193,10 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
          num_pfilters, 
          mc)
  , m_log_accept_prob(-std::numeric_limits<float_t>::infinity())
- , m_approx_max_ll(approx_max_ll)
  , m_num_pfilters(num_pfilters)
 {
     static_data_t tmp_data = utils::read_data<dimobs,float_t>(data_file);
     m_pool.add_observed_data( tmp_data );
-    m_data_size = tmp_data.size();
    //print out first row just to make sure it looks good
    std::cerr << "first row of data: \n";
    std::cerr << tmp_data[0].transpose() << "\n";  
@@ -211,10 +206,6 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
     
     std::string messages_file = gen_string_with_time(message_file_base_name);
     m_message_stream.open(messages_file);  
-
-    // change m_approx_max_ll to default if it's unchanged from 0
-    // TODO: how to use type traits to check that tmp_data has size() method
-    if( std::abs(m_approx_max_ll) < .001) m_approx_max_ll = -.5 * m_data_size; 
 }
 
 
@@ -349,9 +340,8 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
             // propose a new theta
             proposed_trans_theta = q_samp(m_current_theta);
             dyn_data_t proposed_theta(proposed_trans_theta, m_tts);
-            
             m_new_log_prior = log_prior_eval(proposed_theta) + proposed_theta.get_log_jacobian();
-            m_new_log_like = std::log(m_pool.work(proposed_theta)) - std::log(m_num_pfilters) + m_approx_max_ll;  //CHANGED https://github.com/tbrown122387/ssme/issues/18#issuecomment-1200450044 
+            m_new_log_like = m_pool.work(proposed_theta); 
 
             // decide whether to accept or reject
             m_log_accept_prob = m_new_log_prior + m_new_log_like - m_old_log_prior - m_old_log_like;                
@@ -370,7 +360,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
             }
            
         }else{ // first iteration
-            m_old_log_like = std::log( m_pool.work(m_current_theta) ) - std::log(m_num_pfilters) + m_approx_max_ll; // CHANGED https://github.com/tbrown122387/ssme/issues/18#issuecomment-1200450044
+            m_old_log_like = m_pool.work(m_current_theta);
             m_old_log_prior = log_prior_eval(m_current_theta) + m_current_theta.get_log_jacobian();
         } 
             
@@ -378,7 +368,7 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
         record_messages();
         m_iter++; 
 
-    } // while(m_iter < m_num_mcmc_iters) // every iteration
+    } 
 }
     
 
