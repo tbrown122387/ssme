@@ -50,7 +50,6 @@ public:
      * @param C0 initial covariance matrix for proposal distribution.
      * @param print_to_console true if you want to see messages in real time
      * @param print_every_k print messages and samples every (this number) iterations
-     * @param approx_max_ll the approximate maximum log-likelihood. if left at 0, changed to-.5*datasize
      */
     ada_pmmh_mvn(const psv &start_trans_theta, 
                  std::vector<std::string> tts,
@@ -171,8 +170,7 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
                                             const unsigned int &t1,
                                             const psm &C0,
                                             bool print_to_console,
-                                            unsigned int print_every_k,
-                                            float_t approx_max_ll)
+                                            unsigned int print_every_k)
  : m_current_theta(start_trans_theta, tts)
  , m_tts(tts)
  , m_sigma_hat(psm::Zero())
