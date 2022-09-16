@@ -191,7 +191,6 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
          num_pfilters, 
          mc)
  , m_log_accept_prob(-std::numeric_limits<float_t>::infinity())
- , m_num_pfilters(num_pfilters)
 {
     static_data_t tmp_data = utils::read_data<dimobs,float_t>(data_file);
     m_pool.add_observed_data( tmp_data );
@@ -382,3 +381,4 @@ std::string ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::gen_string_with_tim
 }
 
 #endif //ADA_PMMH_MVN_H
+
