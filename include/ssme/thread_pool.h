@@ -167,7 +167,7 @@ public:
     {
         unsigned nt = std::thread::hardware_concurrency(); 
         unsigned thread_count = ((nt > 1) && mt) ? nt : 1 ;
-        if ( thread_count > 1) thread_count -= 1;
+//        if ( thread_count > 1) thread_count -= 1;
 
         try {
             for(unsigned i=0; i< thread_count; ++i) {
