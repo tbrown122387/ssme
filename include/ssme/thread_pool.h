@@ -433,8 +433,10 @@ private:
      */ 
     void worker_thread() {
 
-        if constexpr(debug)
+        if constexpr(debug){
+            std::unique_lock<std::mutex> param_lock(m_ave_mut);
             std::cout << "DEBUG: starting worker_thread()\n";
+        }
 
         while(!m_done)
         {
