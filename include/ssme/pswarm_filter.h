@@ -305,7 +305,7 @@ private:
 
 
 
-template<typename ModType, size_t n_filt_funcs, size_t nstateparts, size_t nparamparts, size_t dimy, size_t dimx, size_t dimcov, size_t dimparam>
+template<typename ModType, size_t n_filt_funcs, size_t nstateparts, size_t nparamparts, size_t dimy, size_t dimx, size_t dimcov, size_t dimparam, bool debug = false>
 class SwarmWithCovs {
 
 
@@ -372,7 +372,7 @@ private:
     unsigned int m_num_obs;
 
     /* thread pool for faster calculations*/
-    split_data_thread_pool<ocsv, mod_funcs_pair, mats_and_loglike, nparamparts> m_tp; 
+    split_data_thread_pool<ocsv, mod_funcs_pair, mats_and_loglike, nparamparts, debug> m_tp; 
 
     /* calls .filter() on a particle filtering object. side effects and the return object are important */
     // first element of yt_then_zt is the observation, and then it's the covariate, in that order
@@ -480,10 +480,10 @@ public:
         , m_num_obs(0)
         , m_tp(
                 m_mods_and_funcs,
-                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::comp_func,
-                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::inter_agg_func,
-                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::intra_agg_func,
-                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam>::reset_func,
+                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam,debug>::comp_func,
+                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam,debug>::inter_agg_func,
+                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam,debug>::intra_agg_func,
+                &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam,debug>::reset_func,
                 [](const mats_and_loglike& o){return o;},
                 parallel)
     {

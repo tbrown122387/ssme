@@ -149,12 +149,12 @@ class svol_swarm_1 : public SwarmWithCovs<svol_leverage<n_state_parts,mn_resamp_
                                 1, 
                                 n_state_parts, 
                                 n_param_parts, 
-                                DIMY, DIMX, DIMCOV, DIMPARAM>
+                                DIMY, DIMX, DIMCOV, DIMPARAM, true>
 {
 public:
 
     using ModType = svol_leverage<n_state_parts,mn_resamp_fast1<n_state_parts,DIMX,float_t>, float_t>;
-    using SwarmBase = SwarmWithCovs<ModType, 1, n_state_parts, n_param_parts, DIMY, DIMX, DIMCOV, DIMPARAM>;
+    using SwarmBase = SwarmWithCovs<ModType, 1, n_state_parts, n_param_parts, DIMY, DIMX, DIMCOV, DIMPARAM, true>;
     using ssv = Eigen::Matrix<float_t,DIMX,1>;
     using csv = Eigen::Matrix<float_t,DIMCOV,1>;
     using osv = Eigen::Matrix<float_t,DIMY,1>;

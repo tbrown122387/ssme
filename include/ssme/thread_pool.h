@@ -45,7 +45,7 @@ public:
  * @tparam static_data_t the type of input that only gets set once
  * @tparam the type of function output 
  */
-template<typename dyn_data_t, typename static_data_t, typename func_output_t >
+template<typename dyn_data_t, typename static_data_t, typename func_output_t, bool debug = false>
 class thread_pool
 {
 public:  
@@ -109,6 +109,11 @@ private:
      * calculations begin to be performed, and all their outputs are averaged together.
      */ 
     void worker_thread() {
+
+        if constexpr(debug){
+            std::shared_lock<std::shared_mutex> param_lock(m_param_mut);
+            std::cout << "DEBUG: starting worker_thread()\n";
+        }
 
         while(!m_done)
         {
@@ -238,7 +243,7 @@ public:
  * @tparam out_t (e.g. a vector of Eigen::MatrixXd)
  * @tparam num_static_elem the size of the array
  */
-template<typename dyn_in_t, typename static_in_elem_t, typename out_t, size_t num_static_elems >
+template<typename dyn_in_t, typename static_in_elem_t, typename out_t, size_t num_static_elems, bool debug = false>
 class split_data_thread_pool
 {
 
@@ -332,8 +337,13 @@ public:
     {  
         unsigned nt = std::thread::hardware_concurrency(); 
         m_num_threads = ((nt > 1) && mt) ? nt : 1;
-        if(m_num_threads > 1) m_num_threads -= 1; // one fewer 
+        //if(m_num_threads > 1) m_num_threads -= 1; // one fewer 
         
+        if constexpr(debug){
+            std::lock_guard<std::mutex> param_lock(m_ave_mut);
+            std::cout << "DEBUG: inside split_data_thread_pool()\n";
+        }
+
         try {
             // create threads
             std::thread::id most_recent_id;
@@ -359,6 +369,12 @@ public:
         
         // initailize working agg
         m_working_agg = m_reset_f();
+
+        if constexpr(debug){
+            std::unique_lock<std::mutex> param_lock(m_ave_mut);
+            std::cout << "DEBUG: split_data_thread_pool() resets m_working_agg to " << m_working_agg.second << "\n";
+        }
+
     }
 
 
@@ -377,14 +393,25 @@ public:
      */
     out_t work(dyn_in_t new_input) {
 
+
         // set the input for all the threads
         m_dynamic_input = new_input;
+
+        if constexpr(debug){
+            std::unique_lock<std::mutex> param_lock(m_ave_mut);
+            std::cout << "DEBUG: work() sets new dynamic input for all threads.\n";
+        }
 
         // refresh the aggregate quantity (probably setting it to 0)
         {
         std::unique_lock<std::mutex> ave_lock(m_ave_mut);
         m_working_agg = m_reset_f();
         m_agg_qty_fresh = true;
+        }
+
+        if constexpr(debug){
+            std::unique_lock<std::mutex> param_lock(m_ave_mut);
+            std::cout << "DEBUG: work() signals to all threads there is new work\n";
         }
 
         // start doing work and wait for output to be "returned"
@@ -406,6 +433,9 @@ private:
      */ 
     void worker_thread() {
 
+        if constexpr(debug)
+            std::cout << "DEBUG: starting worker_thread()\n";
+
         while(!m_done)
         {
 
@@ -418,6 +448,12 @@ private:
                     if(val) all_threads_finished = false;
                 }
             }
+            
+            if constexpr(debug){
+                std::unique_lock<std::mutex> param_lock(m_ave_mut);
+                std::cout << "DEBUG:  this_thread_has_work: " << this_thread_has_work << ", last_thread: " << last_thread << "all_threads_finished: " << all_threads_finished << "\n";
+            }
+
 
             if( m_all_work_distributed && this_thread_has_work ){
 
@@ -425,14 +461,26 @@ private:
                 // call the work function on each element of the static/stable with the dynamic input shared across all calls
                 std::vector<unsigned> work_indexes = m_work_schedule.at(std::this_thread::get_id());
                 out_t this_threads_ave = m_reset_f();
+                
+                if constexpr(debug){
+                    std::unique_lock<std::mutex> param_lock(m_ave_mut);
+                    std::cout << "DEBUG: thread " << std::this_thread::get_id() << " average: " << this_threads_ave.second << "\n";
+                }
+
                 for(const auto& idx : work_indexes){
                     this_threads_ave = m_intra_agg_f(
                             this_threads_ave, 
                             m_comp_f(m_dynamic_input, m_static_input[idx]),
                             work_indexes.size());
+                    if constexpr(debug){
+                        std::unique_lock<std::mutex> param_lock(m_ave_mut);
+                        std::cout << "DEBUG: thread " << std::this_thread::get_id() << "'s average: " << this_threads_ave.second << "\n";
+                    }
+
                 }
 
                 // **inter-thread** averaging
+                {
       	        std::lock_guard<std::mutex> ave_lock{m_ave_mut};
                 m_working_agg = m_inter_agg_f(m_working_agg, 
                                              this_threads_ave, 
@@ -440,6 +488,12 @@ private:
                                              work_indexes.size());
                 m_has_new_dyn_input.at(std::this_thread::get_id()) = false;
                 m_agg_qty_fresh = false;
+                }
+
+                if constexpr(debug){
+                    std::unique_lock<std::mutex> param_lock(m_ave_mut);
+                    std::cout << "DEBUG: thread " << std::this_thread::get_id() << "changing working average to " << m_working_agg.second << "\n";
+                }
 
             }else if( m_all_work_distributed && last_thread && all_threads_finished ){
                 
