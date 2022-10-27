@@ -16,6 +16,7 @@
 #define DIMY 1
 #define DIMCOV 1
 #define DIMPARAM 4
+#define SVOLSWARMDEBUG false
 
 using FLOATTYPE = double;
 using namespace pf;
@@ -149,12 +150,12 @@ class svol_swarm_1 : public SwarmWithCovs<svol_leverage<n_state_parts,mn_resamp_
                                 1, 
                                 n_state_parts, 
                                 n_param_parts, 
-                                DIMY, DIMX, DIMCOV, DIMPARAM, true>
+                                DIMY, DIMX, DIMCOV, DIMPARAM, SVOLSWARMDEBUG>
 {
 public:
 
     using ModType = svol_leverage<n_state_parts,mn_resamp_fast1<n_state_parts,DIMX,float_t>, float_t>;
-    using SwarmBase = SwarmWithCovs<ModType, 1, n_state_parts, n_param_parts, DIMY, DIMX, DIMCOV, DIMPARAM, true>;
+    using SwarmBase = SwarmWithCovs<ModType, 1, n_state_parts, n_param_parts, DIMY, DIMX, DIMCOV, DIMPARAM, SVOLSWARMDEBUG>;
     using ssv = Eigen::Matrix<float_t,DIMX,1>;
     using csv = Eigen::Matrix<float_t,DIMCOV,1>;
     using osv = Eigen::Matrix<float_t,DIMY,1>;
