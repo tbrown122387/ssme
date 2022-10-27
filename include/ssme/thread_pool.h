@@ -62,17 +62,17 @@ private:
     mutable std::shared_mutex m_param_mut; 
 
     /* locks the average and count of comps */
-    mutable std::mutex m_ac_mut; 
+    mutable std::mutex m_ac_mut;
+
+    /* number of threads in pool */
+    unsigned m_num_threads;
  
-    /* the number of calls that have been completed so far */
+    /* the number of calls that have been completed so far. also signals new work when it's zero */
     std::atomic<unsigned> m_count;
 
     /* flag for if pool is operational */
     std::atomic_bool m_done;
 
-    /* flag for if there is a new input */
-    std::atomic_bool m_has_an_input;
-    
     /* the accumulated variable (working sum of exp(log_like - max) ) */
     func_output_t m_working_sum;
 
@@ -103,52 +103,6 @@ private:
     /* the RAII thread killer (defined above) */
     join_threads m_joiner;
 
-
-    /**
-     * @brief This function runs on all threads, and continuously waits for work to do. When a new parameter comes, 
-     * calculations begin to be performed, and all their outputs are averaged together.
-     */ 
-    void worker_thread() {
-
-        if constexpr(debug){
-            std::shared_lock<std::shared_mutex> param_lock(m_param_mut);
-            std::cout << "DEBUG: starting worker_thread()\n";
-        }
-
-        while(!m_done)
-        {
-            if(m_has_an_input){
-               
-                // call the expensive function that returns a approximate log-likelihood
-                std::shared_lock<std::shared_mutex> param_lock(m_param_mut);
-                func_output_t val = m_f(m_param, m_observed_data);
-                
-                // m_f is expected to be log-likelihood
-                // write it to the sum of exponentials and 
-                // increment count
-                // do this in thread-safe way with mutex
-                // use first log-like to approximate max of all log-likes
-      	        std::lock_guard<std::mutex> out_lock{m_ac_mut};
-                if( m_count.load() == 0 ){
-                    m_working_log_max = val;
-                    m_working_sum += 1.0; // exp(ll - ll) 
-                    m_count++;
-                } else if ( m_count.load() < m_total_calcs ) {
-                    m_working_sum += std::exp(val - m_working_log_max); 
-                    m_count++;
-                }else if( m_count.load() == m_total_calcs){
-                    // finalize log-sum-exp value
-                    m_out.set_value(m_working_log_max + std::log(m_working_sum) - std::log(m_total_calcs) );
-                    m_has_an_input = false;
-                    m_count++;
-                }
-
-            }else{
-                  std::this_thread::yield();
-            }
-        }
-    }
-
 public:
 
     thread_pool() = delete;  
@@ -159,10 +113,10 @@ public:
      * @param num_comps the number of times to call f with each new parameter input.
      * @param mt do you want multiple threads 
      */  
-    thread_pool(F f, unsigned num_comps, bool mt = true) 
-        : m_count(0)
+    thread_pool(F f, unsigned num_comps, bool mt = true, unsigned num_threads = 0)
+        : m_num_threads(num_threads)
+        , m_count(0)
         , m_done(false)
-        , m_has_an_input(false)
         , m_working_sum(0.0)
         , m_total_calcs(num_comps)
         , m_f(f)
@@ -170,12 +124,26 @@ public:
         , m_joiner(m_threads)
 
     {
-        unsigned nt = std::thread::hardware_concurrency(); 
-        unsigned thread_count = ((nt > 1) && mt) ? nt : 1 ;
-//        if ( thread_count > 1) thread_count -= 1;
+
+        // assign work load and start threads, getting them ready to work
+        if ( m_num_threads == 0 ) {
+            if( mt ) {
+                unsigned nt  = std::thread::hardware_concurrency();
+                m_num_threads = (nt > 0) ? nt : 1;
+            }else {
+                m_num_threads = 1;
+            }
+        }
+
+        // check for disagreement
+        if ((m_num_threads > 1) && (!mt)) {
+            throw std::invalid_argument("can't request single threaded and multiple threads at the same time!");
+        }else if( mt && (m_num_threads == 1)) {
+            throw std::runtime_error("requested multiple threads but only one is available");
+        }
 
         try {
-            for(unsigned i=0; i< thread_count; ++i) {
+            for(unsigned i=0; i < m_num_threads; ++i) {
                 m_threads.push_back( std::thread(&thread_pool::worker_thread, this));
             }
         } catch(...) {
@@ -212,22 +180,79 @@ public:
     func_output_t work(dyn_data_t new_param) {
 
         if( m_no_data_yet ) 
-            throw std::runtime_error("must add observed data before calculating anything\n"); 
+            throw std::runtime_error("must add observed data before calculating anything\n");
+
+        {
+            std::unique_lock<std::mutex> ave_lock(m_ac_mut);
+            m_working_sum = 0.0;
+        }
 
         {
             std::unique_lock<std::shared_mutex> param_lk(m_param_mut);
             m_param = new_param;
         }
 
-        {
-            std::unique_lock<std::mutex> ave_lock(m_ac_mut);
-            m_count = 0;
-            m_working_sum = 0.0;
-        }
+        // trigger work to start
+        m_count = 0;
 
         m_out = std::promise<func_output_t>();
-        m_has_an_input = true;
         return m_out.get_future().get();
+    }
+
+private:
+    /**
+ * @brief This function runs on all threads, and continuously waits for work to do. When a new parameter comes,
+ * calculations begin to be performed, and all their outputs are averaged together.
+ */
+    void worker_thread() {
+
+        if constexpr(debug) {
+            std::shared_lock<std::shared_mutex> param_lock(m_param_mut);
+            std::cout << "DEBUG: starting worker_thread()\n";
+        }
+
+        while (!m_done) {
+
+            // get number of times work has been done and increment so other threads don't do double work
+            unsigned calc_count = m_count++;
+
+            // either finalize the average, perform difficult work, or spin
+            if (calc_count == m_total_calcs) {
+
+                // lock mutex and finalize log-sum-exp value
+                {
+                    std::lock_guard<std::mutex> out_lock{m_ac_mut};
+                    m_out.set_value(m_working_log_max + std::log(m_working_sum) - std::log(m_total_calcs));
+                }
+
+            } else if (calc_count < m_total_calcs) {
+
+                // call the expensive function that returns an approximate log-likelihood
+                func_output_t val;
+                {
+                    std::shared_lock<std::shared_mutex> param_lock(m_param_mut);
+                    val = m_f(m_param, m_observed_data);
+                }
+
+                // m_f is expected to be log-likelihood
+                // write it to the sum of exponentials and
+                // increment count
+                // do this in thread-safe way with mutex
+                // use first log-like to approximate max of all log-likes
+                {
+                    std::lock_guard<std::mutex> out_lock{m_ac_mut};
+                    if (calc_count == 0) {
+                        m_working_log_max = val;
+                        m_working_sum += 1.0; // exp(ll - ll)
+                    } else {
+                        m_working_sum += std::exp(val - m_working_log_max);
+                    }
+                }
+
+            } else {
+                std::this_thread::yield();
+            }
+        }
     }
 };
 
@@ -308,6 +333,7 @@ private:
     std::map<std::thread::id, std::vector<unsigned>> m_work_schedule;
 
     std::atomic_int m_num_thread_aves_done;
+
 public:
   
 
@@ -321,8 +347,10 @@ public:
             intra_agg_func_t intra_agg_f,
             reset_func_t reset_f, 
             final_func_t final_f = [](const out_t& o){ return o;}, 
-            bool mt = true) 
-        : m_done(false)
+            bool mt = true,
+            unsigned num_threads = 0)
+        : m_num_threads(num_threads)
+        , m_done(false)
         , m_comp_f(comp_f)
         , m_inter_agg_f(inter_agg_f)
         , m_intra_agg_f(intra_agg_f)
@@ -330,15 +358,29 @@ public:
         , m_final_f(final_f)
         , m_static_input(static_container)
         , m_joiner(m_threads)
-        , m_num_thread_aves_done(0)
-    {
+        , m_num_thread_aves_done(0) {
 
         // refresh output
         m_working_agg = m_reset_f();
 
         // assign work load and start threads, getting them ready to work
-        unsigned nt = std::thread::hardware_concurrency();
-        m_num_threads = ((nt > 1) && mt) ? nt : 1;
+        if ( m_num_threads == 0 ) {
+            if( mt ) {
+                unsigned nt  = std::thread::hardware_concurrency();
+                m_num_threads = (nt > 0) ? nt : 1;
+            }else {
+                m_num_threads = 1;
+            }
+        }
+
+        // check for disagreement
+        if ((m_num_threads > 1) && (!mt)) {
+            throw std::invalid_argument("can't request single threaded and multiple threads at the same time!");
+        }else if( mt && (m_num_threads == 1)) {
+            throw std::runtime_error("requested multiple threads but only one is available");
+        }
+
+
         try {
             std::thread::id most_recent_id;
             for(unsigned i=0; i< m_num_threads; ++i) {

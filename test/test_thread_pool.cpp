@@ -23,7 +23,8 @@ public:
     MyFixture() 
         : pool(MyFixture::d, 
                 1e4, // number of calculations 
-                true) // use multithreading? 
+                true, // use multithreading?
+                2) // 2 threads
     {
         pool.add_observed_data( std::vector<double>{999} );
     }
@@ -60,7 +61,9 @@ public:
                     return std::accumulate(nums.begin(), nums.end(), 0.0);
                 },
                 1e4, // number of calcs 
-                true) {
+                true, // use multithreading?
+                2) // number threads 
+        {
             pool.add_observed_data( std::vector<double>{999} );
         }
 };
@@ -97,9 +100,11 @@ public:
                          std::placeholders::_1,
                          std::placeholders::_2), 
                1e4,//number of calcs 
-               true) { // multithreadig?
-            pool.add_observed_data( std::vector<double>{999} );
-        }
+               true, // multithreading?
+               2) // num threads
+    {  
+        pool.add_observed_data( std::vector<double>{999} );
+    }
 };
 
 
