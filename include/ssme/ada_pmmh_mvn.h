@@ -170,7 +170,8 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
                                             const unsigned int &t1,
                                             const psm &C0,
                                             bool print_to_console,
-                                            unsigned int print_every_k)
+                                            unsigned int print_every_k,
+                                            unsigned num_threads)
  : m_current_theta(start_trans_theta, tts)
  , m_tts(tts)
  , m_sigma_hat(psm::Zero())
@@ -189,7 +190,8 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
                     std::placeholders::_1,
                     std::placeholders::_2),
          num_pfilters, 
-         mc)
+         mc,
+         num_threads)
  , m_log_accept_prob(-std::numeric_limits<float_t>::infinity())
 {
     static_data_t tmp_data = utils::read_data<dimobs,float_t>(data_file);

@@ -142,6 +142,8 @@ public:
             throw std::runtime_error("requested multiple threads but only one is available");
         }
 
+
+        // launch all threads
         try {
             for(unsigned i=0; i < m_num_threads; ++i) {
                 m_threads.push_back( std::thread(&thread_pool::worker_thread, this));
@@ -360,8 +362,6 @@ public:
         , m_joiner(m_threads)
         , m_num_thread_aves_done(0) {
 
-        // refresh output
-        m_working_agg = m_reset_f();
 
         // assign work load and start threads, getting them ready to work
         if ( m_num_threads == 0 ) {
@@ -380,25 +380,36 @@ public:
             throw std::runtime_error("requested multiple threads but only one is available");
         }
 
-
+        // launch threads
         try {
-            std::thread::id most_recent_id;
-            for(unsigned i=0; i< m_num_threads; ++i) {
+            for(unsigned i=0; i< m_num_threads; ++i) 
                 m_threads.push_back( std::thread(&split_data_thread_pool::worker_thread, this));
-                most_recent_id = m_threads.back().get_id();
-                m_work_schedule.insert(std::pair<std::thread::id, std::vector<unsigned> >(most_recent_id, std::vector<unsigned>{}));
-                m_has_new_dyn_input.insert(std::pair<std::thread::id, bool>(most_recent_id, false));
+        } catch(...) {
+            m_done=true;
+            throw;
+        }
+
+        //TODO
+        // for all threads, set work schedule, and work signaler
+        {
+            std::unique_lock<std::shared_mutex> input_lock(m_input_mut);
+            std::thread::id thread_id;
+            for(unsigned i = 0; i < m_num_threads; ++i){
+
+                thread_id = m_threads[i].get_id();
+                m_work_schedule.insert(
+                        std::pair<std::thread::id, std::vector<unsigned> >(
+                            thread_id, std::vector<unsigned>{}));
+                m_has_new_dyn_input.insert(
+                        std::pair<std::thread::id, bool>(
+                            thread_id, false));
             }
 
             for(size_t i = 0; i < num_static_elems; ++i){
                 unsigned thread_idx = i % m_num_threads;
-                std::thread::id thread_id = m_threads[thread_idx].get_id();
+                thread_id = m_threads[thread_idx].get_id();
                 m_work_schedule.at(thread_id).push_back((unsigned)i);
             }
-
-        } catch(...) {
-            m_done=true;
-            throw;
         }
 
         if constexpr(debug){
@@ -471,11 +482,13 @@ private:
         while (!m_done) {
 
             // create some variables used to decide what to do
-            bool time_to_finalize_output = (m_num_thread_aves_done == m_num_threads); // TODO read more about atomic counters and if this works
-            bool is_designated_finisher_thread = std::prev(m_work_schedule.end())->first == std::this_thread::get_id(); // designate last thread
-            bool this_thread_has_work = false; // potentially changed below
+            bool time_to_finalize_output = (m_num_thread_aves_done == m_num_threads); 
+            bool is_designated_finisher_thread = false;
+            bool this_thread_has_work = false; 
             {
                 std::shared_lock<std::shared_mutex> read_input_lock(m_input_mut);
+                if(!m_work_schedule.empty())
+                    is_designated_finisher_thread = std::this_thread::get_id() == std::prev(m_work_schedule.end())->first; 
                 auto iter = m_has_new_dyn_input.find(std::this_thread::get_id());
                 this_thread_has_work = (iter != m_has_new_dyn_input.end()) && (iter->second);
             }

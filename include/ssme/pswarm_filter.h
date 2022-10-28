@@ -180,7 +180,7 @@ public:
      * any data is seen. Perhaps you can back out the dimension earlier to de-complicate thigns
      * Recall that hte particle filter classes' filter() gets passed a vector not an array
      */
-    explicit Swarm(const std::vector<state_parm_func>& fs, bool parallel = true)
+    explicit Swarm(const std::vector<state_parm_func>& fs, bool parallel = true, unsigned num_threads = 0)
         : m_models_are_not_instantiated(true)
         , m_num_obs(0)
         , m_tp(
@@ -190,7 +190,8 @@ public:
                 &Swarm<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimparam>::intra_agg_func, 
                 &Swarm<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimparam>::reset_func, 
                 [](const mats_and_loglike& o){return o;}, 
-                parallel) 
+                parallel,
+                num_threads) 
     { 
         if(fs.size() == n_filt_funcs){
             m_proto_funcs = fs;
@@ -475,7 +476,7 @@ public:
      * any data is seen. Perhaps you can back out the dimension earlier to de-complicate thigns
      * Recall that hte particle filter classes' filter() gets passed a vector not an array
      */
-    explicit SwarmWithCovs(const std::vector<state_cov_parm_func>& fs, bool parallel = true)
+    explicit SwarmWithCovs(const std::vector<state_cov_parm_func>& fs, bool parallel = true, unsigned num_threads = 0)
         : m_models_are_not_instantiated(true)
         , m_num_obs(0)
         , m_tp(
@@ -485,7 +486,8 @@ public:
                 &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam,debug>::intra_agg_func,
                 &SwarmWithCovs<ModType,n_filt_funcs,nstateparts,nparamparts,dimy,dimx,dimcov,dimparam,debug>::reset_func,
                 [](const mats_and_loglike& o){return o;},
-                parallel)
+                parallel,
+                num_threads)
     {
         if(fs.size() == n_filt_funcs){
             m_proto_funcs = fs;
