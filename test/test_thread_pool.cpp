@@ -3,6 +3,8 @@
 
 #include <numeric> // accumulate
 
+#define DEBUG false
+#define NUMCALCS 1e4
 
 class MyFixture {
 public:
@@ -18,11 +20,11 @@ public:
         return std::accumulate(nums.begin(), nums.end(), 0.0);
     }
 
-    thread_pool<param_t,obs_data_t,double> pool;
+    thread_pool<param_t,obs_data_t,double,DEBUG> pool;
     
     MyFixture() 
         : pool(MyFixture::d, 
-                1e4, // number of calculations 
+                NUMCALCS, // number of calculations 
                 true, // use multithreading?
                 2) // 2 threads
     {
@@ -50,7 +52,7 @@ public:
     using param_t = std::vector<double>;
     using obs_data_t = std::vector<double>;
 
-    thread_pool<param_t, obs_data_t, double> pool;
+    thread_pool<param_t, obs_data_t, double,DEBUG> pool;
  
 
     // this gives the sum, but think of it as returning a log-likelihood
@@ -60,7 +62,7 @@ public:
                 [](param_t nums, obs_data_t od) -> double{
                     return std::accumulate(nums.begin(), nums.end(), 0.0);
                 },
-                1e4, // number of calcs 
+                NUMCALCS, // number of calcs 
                 true, // use multithreading?
                 2) // number threads 
         {
@@ -92,14 +94,14 @@ public:
         return std::accumulate(theta.begin(), theta.end(), 0.0);
     }
 
-    thread_pool<param_t, obs_data_t, double> pool;
+    thread_pool<param_t, obs_data_t, double, DEBUG> pool;
    
     MyFixture3() 
         : pool(std::bind(&MyFixture3::d, 
                          this, 
                          std::placeholders::_1,
                          std::placeholders::_2), 
-               1e4,//number of calcs 
+               NUMCALCS,//number of calcs 
                true, // multithreading?
                2) // num threads
     {  
@@ -133,11 +135,11 @@ public:
         return std::accumulate(nums.begin(), nums.end(), 0.0);
     }
 
-    thread_pool<param_t,obs_data_t,double> pool;
+    thread_pool<param_t,obs_data_t,double,DEBUG> pool;
 
     // the only difference between this and above is false!
     MyFixture4() 
-        : pool(d, 1e4, false) { 
+        : pool(d, NUMCALCS, false) { 
             pool.add_observed_data( std::vector<double>{999} );
         }
 };

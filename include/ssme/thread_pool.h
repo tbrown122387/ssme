@@ -59,10 +59,10 @@ private:
 
 
     /* shared lock for reading in new parameter values */  
-    mutable std::shared_mutex m_param_mut; 
+    mutable std::shared_mutex m_input_mut; 
 
     /* locks the average and count of comps */
-    mutable std::mutex m_ac_mut;
+    mutable std::mutex m_output_mut;
 
     /* number of threads in pool */
     unsigned m_num_threads;
@@ -73,14 +73,11 @@ private:
     /* flag for if pool is operational */
     std::atomic_bool m_done;
 
-    /* the accumulated variable (working sum of exp(log_like - max) ) */
-    func_output_t m_working_sum;
-
-    /* function is expected to output a log-likelihood and we're using the first one to approx. the max*/
-    func_output_t m_working_log_max;
-
     /* the unchanging m_outdesired number of function calls you want for each fresh new input */
     const unsigned m_total_calcs;
+   
+    /* store all the calculations in a vector */ 
+    std::vector<func_output_t> m_all_calcs;
 
     /* promised output of an average */
     std::promise<func_output_t> m_out;
@@ -88,10 +85,10 @@ private:
     /* our function that gets called every time */
     F m_f; 
 
-    /* the dynamic parameter vector that is used as an input to the function, which occasionally gets changed by a single writer  */
+    /* input 1 of 2: dynamic parameter vector that is used as an input to the function, which occasionally gets changed by a single writer  */
     dyn_data_t m_param;
 
-    /* the unchanging observed data that is used as an input to the function */ 
+    /* input 2 of 2: unchanging observed data that is used as an input to the function */ 
     static_data_t m_observed_data; 
  
     /* whether the observed "static" data has been added to the thread pool yet */ 
@@ -115,10 +112,9 @@ public:
      */  
     thread_pool(F f, unsigned num_comps, bool mt = true, unsigned num_threads = 0)
         : m_num_threads(num_threads)
-        , m_count(0)
+        , m_count(num_comps+1) // threads spin until m_count <= num_comps
         , m_done(false)
-        , m_working_sum(0.0)
-        , m_total_calcs(num_comps)
+        , m_total_calcs(num_comps) 
         , m_f(f)
         , m_no_data_yet(true) 
         , m_joiner(m_threads)
@@ -142,7 +138,6 @@ public:
             throw std::runtime_error("requested multiple threads but only one is available");
         }
 
-
         // launch all threads
         try {
             for(unsigned i=0; i < m_num_threads; ++i) {
@@ -161,6 +156,7 @@ public:
      */
     void add_observed_data(const static_data_t& obs_data)
     {
+        std::unique_lock<std::shared_mutex> input_lock(m_input_mut);
         m_observed_data = obs_data;
         m_no_data_yet = false;
     }
@@ -184,19 +180,24 @@ public:
         if( m_no_data_yet ) 
             throw std::runtime_error("must add observed data before calculating anything\n");
 
+        // reset output sum 
         {
-            std::unique_lock<std::mutex> ave_lock(m_ac_mut);
-            m_working_sum = 0.0;
+            std::unique_lock<std::mutex> output_lock(m_output_mut);
+            if constexpr(debug)
+                std::cout << "cleraing output\n";
+            m_all_calcs.clear();
         }
 
+        // set new work and signal threads to begin
         {
-            std::unique_lock<std::shared_mutex> param_lk(m_param_mut);
+            std::unique_lock<std::shared_mutex> param_lk(m_input_mut);
+            if constexpr(debug)
+                std::cout << "setting first input to " << new_param[0] << "\n";
             m_param = new_param;
         }
+        m_count = 0; 
 
-        // trigger work to start
-        m_count = 0;
-
+        // wait for work to come back and then return it
         m_out = std::promise<func_output_t>();
         return m_out.get_future().get();
     }
@@ -209,48 +210,54 @@ private:
     void worker_thread() {
 
         if constexpr(debug) {
-            std::shared_lock<std::shared_mutex> param_lock(m_param_mut);
+            std::unique_lock<std::shared_mutex> param_lock(m_input_mut);
             std::cout << "DEBUG: starting worker_thread()\n";
         }
 
         while (!m_done) {
 
-            // get number of times work has been done and increment so other threads don't do double work
-            unsigned calc_count = m_count++;
-
+            
+            // get number of times work has been done
+            unsigned calc_count = m_count;
+                
             // either finalize the average, perform difficult work, or spin
-            if (calc_count == m_total_calcs) {
-
-                // lock mutex and finalize log-sum-exp value
-                {
-                    std::lock_guard<std::mutex> out_lock{m_ac_mut};
-                    m_out.set_value(m_working_log_max + std::log(m_working_sum) - std::log(m_total_calcs));
+            if ( calc_count == m_total_calcs ) {
+    
+                // lock mutex and finalize log-mean-exp value
+                std::lock_guard<std::mutex> out_lock{m_output_mut};
+                func_output_t m = *max_element(m_all_calcs.begin(), m_all_calcs.end());
+                func_output_t sum_exp = 0;
+                for(unsigned i = 0; i < m_total_calcs; ++i){
+                    sum_exp += std::exp(m_all_calcs[i] - m);
                 }
+                func_output_t final_val = m + std::log(sum_exp) - std::log(m_total_calcs);
+
+                if constexpr(debug)
+                    std::cout << "finalizing " << final_val << "\n";
+                m_out.set_value(final_val);
+
+                // keep going until work is exhausted
+                m_count++;
 
             } else if (calc_count < m_total_calcs) {
-
+    
                 // call the expensive function that returns an approximate log-likelihood
                 func_output_t val;
                 {
-                    std::shared_lock<std::shared_mutex> param_lock(m_param_mut);
+                    std::shared_lock<std::shared_mutex> param_lock(m_input_mut);
                     val = m_f(m_param, m_observed_data);
                 }
 
-                // m_f is expected to be log-likelihood
-                // write it to the sum of exponentials and
-                // increment count
-                // do this in thread-safe way with mutex
-                // use first log-like to approximate max of all log-likes
+                // store all calcs
                 {
-                    std::lock_guard<std::mutex> out_lock{m_ac_mut};
-                    if (calc_count == 0) {
-                        m_working_log_max = val;
-                        m_working_sum += 1.0; // exp(ll - ll)
-                    } else {
-                        m_working_sum += std::exp(val - m_working_log_max);
-                    }
+                    std::lock_guard<std::mutex> out_lock{m_output_mut};
+                    if constexpr(debug)
+                        std::cout << "writing out a " << val <<  "in space " << calc_count << "\n";
+                    m_all_calcs.push_back(val);
                 }
 
+                // keep going until work is exhausted
+                m_count++;
             } else {
                 std::this_thread::yield();
             }
