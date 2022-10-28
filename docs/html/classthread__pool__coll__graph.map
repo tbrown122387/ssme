@@ -1,0 +1,4 @@
+<map id="thread_pool&lt; dyn_data_t, static_data_t, func_output_t, debug &gt;" name="thread_pool&lt; dyn_data_t, static_data_t, func_output_t, debug &gt;">
+<area shape="rect" id="node1" title="Here we have many concurrent parameter readers, but only a single parameter writer...." alt="" coords="5,95,180,151"/>
+<area shape="rect" id="node2" href="$classjoin__threads.html" title="RAII thread killer." alt="" coords="41,5,144,32"/>
+</map>

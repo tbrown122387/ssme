@@ -9,7 +9,6 @@
 #include <future>
 #include <map>
 #include <array>
-
 #include <iostream>
 
 
@@ -39,11 +38,12 @@ public:
  * This thread pool owns one function that returns one (random) floating point number. The pool sits ready to perform calculations
  * on any new parameter value. Once a new parameter value is received, this pool calls its function a fixed number of times, 
  * and all of the function output is averaged in a thread-safe way. Actually, these function evals are expected to be in the log
- * space, and the log average is calculatd using the log-sum-exp trick. For our particular applications, this function will also depend 
+ * space, and the log-mean-exp is calculated using the log-sum-exp trick. For our particular applications, this function will also depend
  * on observed data that doesn't change once the thread pool has been initialized.
  * @tparam dyn_data_t dynamic data type. The type of input that gets changed repeatedly.
  * @tparam static_data_t the type of input that only gets set once
- * @tparam the type of function output 
+ * @tparam func_output_t type of function output
+ * @tparam debug do you want debug printing messages?
  */
 template<typename dyn_data_t, typename static_data_t, typename func_output_t, bool debug = false>
 class thread_pool
@@ -73,7 +73,7 @@ private:
     /* flag for if pool is operational */
     std::atomic_bool m_done;
 
-    /* the unchanging m_outdesired number of function calls you want for each fresh new input */
+    /* the unchanging number of function calls you want for each fresh new input */
     const unsigned m_total_calcs;
    
     /* store all the calculations in a vector */ 
@@ -108,7 +108,8 @@ public:
      * @brief The ctor spawns the working threads and gets ready to start doing work.
      * @param f the function that gets called a bunch of times.
      * @param num_comps the number of times to call f with each new parameter input.
-     * @param mt do you want multiple threads 
+     * @param mt do you want multiple threads?
+     * @param num_threads the number of threads you want or 0 which decides what's available for you
      */  
     thread_pool(F f, unsigned num_comps, bool mt = true, unsigned num_threads = 0)
         : m_num_threads(num_threads)
@@ -156,6 +157,8 @@ public:
      */
     void add_observed_data(const static_data_t& obs_data)
     {
+        if( !m_no_data_yet )
+            throw std::runtime_error("you already called add_observed_data once before!");
         std::unique_lock<std::shared_mutex> input_lock(m_input_mut);
         m_observed_data = obs_data;
         m_no_data_yet = false;
@@ -203,10 +206,12 @@ public:
     }
 
 private:
+
+
     /**
- * @brief This function runs on all threads, and continuously waits for work to do. When a new parameter comes,
- * calculations begin to be performed, and all their outputs are averaged together.
- */
+     * @brief This function runs on all threads, and continuously waits for work to do. When a new parameter comes,
+     * calculations begin to be performed, and all their outputs are averaged together. When work is finished, threads idle
+     */
     void worker_thread() {
 
         if constexpr(debug) {
@@ -276,6 +281,7 @@ private:
  * @tparam static_in_elem_t (e.g. a particle filter model type)
  * @tparam out_t (e.g. a vector of Eigen::MatrixXd)
  * @tparam num_static_elem the size of the array
+ * @tparam debug true if you want debug messages printed
  */
 template<typename dyn_in_t, typename static_in_elem_t, typename out_t, size_t num_static_elems, bool debug = false>
 class split_data_thread_pool
@@ -283,7 +289,7 @@ class split_data_thread_pool
 
 private: 
 
-    /* type alias for the type of function this thread pool owns */ 
+    /* type aliases for the type of functions this thread pool owns */
     using comp_func_t      = std::function<out_t(const dyn_in_t&, static_in_elem_t&)>;
     using inter_agg_func_t = std::function<out_t(const out_t&, const out_t&, unsigned num_threads, unsigned num_terms_in_thread)>; 
     using intra_agg_func_t = std::function<out_t(const out_t&, const out_t&, unsigned num_terms_in_thread)>; 
@@ -341,6 +347,7 @@ private:
     /* key: thread id; val: a vector if indexes to iterate over to get work */ 
     std::map<std::thread::id, std::vector<unsigned>> m_work_schedule;
 
+    /* atomic counter for how many pieces of work have been done */
     std::atomic_int m_num_thread_aves_done;
 
 public:
@@ -348,6 +355,14 @@ public:
 
     /**
      * @brief The ctor spawns the working threads and gets ready to start doing work.
+     * @param static_container unchanging data used to perform calculations
+     * @param comp_f performs expensive calculation
+     * @param inter_agg_f adds thread's work to overall average
+     * @param intra_agg_f adds to intra-thread average
+     * @param reset_f reset function (usually resets average to 0)
+     * @param final_f finalizer function (default is identity)
+     * @param mt true if you want multithreading
+     * @param num_threads
      */  
     split_data_thread_pool(
             std::array<static_in_elem_t, num_static_elems>& static_container,
@@ -396,7 +411,6 @@ public:
             throw;
         }
 
-        //TODO
         // for all threads, set work schedule, and work signaler
         {
             std::unique_lock<std::shared_mutex> input_lock(m_input_mut);
@@ -437,7 +451,7 @@ public:
 
     /**
      * @brief changes the shared data member, then resets some variables, then starts all the work and returns the "average".
-     * @param the new parameter input 
+     * @param new_input new parameter input
      * @return a floating point average 
      */
     out_t work(dyn_in_t new_input) {
@@ -446,15 +460,13 @@ public:
         {
             std::unique_lock<std::mutex> output_lock(m_output_mut);
             m_working_agg = m_reset_f();
-            m_num_thread_aves_done = 0; // TODO is there a way we can check if this is either 0 or +1 too many?
+            m_num_thread_aves_done = 0;
         }
 
         // set the input for all the threads
         {
             std::unique_lock<std::shared_mutex> input_lock(m_input_mut);
             m_dynamic_input = new_input;
-            // todo can we check that they're all currently false?
-            //  if they're not we're interupting a thread that's in the middle of work
             for(auto & [key,val] : m_has_new_dyn_input)
                 val = true;
         }
@@ -465,8 +477,6 @@ public:
         }
 
         // wait for work to finish and then return result
-        // TODO can this deadlock? suppose we're here waiting for m_out to be finished
-        // but the thread that's supposed to finish it is the thread that's running this logic?
         m_out = std::promise<out_t>();
         return m_out.get_future().get();
     }
@@ -538,7 +548,7 @@ private:
                 }
 
                 // signal that this thread should go back to waiting
-                // TODO should this grab the mutex? shared or unique lock?
+                // thread safe because each map element corresponds with unique thread
                 m_has_new_dyn_input.at(std::this_thread::get_id()) = false;
 
 

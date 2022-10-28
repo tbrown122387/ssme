@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['sssmat',['sssMat',['../classmsl1__rbbpf.html#a6b6f080289374270272071e2e3175cd5',1,'msl1_rbbpf']]],
-  ['sssv',['sssv',['../classmsl1__rbbpf.html#a6703c548bb85bbe8e5a6baa723e8f0bb',1,'msl1_rbbpf']]]
+  ['mat_252',['Mat',['../classLWFilter.html#a6e69bf8ce4911fd4b4cef23dcd7df523',1,'LWFilter::Mat()'],['../classLWFilterFutureSimulator.html#a6c037336f3a76aebf1c0c089182f8c09',1,'LWFilterFutureSimulator::Mat()'],['../classLWFilterWithCovs.html#a1536c113532bc8e7b9eb87c87377cbb0',1,'LWFilterWithCovs::Mat()'],['../classLWFilterWithCovsFutureSimulator.html#a883b6eab66f1d1c89da4e1361af9635f',1,'LWFilterWithCovsFutureSimulator::Mat()'],['../classLWFilter2.html#a76fc18e0797b6f9f53515fffe71c9785',1,'LWFilter2::Mat()'],['../classLWFilter2FutureSimulator.html#a051cf851e1a78c70dd8d2f2576146837',1,'LWFilter2FutureSimulator::Mat()'],['../classLWFilter2WithCovs.html#af575f46f3f4ffd6bbbc2356f8864743a',1,'LWFilter2WithCovs::Mat()'],['../classLWFilter2WithCovsFutureSimulator.html#a70c707befb3d9ca30da1dde27d85e281',1,'LWFilter2WithCovsFutureSimulator::Mat()']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['univ_5fsvol_5festimator',['univ_svol_estimator',['../classuniv__svol__estimator.html',1,'']]],
-  ['updatehmm',['updateHMM',['../classmsl1__rbbpf.html#aa22847dfe35723fa3623385d1b534989',1,'msl1_rbbpf']]]
+  ['read_5fdata_82',['read_data',['../namespaceutils.html#abf386a12d05c40b823612cf5613dcf36',1,'utils']]],
+  ['resamplogwts_83',['resampLogWts',['../classmn__resamp__states__and__params.html#a34f82c251cbb1780f9f3b6ceada47e84',1,'mn_resamp_states_and_params']]]
 ];

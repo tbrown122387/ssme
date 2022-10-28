@@ -1,0 +1,105 @@
+\hypertarget{classmn__resamp__states__and__params}{}\doxysection{mn\+\_\+resamp\+\_\+states\+\_\+and\+\_\+params$<$ nparts, dimx, dimparam, float\+\_\+t $>$ Class Template Reference}
+\label{classmn__resamp__states__and__params}\index{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$@{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$}}
+
+
+{\ttfamily \#include $<$liu\+\_\+west\+\_\+filter.\+h$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classmn__resamp__states__and__params_a3518d22849f3be5516d24c958f3bd299}{ssv}} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimx, 1 $>$
+\item 
+using \mbox{\hyperlink{classmn__resamp__states__and__params_abc7ef8fdfbb73de2186c023aea55aa2a}{array\+Vec}} = std\+::array$<$ \mbox{\hyperlink{classmn__resamp__states__and__params_a3518d22849f3be5516d24c958f3bd299}{ssv}}, nparts $>$
+\item 
+using \mbox{\hyperlink{classmn__resamp__states__and__params_ac7d3d59588d530574bba4c8a2504c714}{array\+Params}} = std\+::array$<$ \mbox{\hyperlink{classparam_1_1pack}{param\+::pack}}$<$ float\+\_\+t, dimparam $>$, nparts $>$
+\item 
+using \mbox{\hyperlink{classmn__resamp__states__and__params_a89a332c00662e4f78d84c1be0b5b8c92}{array\+Float}} = std\+::array$<$ float\+\_\+t, nparts $>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classmn__resamp__states__and__params_a4939651b9c002d0721b59a46fee7ebf6}\label{classmn__resamp__states__and__params_a4939651b9c002d0721b59a46fee7ebf6}} 
+\mbox{\hyperlink{classmn__resamp__states__and__params_a4939651b9c002d0721b59a46fee7ebf6}{mn\+\_\+resamp\+\_\+states\+\_\+and\+\_\+params}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classmn__resamp__states__and__params_a0fe9d82cc40c509d2e7f0566fb31b179}\label{classmn__resamp__states__and__params_a0fe9d82cc40c509d2e7f0566fb31b179}} 
+{\bfseries mn\+\_\+resamp\+\_\+states\+\_\+and\+\_\+params} (unsigned long seed)
+\item 
+void \mbox{\hyperlink{classmn__resamp__states__and__params_a34f82c251cbb1780f9f3b6ceada47e84}{resamp\+Log\+Wts}} (\mbox{\hyperlink{classmn__resamp__states__and__params_abc7ef8fdfbb73de2186c023aea55aa2a}{array\+Vec}} \&old\+State\+Parts, \mbox{\hyperlink{classmn__resamp__states__and__params_ac7d3d59588d530574bba4c8a2504c714}{array\+Params}} \&old\+Param\+Parts, \mbox{\hyperlink{classmn__resamp__states__and__params_a89a332c00662e4f78d84c1be0b5b8c92}{array\+Float}} \&old\+Log\+Un\+Norm\+Wts)
+\begin{DoxyCompactList}\small\item\em resamples particles. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classmn__resamp__states__and__params_a6d54af67838db3498789ccdd5a394115}\label{classmn__resamp__states__and__params_a6d54af67838db3498789ccdd5a394115}} 
+std\+::mt19937 {\bfseries m\+\_\+gen}
+\item 
+\mbox{\Hypertarget{classmn__resamp__states__and__params_a7fc1af5f9f8c51345ffa1c72de444e04}\label{classmn__resamp__states__and__params_a7fc1af5f9f8c51345ffa1c72de444e04}} 
+std\+::uniform\+\_\+real\+\_\+distribution$<$ float\+\_\+t $>$ {\bfseries m\+\_\+u\+\_\+sampler}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimparam, typename float\+\_\+t$>$\newline
+class mn\+\_\+resamp\+\_\+states\+\_\+and\+\_\+params$<$ nparts, dimx, dimparam, float\+\_\+t $>$}
+
+\begin{DoxyAuthor}{Author}
+taylor 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classmn__resamp__states__and__params_a89a332c00662e4f78d84c1be0b5b8c92}\label{classmn__resamp__states__and__params_a89a332c00662e4f78d84c1be0b5b8c92}} 
+\index{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$@{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$}!arrayFloat@{arrayFloat}}
+\index{arrayFloat@{arrayFloat}!mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$@{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{arrayFloat}{arrayFloat}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimparam, typename float\+\_\+t $>$ \\
+using \mbox{\hyperlink{classmn__resamp__states__and__params}{mn\+\_\+resamp\+\_\+states\+\_\+and\+\_\+params}}$<$ nparts, dimx, dimparam, float\+\_\+t $>$\+::\mbox{\hyperlink{classmn__resamp__states__and__params_a89a332c00662e4f78d84c1be0b5b8c92}{array\+Float}} =  std\+::array$<$float\+\_\+t,nparts$>$}
+
+type alias for array of float\+\_\+ts \mbox{\Hypertarget{classmn__resamp__states__and__params_ac7d3d59588d530574bba4c8a2504c714}\label{classmn__resamp__states__and__params_ac7d3d59588d530574bba4c8a2504c714}} 
+\index{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$@{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$}!arrayParams@{arrayParams}}
+\index{arrayParams@{arrayParams}!mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$@{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{arrayParams}{arrayParams}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimparam, typename float\+\_\+t $>$ \\
+using \mbox{\hyperlink{classmn__resamp__states__and__params}{mn\+\_\+resamp\+\_\+states\+\_\+and\+\_\+params}}$<$ nparts, dimx, dimparam, float\+\_\+t $>$\+::\mbox{\hyperlink{classmn__resamp__states__and__params_ac7d3d59588d530574bba4c8a2504c714}{array\+Params}} =  std\+::array$<$\mbox{\hyperlink{classparam_1_1pack}{param\+::pack}}$<$float\+\_\+t,dimparam$>$, nparts$>$}
+
+type alias for array of parameter packs \mbox{\Hypertarget{classmn__resamp__states__and__params_abc7ef8fdfbb73de2186c023aea55aa2a}\label{classmn__resamp__states__and__params_abc7ef8fdfbb73de2186c023aea55aa2a}} 
+\index{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$@{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$}!arrayVec@{arrayVec}}
+\index{arrayVec@{arrayVec}!mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$@{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{arrayVec}{arrayVec}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimparam, typename float\+\_\+t $>$ \\
+using \mbox{\hyperlink{classmn__resamp__states__and__params}{mn\+\_\+resamp\+\_\+states\+\_\+and\+\_\+params}}$<$ nparts, dimx, dimparam, float\+\_\+t $>$\+::\mbox{\hyperlink{classmn__resamp__states__and__params_abc7ef8fdfbb73de2186c023aea55aa2a}{array\+Vec}} =  std\+::array$<$\mbox{\hyperlink{classmn__resamp__states__and__params_a3518d22849f3be5516d24c958f3bd299}{ssv}}, nparts$>$}
+
+type alias for array of Eigen Matrices \mbox{\Hypertarget{classmn__resamp__states__and__params_a3518d22849f3be5516d24c958f3bd299}\label{classmn__resamp__states__and__params_a3518d22849f3be5516d24c958f3bd299}} 
+\index{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$@{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$}!ssv@{ssv}}
+\index{ssv@{ssv}!mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$@{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{ssv}{ssv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimparam, typename float\+\_\+t $>$ \\
+using \mbox{\hyperlink{classmn__resamp__states__and__params}{mn\+\_\+resamp\+\_\+states\+\_\+and\+\_\+params}}$<$ nparts, dimx, dimparam, float\+\_\+t $>$\+::\mbox{\hyperlink{classmn__resamp__states__and__params_a3518d22849f3be5516d24c958f3bd299}{ssv}} =  Eigen\+::\+Matrix$<$float\+\_\+t,dimx,1$>$}
+
+type alias for linear algebra stuff 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classmn__resamp__states__and__params_a34f82c251cbb1780f9f3b6ceada47e84}\label{classmn__resamp__states__and__params_a34f82c251cbb1780f9f3b6ceada47e84}} 
+\index{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$@{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$}!resampLogWts@{resampLogWts}}
+\index{resampLogWts@{resampLogWts}!mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$@{mn\_resamp\_states\_and\_params$<$ nparts, dimx, dimparam, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{resampLogWts()}{resampLogWts()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimparam, typename float\+\_\+t $>$ \\
+void \mbox{\hyperlink{classmn__resamp__states__and__params}{mn\+\_\+resamp\+\_\+states\+\_\+and\+\_\+params}}$<$ nparts, dimx, dimparam, float\+\_\+t $>$\+::resamp\+Log\+Wts (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classmn__resamp__states__and__params_abc7ef8fdfbb73de2186c023aea55aa2a}{array\+Vec}} \&}]{old\+State\+Parts,  }\item[{\mbox{\hyperlink{classmn__resamp__states__and__params_ac7d3d59588d530574bba4c8a2504c714}{array\+Params}} \&}]{old\+Param\+Parts,  }\item[{\mbox{\hyperlink{classmn__resamp__states__and__params_a89a332c00662e4f78d84c1be0b5b8c92}{array\+Float}} \&}]{old\+Log\+Un\+Norm\+Wts }\end{DoxyParamCaption})}
+
+
+
+resamples particles. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em old\+State\+Parts} & the old state particles \\
+\hline
+{\em old\+Param\+Parts} & the old param particles \\
+\hline
+{\em old\+Log\+Un\+Norm\+Wts} & the old log unnormalized weights \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ssme/\mbox{\hyperlink{liu__west__filter_8h}{liu\+\_\+west\+\_\+filter.\+h}}\end{DoxyCompactItemize}

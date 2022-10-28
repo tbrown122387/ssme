@@ -1,3 +1,6 @@
-<map id="ada_pmmh_mvn&lt; numparams, dimobs, numparts &gt;" name="ada_pmmh_mvn&lt; numparams, dimobs, numparts &gt;">
-<area shape="rect" id="node2" href="$classparamPack.html" title="paramPack" alt="" coords="63,5,151,32"/>
+<map id="ada_pmmh_mvn&lt; numparams, dimobs, numparts, float_t &gt;" name="ada_pmmh_mvn&lt; numparams, dimobs, numparts, float_t &gt;">
+<area shape="rect" id="node1" title=" " alt="" coords="561,61,789,102"/>
+<area shape="rect" id="node2" href="$classthread__pool.html" title=" " alt="" coords="267,13,460,69"/>
+<area shape="rect" id="node3" href="$classjoin__threads.html" title="RAII thread killer." alt="" coords="27,5,130,32"/>
+<area shape="rect" id="node4" href="$classparam_1_1pack.html" title=" " alt="" coords="5,71,152,113"/>
 </map>

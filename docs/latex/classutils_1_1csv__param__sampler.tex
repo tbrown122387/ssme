@@ -1,0 +1,95 @@
+\hypertarget{classutils_1_1csv__param__sampler}{}\doxysection{utils\+::csv\+\_\+param\+\_\+sampler$<$ dimparam, float\+\_\+t $>$ Class Template Reference}
+\label{classutils_1_1csv__param__sampler}\index{utils::csv\_param\_sampler$<$ dimparam, float\_t $>$@{utils::csv\_param\_sampler$<$ dimparam, float\_t $>$}}
+
+
+{\ttfamily \#include $<$utils.\+h$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classutils_1_1csv__param__sampler_a8a27569788cf1307cd2c0db098814149}{psv}} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimparam, 1 $>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classutils_1_1csv__param__sampler_acddd57327bc9821ba0663e30dcf8aee5}\label{classutils_1_1csv__param__sampler_acddd57327bc9821ba0663e30dcf8aee5}} 
+\mbox{\hyperlink{classutils_1_1csv__param__sampler_acddd57327bc9821ba0663e30dcf8aee5}{csv\+\_\+param\+\_\+sampler}} ()=delete
+\begin{DoxyCompactList}\small\item\em Default constructor is deleted because you need a file location. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classutils_1_1csv__param__sampler_a03524884fed05ec8e5a2c3b501dd35b1}{csv\+\_\+param\+\_\+sampler}} (const std\+::string \&param\+\_\+csv\+\_\+filename)
+\begin{DoxyCompactList}\small\item\em ctor 1 \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classutils_1_1csv__param__sampler_ae539f6f7de62ae3abfe63843d41490ad}{csv\+\_\+param\+\_\+sampler}} (const std\+::string \&param\+\_\+csv\+\_\+filename, unsigned long seed)
+\begin{DoxyCompactList}\small\item\em constructor with seed \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classutils_1_1csv__param__sampler_a9eb8f3c257d37055c101cb5b0d4347af}\label{classutils_1_1csv__param__sampler_a9eb8f3c257d37055c101cb5b0d4347af}} 
+\mbox{\hyperlink{classutils_1_1csv__param__sampler_a8a27569788cf1307cd2c0db098814149}{psv}} \mbox{\hyperlink{classutils_1_1csv__param__sampler_a9eb8f3c257d37055c101cb5b0d4347af}{samp}} ()
+\begin{DoxyCompactList}\small\item\em draw random (re-\/)sample parameter vector \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classutils_1_1csv__param__sampler_afe9322e314608f3a4768ef5f5e3329db}\label{classutils_1_1csv__param__sampler_afe9322e314608f3a4768ef5f5e3329db}} 
+std\+::mt19937 {\bfseries m\+\_\+gen}
+\item 
+\mbox{\Hypertarget{classutils_1_1csv__param__sampler_adde058166c3a8e2c960ddb78cfe67eda}\label{classutils_1_1csv__param__sampler_adde058166c3a8e2c960ddb78cfe67eda}} 
+std\+::uniform\+\_\+int\+\_\+distribution$<$ int $>$ {\bfseries m\+\_\+idx\+\_\+sampler}
+\item 
+\mbox{\Hypertarget{classutils_1_1csv__param__sampler_ada4343835c7ea25365945d25d05bed60}\label{classutils_1_1csv__param__sampler_ada4343835c7ea25365945d25d05bed60}} 
+std\+::vector$<$ \mbox{\hyperlink{classutils_1_1csv__param__sampler_a8a27569788cf1307cd2c0db098814149}{psv}} $>$ {\bfseries m\+\_\+param\+\_\+samps}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$size\+\_\+t dimparam, typename float\+\_\+t$>$\newline
+class utils\+::csv\+\_\+param\+\_\+sampler$<$ dimparam, float\+\_\+t $>$}
+
+\begin{DoxyAuthor}{Author}
+taylor 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classutils_1_1csv__param__sampler_a8a27569788cf1307cd2c0db098814149}\label{classutils_1_1csv__param__sampler_a8a27569788cf1307cd2c0db098814149}} 
+\index{utils::csv\_param\_sampler$<$ dimparam, float\_t $>$@{utils::csv\_param\_sampler$<$ dimparam, float\_t $>$}!psv@{psv}}
+\index{psv@{psv}!utils::csv\_param\_sampler$<$ dimparam, float\_t $>$@{utils::csv\_param\_sampler$<$ dimparam, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{psv}{psv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t dimparam, typename float\+\_\+t $>$ \\
+using \mbox{\hyperlink{classutils_1_1csv__param__sampler}{utils\+::csv\+\_\+param\+\_\+sampler}}$<$ dimparam, float\+\_\+t $>$\+::\mbox{\hyperlink{classutils_1_1csv__param__sampler_a8a27569788cf1307cd2c0db098814149}{psv}} =  Eigen\+::\+Matrix$<$float\+\_\+t, dimparam,1$>$}
+
+\char`\"{}param sized vector\char`\"{} type alias for linear algebra stuff 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classutils_1_1csv__param__sampler_a03524884fed05ec8e5a2c3b501dd35b1}\label{classutils_1_1csv__param__sampler_a03524884fed05ec8e5a2c3b501dd35b1}} 
+\index{utils::csv\_param\_sampler$<$ dimparam, float\_t $>$@{utils::csv\_param\_sampler$<$ dimparam, float\_t $>$}!csv\_param\_sampler@{csv\_param\_sampler}}
+\index{csv\_param\_sampler@{csv\_param\_sampler}!utils::csv\_param\_sampler$<$ dimparam, float\_t $>$@{utils::csv\_param\_sampler$<$ dimparam, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{csv\_param\_sampler()}{csv\_param\_sampler()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$size\+\_\+t dimparam, typename float\+\_\+t $>$ \\
+\mbox{\hyperlink{classutils_1_1csv__param__sampler}{utils\+::csv\+\_\+param\+\_\+sampler}}$<$ dimparam, float\+\_\+t $>$\+::\mbox{\hyperlink{classutils_1_1csv__param__sampler}{csv\+\_\+param\+\_\+sampler}} (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{param\+\_\+csv\+\_\+filename }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+ctor 1 
+
+
+\begin{DoxyParams}{Parameters}
+{\em the} & name of the csv of parameter samples (must be headerless and comma separated) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classutils_1_1csv__param__sampler_ae539f6f7de62ae3abfe63843d41490ad}\label{classutils_1_1csv__param__sampler_ae539f6f7de62ae3abfe63843d41490ad}} 
+\index{utils::csv\_param\_sampler$<$ dimparam, float\_t $>$@{utils::csv\_param\_sampler$<$ dimparam, float\_t $>$}!csv\_param\_sampler@{csv\_param\_sampler}}
+\index{csv\_param\_sampler@{csv\_param\_sampler}!utils::csv\_param\_sampler$<$ dimparam, float\_t $>$@{utils::csv\_param\_sampler$<$ dimparam, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{csv\_param\_sampler()}{csv\_param\_sampler()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$size\+\_\+t dimparam, typename float\+\_\+t $>$ \\
+\mbox{\hyperlink{classutils_1_1csv__param__sampler}{utils\+::csv\+\_\+param\+\_\+sampler}}$<$ dimparam, float\+\_\+t $>$\+::\mbox{\hyperlink{classutils_1_1csv__param__sampler}{csv\+\_\+param\+\_\+sampler}} (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{param\+\_\+csv\+\_\+filename,  }\item[{unsigned long}]{seed }\end{DoxyParamCaption})}
+
+
+
+constructor with seed 
+
+
+\begin{DoxyParams}{Parameters}
+{\em the} & name of the csv of parameter samples (must be headerless and comma separated) \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ssme/\mbox{\hyperlink{utils_8h}{utils.\+h}}\end{DoxyCompactItemize}

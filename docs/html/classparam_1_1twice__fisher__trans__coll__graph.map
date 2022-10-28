@@ -1,0 +1,4 @@
+<map id="param::twice_fisher_trans&lt; float_t &gt;" name="param::twice_fisher_trans&lt; float_t &gt;">
+<area shape="rect" id="node1" title="trans_p = log(1+orig_p) &#45; log(1&#45;orig_p) = logit((orig_p+1)/2)." alt="" coords="33,80,184,121"/>
+<area shape="rect" id="node2" href="$classparam_1_1transform.html" title="a pure virtual base class. cts params only." alt="" coords="5,5,212,32"/>
+</map>

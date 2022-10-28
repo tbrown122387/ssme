@@ -1,0 +1,63 @@
+\hypertarget{classparam_1_1twice__fisher__trans}{}\doxysection{param\+::twice\+\_\+fisher\+\_\+trans$<$ float\+\_\+t $>$ Class Template Reference}
+\label{classparam_1_1twice__fisher__trans}\index{param::twice\_fisher\_trans$<$ float\_t $>$@{param::twice\_fisher\_trans$<$ float\_t $>$}}
+
+
+trans\+\_\+p = log(1+orig\+\_\+p) -\/ log(1-\/orig\+\_\+p) = logit((orig\+\_\+p+1)/2).  
+
+
+
+
+{\ttfamily \#include $<$parameters.\+h$>$}
+
+
+
+Inheritance diagram for param\+::twice\+\_\+fisher\+\_\+trans$<$ float\+\_\+t $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{classparam_1_1twice__fisher__trans__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for param\+::twice\+\_\+fisher\+\_\+trans$<$ float\+\_\+t $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{classparam_1_1twice__fisher__trans__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classparam_1_1twice__fisher__trans_a083892abd1e85929c2fa378f639289fb}\label{classparam_1_1twice__fisher__trans_a083892abd1e85929c2fa378f639289fb}} 
+float\+\_\+t \mbox{\hyperlink{classparam_1_1twice__fisher__trans_a083892abd1e85929c2fa378f639289fb}{trans}} (const float\+\_\+t \&p) override
+\begin{DoxyCompactList}\small\item\em from the constrained/nontransformed to the transformed/unconstrained space \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparam_1_1twice__fisher__trans_a9fe1f41cffdad73a306937aaf40eb5a1}\label{classparam_1_1twice__fisher__trans_a9fe1f41cffdad73a306937aaf40eb5a1}} 
+float\+\_\+t \mbox{\hyperlink{classparam_1_1twice__fisher__trans_a9fe1f41cffdad73a306937aaf40eb5a1}{inv\+\_\+trans}} (const float\+\_\+t \&trans\+\_\+p) override
+\begin{DoxyCompactList}\small\item\em from the unconstrained/transformed to the constrained/untransformed space; \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparam_1_1twice__fisher__trans_a401ea6bb3e588111e1feed2315599ff4}\label{classparam_1_1twice__fisher__trans_a401ea6bb3e588111e1feed2315599ff4}} 
+float\+\_\+t \mbox{\hyperlink{classparam_1_1twice__fisher__trans_a401ea6bb3e588111e1feed2315599ff4}{log\+\_\+jacobian}} (const float\+\_\+t \&p) override
+\begin{DoxyCompactList}\small\item\em get the log jacobian (from untransformed to transformed). For use with adjusting priors to the transformed space. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparam_1_1twice__fisher__trans_a718b804ef542b140139f0f27389b72a5}\label{classparam_1_1twice__fisher__trans_a718b804ef542b140139f0f27389b72a5}} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classparam_1_1transform}{transform}}$<$ float\+\_\+t $>$ $>$ \mbox{\hyperlink{classparam_1_1twice__fisher__trans_a718b804ef542b140139f0f27389b72a5}{clone}} () const override
+\begin{DoxyCompactList}\small\item\em a clone method that helps with deep-\/copying transforms \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename float\+\_\+t$>$\newline
+class param\+::twice\+\_\+fisher\+\_\+trans$<$ float\+\_\+t $>$}
+
+trans\+\_\+p = log(1+orig\+\_\+p) -\/ log(1-\/orig\+\_\+p) = logit((orig\+\_\+p+1)/2). 
+
+\begin{DoxyAuthor}{Author}
+Taylor 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ssme/\mbox{\hyperlink{parameters_8h}{parameters.\+h}}\end{DoxyCompactItemize}

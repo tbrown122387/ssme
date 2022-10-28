@@ -1,0 +1,193 @@
+\hypertarget{classsplit__data__thread__pool}{}\doxysection{split\+\_\+data\+\_\+thread\+\_\+pool$<$ dyn\+\_\+in\+\_\+t, static\+\_\+in\+\_\+elem\+\_\+t, out\+\_\+t, num\+\_\+static\+\_\+elems, debug $>$ Class Template Reference}
+\label{classsplit__data__thread__pool}\index{split\_data\_thread\_pool$<$ dyn\_in\_t, static\_in\_elem\_t, out\_t, num\_static\_elems, debug $>$@{split\_data\_thread\_pool$<$ dyn\_in\_t, static\_in\_elem\_t, out\_t, num\_static\_elems, debug $>$}}
+
+
+split data thread pool Unlike the above thread pool, this pre-\/allocates work across the nodes. \char`\"{}work\char`\"{} is initiated when there is a new object of type dyn\+\_\+in\+\_\+t, which is shared across all threads. Work is performed for every element of the array of static\+\_\+in\+\_\+elem\+\_\+t. The same function is applied to every pair.  
+
+
+
+
+{\ttfamily \#include $<$thread\+\_\+pool.\+h$>$}
+
+
+
+Collaboration diagram for split\+\_\+data\+\_\+thread\+\_\+pool$<$ dyn\+\_\+in\+\_\+t, static\+\_\+in\+\_\+elem\+\_\+t, out\+\_\+t, num\+\_\+static\+\_\+elems, debug $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=226pt]{classsplit__data__thread__pool__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classsplit__data__thread__pool_a99b09e92fade3b5283fb7d13d4ae37fc}{split\+\_\+data\+\_\+thread\+\_\+pool}} (std\+::array$<$ static\+\_\+in\+\_\+elem\+\_\+t, num\+\_\+static\+\_\+elems $>$ \&static\+\_\+container, comp\+\_\+func\+\_\+t comp\+\_\+f, inter\+\_\+agg\+\_\+func\+\_\+t inter\+\_\+agg\+\_\+f, intra\+\_\+agg\+\_\+func\+\_\+t intra\+\_\+agg\+\_\+f, reset\+\_\+func\+\_\+t reset\+\_\+f, final\+\_\+func\+\_\+t final\+\_\+f=\mbox{[}$\,$\mbox{]}(const out\+\_\+t \&o)\{ return o;\}, bool mt=true, unsigned num\+\_\+threads=0)
+\begin{DoxyCompactList}\small\item\em The ctor spawns the working threads and gets ready to start doing work. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a7b62820ff71bf54b238060cced05da61}\label{classsplit__data__thread__pool_a7b62820ff71bf54b238060cced05da61}} 
+\mbox{\hyperlink{classsplit__data__thread__pool_a7b62820ff71bf54b238060cced05da61}{$\sim$split\+\_\+data\+\_\+thread\+\_\+pool}} ()
+\begin{DoxyCompactList}\small\item\em destructor \end{DoxyCompactList}\item 
+out\+\_\+t \mbox{\hyperlink{classsplit__data__thread__pool_ae31140d4756c98226680c7fd46b09ccb}{work}} (dyn\+\_\+in\+\_\+t new\+\_\+input)
+\begin{DoxyCompactList}\small\item\em changes the shared data member, then resets some variables, then starts all the work and returns the \char`\"{}average\char`\"{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a77784e8ffb043406e746e9424483ab00}\label{classsplit__data__thread__pool_a77784e8ffb043406e746e9424483ab00}} 
+using {\bfseries comp\+\_\+func\+\_\+t} = std\+::function$<$ out\+\_\+t(const dyn\+\_\+in\+\_\+t \&, static\+\_\+in\+\_\+elem\+\_\+t \&)$>$
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_afa0bbaa49186623703811cc2d7e27f45}\label{classsplit__data__thread__pool_afa0bbaa49186623703811cc2d7e27f45}} 
+using {\bfseries inter\+\_\+agg\+\_\+func\+\_\+t} = std\+::function$<$ out\+\_\+t(const out\+\_\+t \&, const out\+\_\+t \&, unsigned num\+\_\+threads, unsigned num\+\_\+terms\+\_\+in\+\_\+thread)$>$
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a40c4cc6d5d6933e94ca4ee67c449b7c0}\label{classsplit__data__thread__pool_a40c4cc6d5d6933e94ca4ee67c449b7c0}} 
+using {\bfseries intra\+\_\+agg\+\_\+func\+\_\+t} = std\+::function$<$ out\+\_\+t(const out\+\_\+t \&, const out\+\_\+t \&, unsigned num\+\_\+terms\+\_\+in\+\_\+thread)$>$
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a5010bf37c11f95d3dd0dd6d9b5bb603e}\label{classsplit__data__thread__pool_a5010bf37c11f95d3dd0dd6d9b5bb603e}} 
+using {\bfseries reset\+\_\+func\+\_\+t} = std\+::function$<$ out\+\_\+t(void)$>$
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_acfcce3946a048052a2156afa191306d8}\label{classsplit__data__thread__pool_acfcce3946a048052a2156afa191306d8}} 
+using {\bfseries final\+\_\+func\+\_\+t} = std\+::function$<$ out\+\_\+t(const out\+\_\+t \&)$>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a35345920c09adae9d7df03605ee7b115}\label{classsplit__data__thread__pool_a35345920c09adae9d7df03605ee7b115}} 
+void \mbox{\hyperlink{classsplit__data__thread__pool_a35345920c09adae9d7df03605ee7b115}{worker\+\_\+thread}} ()
+\begin{DoxyCompactList}\small\item\em This function runs on all threads, and continuously waits for work to do. When a new input comes, calculations begin to be performed, and all their outputs are averaged together. When all the threads have finished their work, the final thread performs finalization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a8ce6efcb43981979dc8c728ae474d7d6}\label{classsplit__data__thread__pool_a8ce6efcb43981979dc8c728ae474d7d6}} 
+std\+::mutex {\bfseries m\+\_\+output\+\_\+mut}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_aa89deb86aedcd9df3e3633e1c7d86ce8}\label{classsplit__data__thread__pool_aa89deb86aedcd9df3e3633e1c7d86ce8}} 
+std\+::shared\+\_\+mutex {\bfseries m\+\_\+input\+\_\+mut}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_ac830d3756351ab215601bbcbfae01a42}\label{classsplit__data__thread__pool_ac830d3756351ab215601bbcbfae01a42}} 
+unsigned {\bfseries m\+\_\+num\+\_\+threads}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a653c412a328e8a763a7de7f1fcf29b83}\label{classsplit__data__thread__pool_a653c412a328e8a763a7de7f1fcf29b83}} 
+std\+::atomic\+\_\+bool {\bfseries m\+\_\+done}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a0659785556d47ef822172302d19f7b3f}\label{classsplit__data__thread__pool_a0659785556d47ef822172302d19f7b3f}} 
+std\+::map$<$ std\+::thread\+::id, std\+::atomic\+\_\+bool $>$ {\bfseries m\+\_\+has\+\_\+new\+\_\+dyn\+\_\+input}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a6428a0c86617b522b0389c0c92953cbd}\label{classsplit__data__thread__pool_a6428a0c86617b522b0389c0c92953cbd}} 
+out\+\_\+t {\bfseries m\+\_\+working\+\_\+agg}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a83d67204df27b838a38cb0dddd2e6877}\label{classsplit__data__thread__pool_a83d67204df27b838a38cb0dddd2e6877}} 
+std\+::promise$<$ out\+\_\+t $>$ {\bfseries m\+\_\+out}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a346dbee5226f28cd11672293b38e3f1e}\label{classsplit__data__thread__pool_a346dbee5226f28cd11672293b38e3f1e}} 
+comp\+\_\+func\+\_\+t {\bfseries m\+\_\+comp\+\_\+f}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_acaf602be124f4ae0209a10ff4ed5c645}\label{classsplit__data__thread__pool_acaf602be124f4ae0209a10ff4ed5c645}} 
+inter\+\_\+agg\+\_\+func\+\_\+t {\bfseries m\+\_\+inter\+\_\+agg\+\_\+f}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a01dc3a1a8eb7f594b500a02b49157b23}\label{classsplit__data__thread__pool_a01dc3a1a8eb7f594b500a02b49157b23}} 
+intra\+\_\+agg\+\_\+func\+\_\+t {\bfseries m\+\_\+intra\+\_\+agg\+\_\+f}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a02760036d66c33f525fbd33686869dc1}\label{classsplit__data__thread__pool_a02760036d66c33f525fbd33686869dc1}} 
+reset\+\_\+func\+\_\+t {\bfseries m\+\_\+reset\+\_\+f}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_afd1aea1287cb74815e5162e885dc4694}\label{classsplit__data__thread__pool_afd1aea1287cb74815e5162e885dc4694}} 
+final\+\_\+func\+\_\+t {\bfseries m\+\_\+final\+\_\+f}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a291b956e5ac14eacc033acee4bdbdfb4}\label{classsplit__data__thread__pool_a291b956e5ac14eacc033acee4bdbdfb4}} 
+dyn\+\_\+in\+\_\+t {\bfseries m\+\_\+dynamic\+\_\+input}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a099612b319538d0f966e92636c7813a8}\label{classsplit__data__thread__pool_a099612b319538d0f966e92636c7813a8}} 
+std\+::array$<$ static\+\_\+in\+\_\+elem\+\_\+t, num\+\_\+static\+\_\+elems $>$ \& {\bfseries m\+\_\+static\+\_\+input}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a37629e85beb811eb37e5beea9c34fe72}\label{classsplit__data__thread__pool_a37629e85beb811eb37e5beea9c34fe72}} 
+std\+::vector$<$ std\+::thread $>$ {\bfseries m\+\_\+threads}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_acd4639ace8d39867179169585770e394}\label{classsplit__data__thread__pool_acd4639ace8d39867179169585770e394}} 
+\mbox{\hyperlink{classjoin__threads}{join\+\_\+threads}} {\bfseries m\+\_\+joiner}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_a914d0786f84727a3c23c5fc6264de97e}\label{classsplit__data__thread__pool_a914d0786f84727a3c23c5fc6264de97e}} 
+std\+::map$<$ std\+::thread\+::id, std\+::vector$<$ unsigned $>$ $>$ {\bfseries m\+\_\+work\+\_\+schedule}
+\item 
+\mbox{\Hypertarget{classsplit__data__thread__pool_aec4f3cd8f92761fe4cf22912b942c5ce}\label{classsplit__data__thread__pool_aec4f3cd8f92761fe4cf22912b942c5ce}} 
+std\+::atomic\+\_\+int {\bfseries m\+\_\+num\+\_\+thread\+\_\+aves\+\_\+done}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename dyn\+\_\+in\+\_\+t, typename static\+\_\+in\+\_\+elem\+\_\+t, typename out\+\_\+t, size\+\_\+t num\+\_\+static\+\_\+elems, bool debug = false$>$\newline
+class split\+\_\+data\+\_\+thread\+\_\+pool$<$ dyn\+\_\+in\+\_\+t, static\+\_\+in\+\_\+elem\+\_\+t, out\+\_\+t, num\+\_\+static\+\_\+elems, debug $>$}
+
+split data thread pool Unlike the above thread pool, this pre-\/allocates work across the nodes. \char`\"{}work\char`\"{} is initiated when there is a new object of type dyn\+\_\+in\+\_\+t, which is shared across all threads. Work is performed for every element of the array of static\+\_\+in\+\_\+elem\+\_\+t. The same function is applied to every pair. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em dyn\+\_\+in\+\_\+t} & the type of input that changes every call to \mbox{\hyperlink{classsplit__data__thread__pool_ae31140d4756c98226680c7fd46b09ccb}{work()}} (e.\+g. an Eigen\+::\+Matrix of a time series observation) \\
+\hline
+{\em static\+\_\+in\+\_\+elem\+\_\+t} & (e.\+g. a particle filter model type) \\
+\hline
+{\em out\+\_\+t} & (e.\+g. a vector of Eigen\+::\+Matrix\+Xd) \\
+\hline
+{\em num\+\_\+static\+\_\+elem} & the size of the array \\
+\hline
+{\em debug} & true if you want debug messages printed \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classsplit__data__thread__pool_a99b09e92fade3b5283fb7d13d4ae37fc}\label{classsplit__data__thread__pool_a99b09e92fade3b5283fb7d13d4ae37fc}} 
+\index{split\_data\_thread\_pool$<$ dyn\_in\_t, static\_in\_elem\_t, out\_t, num\_static\_elems, debug $>$@{split\_data\_thread\_pool$<$ dyn\_in\_t, static\_in\_elem\_t, out\_t, num\_static\_elems, debug $>$}!split\_data\_thread\_pool@{split\_data\_thread\_pool}}
+\index{split\_data\_thread\_pool@{split\_data\_thread\_pool}!split\_data\_thread\_pool$<$ dyn\_in\_t, static\_in\_elem\_t, out\_t, num\_static\_elems, debug $>$@{split\_data\_thread\_pool$<$ dyn\_in\_t, static\_in\_elem\_t, out\_t, num\_static\_elems, debug $>$}}
+\doxysubsubsection{\texorpdfstring{split\_data\_thread\_pool()}{split\_data\_thread\_pool()}}
+{\footnotesize\ttfamily template$<$typename dyn\+\_\+in\+\_\+t , typename static\+\_\+in\+\_\+elem\+\_\+t , typename out\+\_\+t , size\+\_\+t num\+\_\+static\+\_\+elems, bool debug = false$>$ \\
+\mbox{\hyperlink{classsplit__data__thread__pool}{split\+\_\+data\+\_\+thread\+\_\+pool}}$<$ dyn\+\_\+in\+\_\+t, static\+\_\+in\+\_\+elem\+\_\+t, out\+\_\+t, num\+\_\+static\+\_\+elems, debug $>$\+::\mbox{\hyperlink{classsplit__data__thread__pool}{split\+\_\+data\+\_\+thread\+\_\+pool}} (\begin{DoxyParamCaption}\item[{std\+::array$<$ static\+\_\+in\+\_\+elem\+\_\+t, num\+\_\+static\+\_\+elems $>$ \&}]{static\+\_\+container,  }\item[{comp\+\_\+func\+\_\+t}]{comp\+\_\+f,  }\item[{inter\+\_\+agg\+\_\+func\+\_\+t}]{inter\+\_\+agg\+\_\+f,  }\item[{intra\+\_\+agg\+\_\+func\+\_\+t}]{intra\+\_\+agg\+\_\+f,  }\item[{reset\+\_\+func\+\_\+t}]{reset\+\_\+f,  }\item[{final\+\_\+func\+\_\+t}]{final\+\_\+f = {\ttfamily \mbox{[}\mbox{]}(const~out\+\_\+t\&~o)\{~return~o;\}},  }\item[{bool}]{mt = {\ttfamily true},  }\item[{unsigned}]{num\+\_\+threads = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The ctor spawns the working threads and gets ready to start doing work. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em static\+\_\+container} & unchanging data used to perform calculations \\
+\hline
+{\em comp\+\_\+f} & performs expensive calculation \\
+\hline
+{\em inter\+\_\+agg\+\_\+f} & adds thread\textquotesingle{}s work to overall average \\
+\hline
+{\em intra\+\_\+agg\+\_\+f} & adds to intra-\/thread average \\
+\hline
+{\em reset\+\_\+f} & reset function (usually resets average to 0) \\
+\hline
+{\em final\+\_\+f} & finalizer function (default is identity) \\
+\hline
+{\em mt} & true if you want multithreading \\
+\hline
+{\em num\+\_\+threads} & \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classsplit__data__thread__pool_ae31140d4756c98226680c7fd46b09ccb}\label{classsplit__data__thread__pool_ae31140d4756c98226680c7fd46b09ccb}} 
+\index{split\_data\_thread\_pool$<$ dyn\_in\_t, static\_in\_elem\_t, out\_t, num\_static\_elems, debug $>$@{split\_data\_thread\_pool$<$ dyn\_in\_t, static\_in\_elem\_t, out\_t, num\_static\_elems, debug $>$}!work@{work}}
+\index{work@{work}!split\_data\_thread\_pool$<$ dyn\_in\_t, static\_in\_elem\_t, out\_t, num\_static\_elems, debug $>$@{split\_data\_thread\_pool$<$ dyn\_in\_t, static\_in\_elem\_t, out\_t, num\_static\_elems, debug $>$}}
+\doxysubsubsection{\texorpdfstring{work()}{work()}}
+{\footnotesize\ttfamily template$<$typename dyn\+\_\+in\+\_\+t , typename static\+\_\+in\+\_\+elem\+\_\+t , typename out\+\_\+t , size\+\_\+t num\+\_\+static\+\_\+elems, bool debug = false$>$ \\
+out\+\_\+t \mbox{\hyperlink{classsplit__data__thread__pool}{split\+\_\+data\+\_\+thread\+\_\+pool}}$<$ dyn\+\_\+in\+\_\+t, static\+\_\+in\+\_\+elem\+\_\+t, out\+\_\+t, num\+\_\+static\+\_\+elems, debug $>$\+::work (\begin{DoxyParamCaption}\item[{dyn\+\_\+in\+\_\+t}]{new\+\_\+input }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+changes the shared data member, then resets some variables, then starts all the work and returns the \char`\"{}average\char`\"{}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+input} & new parameter input \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a floating point average 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ssme/thread\+\_\+pool.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,98 @@
+\hypertarget{liu__west__filter_8h}{}\doxysection{include/ssme/liu\+\_\+west\+\_\+filter.h File Reference}
+\label{liu__west__filter_8h}\index{include/ssme/liu\_west\_filter.h@{include/ssme/liu\_west\_filter.h}}
+
+
+Class that performs multinomial resampling for the Liu-\/\+West filter. For justification, see page 244 of \char`\"{}\+Inference in Hidden Markov Models\char`\"{}.  
+
+
+{\ttfamily \#include $<$array$>$}\newline
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$utility$>$}\newline
+{\ttfamily \#include $<$pf/rv\+\_\+samp.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}utils.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}parameters.\+h\char`\"{}}\newline
+Include dependency graph for liu\+\_\+west\+\_\+filter.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{liu__west__filter_8h__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classmn__resamp__states__and__params}{mn\+\_\+resamp\+\_\+states\+\_\+and\+\_\+params$<$ nparts, dimx, dimparam, float\+\_\+t $>$}}
+\item 
+class \mbox{\hyperlink{classLWFilter}{L\+W\+Filter$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$}}
+\begin{DoxyCompactList}\small\item\em A base class for the Liu-\/\+West Filter. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$}}
+\begin{DoxyCompactList}\small\item\em An add-\/on for the Liu-\/\+West Filter that simulates future observations. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classLWFilterWithCovs}{L\+W\+Filter\+With\+Covs$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$}}
+\begin{DoxyCompactList}\small\item\em A base class for the Liu-\/\+West Filter. Unlike the above Liu-\/\+Wester filter base class, this allows the state transition to depend on covariates. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classLWFilterWithCovsFutureSimulator}{L\+W\+Filter\+With\+Covs\+Future\+Simulator$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$}}
+\begin{DoxyCompactList}\small\item\em An add-\/on for the Liu-\/\+West Filter that simulates future observations. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classLWFilter2}{L\+W\+Filter2$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$}}
+\begin{DoxyCompactList}\small\item\em A base class for a modified version of the Liu-\/\+West Filter. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classLWFilter2FutureSimulator}{L\+W\+Filter2\+Future\+Simulator$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$}}
+\begin{DoxyCompactList}\small\item\em An add-\/on for the Liu-\/\+West (version 2) Filter that simulates future observations. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$}}
+\begin{DoxyCompactList}\small\item\em A base class for a modified version of the Liu-\/\+West Filter. Unlike the above class, it allows the state transition to depend on covariates. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classLWFilter2WithCovsFutureSimulator}{L\+W\+Filter2\+With\+Covs\+Future\+Simulator$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class that performs multinomial resampling for the Liu-\/\+West filter. For justification, see page 244 of \char`\"{}\+Inference in Hidden Markov Models\char`\"{}. 
+
+Liu West filter but without the auxiliary particle filter thing, and it allows the state transition to depend on covariates.
+
+Liu West (version 2) filter future simulator add-\/on.
+
+Liu West filter but without the auxiliary particle filter thing.
+
+Liu West filter with covariates future simulator add-\/on. T\+H\+E\+SE C\+O\+V\+A\+R\+I\+A\+T\+ES H\+A\+VE TO BE P\+A\+ST O\+B\+S\+E\+R\+V\+A\+T\+I\+O\+N\+S!
+
+Liu West filter with covariates in the state transition.
+
+Liu West filter future simulator add-\/on.
+
+Liu West filter.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em nparts} & the number of particles. \\
+\hline
+{\em dimx} & the dimension of each state sample. \\
+\hline
+{\em dimparam} & the dimension of the parameter samples \\
+\hline
+{\em float\+\_\+t} & the floating point type\\
+\hline
+{\em nparts} & the number of particles \\
+\hline
+{\em dimx} & the dimension of the state\textquotesingle{}s state space \\
+\hline
+{\em dimy} & the dimension of each observation \\
+\hline
+{\em dimparam} & the dimension of the parameters \\
+\hline
+{\em float\+\_\+t} & the floating point type \\
+\hline
+{\em debug} & whether or not you want to display debug messages\\
+\hline
+{\em nparts} & the number of particles \\
+\hline
+{\em dimx} & the dimension of the state\textquotesingle{}s state space \\
+\hline
+{\em dimy} & the dimension of each observation \\
+\hline
+{\em dimcov} & the dimension of the covariates \\
+\hline
+{\em dimparam} & the dimension of the parameters \\
+\hline
+{\em float\+\_\+t} & the floating point type \\
+\hline
+{\em debug} & whether or not you want to display debug messages \\
+\hline
+\end{DoxyTemplParams}

@@ -1,0 +1,56 @@
+\hypertarget{utils_8h}{}\doxysection{include/ssme/utils.h File Reference}
+\label{utils_8h}\index{include/ssme/utils.h@{include/ssme/utils.h}}
+
+
+Class that samples parameters from a csv file. File must not have header, and be comma separated.  
+
+
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$array$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+Include dependency graph for utils.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{utils_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{utils_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classutils_1_1csv__param__sampler}{utils\+::csv\+\_\+param\+\_\+sampler$<$ dimparam, float\+\_\+t $>$}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespaceutils}{utils}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\+\_\+t nc, typename float\+\_\+t $>$ }\\std\+::vector$<$ Eigen\+::\+Matrix$<$ float\+\_\+t, nc, 1 $>$ $>$ \mbox{\hyperlink{namespaceutils_abf386a12d05c40b823612cf5613dcf36}{utils\+::read\+\_\+data}} (const std\+::string \&file\+\_\+loc)
+\begin{DoxyCompactList}\small\item\em reads in data in a csv file with no header and separated by commas. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class that samples parameters from a csv file. File must not have header, and be comma separated. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em dimparam} & the dimension of a parameter vector (also the number of columns in the csv file) \\
+\hline
+{\em float\+\_\+t} & the type of floating point \\
+\hline
+\end{DoxyTemplParams}

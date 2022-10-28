@@ -1,0 +1,210 @@
+\hypertarget{classLWFilterFutureSimulator}{}\doxysection{L\+W\+Filter\+Future\+Simulator$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$ Class Template Reference}
+\label{classLWFilterFutureSimulator}\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+
+
+An add-\/on for the Liu-\/\+West Filter that simulates future observations.  
+
+
+
+
+{\ttfamily \#include $<$liu\+\_\+west\+\_\+filter.\+h$>$}
+
+
+
+Inheritance diagram for L\+W\+Filter\+Future\+Simulator$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=234pt]{classLWFilterFutureSimulator__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for L\+W\+Filter\+Future\+Simulator$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=234pt]{classLWFilterFutureSimulator__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classLWFilterFutureSimulator_a52be4c03d45a7625e3ed1b65c07a28f9}\label{classLWFilterFutureSimulator_a52be4c03d45a7625e3ed1b65c07a28f9}} 
+\mbox{\hyperlink{classLWFilterFutureSimulator_a52be4c03d45a7625e3ed1b65c07a28f9}{L\+W\+Filter\+Future\+Simulator}} ()=delete
+\begin{DoxyCompactList}\small\item\em need parameters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilterFutureSimulator_ae8755cdb3639266932b87f6c61e2e201}\label{classLWFilterFutureSimulator_ae8755cdb3639266932b87f6c61e2e201}} 
+\mbox{\hyperlink{classLWFilterFutureSimulator_ae8755cdb3639266932b87f6c61e2e201}{L\+W\+Filter\+Future\+Simulator}} (const std\+::vector$<$ std\+::string $>$ \&transforms, float\+\_\+t delta, const unsigned int \&rs=1)
+\begin{DoxyCompactList}\small\item\em need parameters \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilterFutureSimulator_a1a514f61b0fd1bd5bd9e864501e3f40d}\label{classLWFilterFutureSimulator_a1a514f61b0fd1bd5bd9e864501e3f40d}} 
+virtual \mbox{\hyperlink{classLWFilterFutureSimulator_a1a514f61b0fd1bd5bd9e864501e3f40d}{$\sim$\+L\+W\+Filter\+Future\+Simulator}} ()
+\begin{DoxyCompactList}\small\item\em virtual destructor \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{classLWFilterFutureSimulator_af0cce5daa027dd6ef7ec6d7a116e0ffe}{osv}} \mbox{\hyperlink{classLWFilterFutureSimulator_ac5b082d07c63040814d0270fd7f15b9d}{g\+Samp}} (const \mbox{\hyperlink{classLWFilterFutureSimulator_af5f420de892c446fb9f39df6374cddcb}{ssv}} \&xt, const \mbox{\hyperlink{classLWFilterFutureSimulator_a5676c3f12adb04a485af8ea78268ff31}{psv}} \&untrans\+\_\+new\+\_\+param)=0
+\begin{DoxyCompactList}\small\item\em Sample y\+\_\+t$\vert$ x\+\_\+t, theta\+\_\+t. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classLWFilterFutureSimulator_a865b6b2aceb2e42528d1de018e9bfa10}{obs\+Samples}} \mbox{\hyperlink{classLWFilterFutureSimulator_aed3b61d943e6e541e3e9b2e51b603d5d}{sim\+\_\+future\+\_\+obs}} (unsigned num\+\_\+steps)
+\begin{DoxyCompactList}\small\item\em sample future observations. Note that this changes m\+\_\+mvn\+\_\+gen Note\+: this algorithm is not provided in the paper. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classLWFilterFutureSimulator_af5f420de892c446fb9f39df6374cddcb}{ssv}} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimx, 1 $>$
+\item 
+using \mbox{\hyperlink{classLWFilterFutureSimulator_af0cce5daa027dd6ef7ec6d7a116e0ffe}{osv}} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimy, 1 $>$
+\item 
+using \mbox{\hyperlink{classLWFilterFutureSimulator_a5676c3f12adb04a485af8ea78268ff31}{psv}} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimparam, 1 $>$
+\item 
+using \mbox{\hyperlink{classLWFilterFutureSimulator_a2894fee37a350c172639b7ea2b3ba3bd}{psm}} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimparam, dimparam $>$
+\item 
+using \mbox{\hyperlink{classLWFilterFutureSimulator_a6c037336f3a76aebf1c0c089182f8c09}{Mat}} = Eigen\+::\+Matrix$<$ float\+\_\+t, Eigen\+::\+Dynamic, Eigen\+::\+Dynamic $>$
+\item 
+using \mbox{\hyperlink{classLWFilterFutureSimulator_a14288fbc2e9b4930c0a04b8c2c0e8076}{array\+States}} = std\+::array$<$ \mbox{\hyperlink{classLWFilterFutureSimulator_af5f420de892c446fb9f39df6374cddcb}{ssv}}, nparts $>$
+\item 
+using \mbox{\hyperlink{classLWFilterFutureSimulator_a8b2e32a165adefae9b22b09458322333}{array\+Params}} = std\+::array$<$ \mbox{\hyperlink{classparam_1_1pack}{param\+::pack}}$<$ float\+\_\+t, dimparam $>$, nparts $>$
+\item 
+using \mbox{\hyperlink{classLWFilterFutureSimulator_ad1526694d3eaf3fd228fa02b85630723}{array\+Floats}} = std\+::array$<$ float\+\_\+t, nparts $>$
+\item 
+using \mbox{\hyperlink{classLWFilterFutureSimulator_a18ebc77a3fdee767bfb33ea6eab950cb}{state\+Param\+Func}} = std\+::function$<$ const \mbox{\hyperlink{classLWFilterFutureSimulator_a6c037336f3a76aebf1c0c089182f8c09}{Mat}}(const \mbox{\hyperlink{classLWFilterFutureSimulator_af5f420de892c446fb9f39df6374cddcb}{ssv}} \&, const \mbox{\hyperlink{classLWFilterFutureSimulator_a5676c3f12adb04a485af8ea78268ff31}{psv}} \&)$>$
+\item 
+using \mbox{\hyperlink{classLWFilterFutureSimulator_a05a1cebd039c230d53585d0a7c7c3b2d}{array\+U\+Int}} = std\+::array$<$ unsigned int, nparts $>$
+\item 
+using \mbox{\hyperlink{classLWFilterFutureSimulator_a865b6b2aceb2e42528d1de018e9bfa10}{obs\+Samples}} = std\+::vector$<$ std\+::array$<$ \mbox{\hyperlink{classLWFilterFutureSimulator_af0cce5daa027dd6ef7ec6d7a116e0ffe}{osv}}, nparts $>$ $>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t, bool debug = false$>$\newline
+class L\+W\+Filter\+Future\+Simulator$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$}
+
+An add-\/on for the Liu-\/\+West Filter that simulates future observations. 
+
+\begin{DoxyAuthor}{Author}
+taylor 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classLWFilterFutureSimulator_ad1526694d3eaf3fd228fa02b85630723}\label{classLWFilterFutureSimulator_ad1526694d3eaf3fd228fa02b85630723}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!arrayFloats@{arrayFloats}}
+\index{arrayFloats@{arrayFloats}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{arrayFloats}{arrayFloats}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilterFutureSimulator_ad1526694d3eaf3fd228fa02b85630723}{array\+Floats}} =  std\+::array$<$float\+\_\+t, nparts$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+type alias for array of float\+\_\+ts \mbox{\Hypertarget{classLWFilterFutureSimulator_a8b2e32a165adefae9b22b09458322333}\label{classLWFilterFutureSimulator_a8b2e32a165adefae9b22b09458322333}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!arrayParams@{arrayParams}}
+\index{arrayParams@{arrayParams}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{arrayParams}{arrayParams}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilterFutureSimulator_a8b2e32a165adefae9b22b09458322333}{array\+Params}} =  std\+::array$<$\mbox{\hyperlink{classparam_1_1pack}{param\+::pack}}$<$float\+\_\+t,dimparam$>$, nparts$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+type alias for parameter samples \mbox{\Hypertarget{classLWFilterFutureSimulator_a14288fbc2e9b4930c0a04b8c2c0e8076}\label{classLWFilterFutureSimulator_a14288fbc2e9b4930c0a04b8c2c0e8076}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!arrayStates@{arrayStates}}
+\index{arrayStates@{arrayStates}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{arrayStates}{arrayStates}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilterFutureSimulator_a14288fbc2e9b4930c0a04b8c2c0e8076}{array\+States}} =  std\+::array$<$\mbox{\hyperlink{classLWFilterFutureSimulator_af5f420de892c446fb9f39df6374cddcb}{ssv}}, nparts$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+type alias for linear algebra stuff \mbox{\Hypertarget{classLWFilterFutureSimulator_a05a1cebd039c230d53585d0a7c7c3b2d}\label{classLWFilterFutureSimulator_a05a1cebd039c230d53585d0a7c7c3b2d}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!arrayUInt@{arrayUInt}}
+\index{arrayUInt@{arrayUInt}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{arrayUInt}{arrayUInt}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilterFutureSimulator_a05a1cebd039c230d53585d0a7c7c3b2d}{array\+U\+Int}} =  std\+::array$<$unsigned int, nparts$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+type alias for array of unsigned ints \mbox{\Hypertarget{classLWFilterFutureSimulator_a6c037336f3a76aebf1c0c089182f8c09}\label{classLWFilterFutureSimulator_a6c037336f3a76aebf1c0c089182f8c09}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!Mat@{Mat}}
+\index{Mat@{Mat}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{Mat}{Mat}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilterFutureSimulator_a6c037336f3a76aebf1c0c089182f8c09}{Mat}} =  Eigen\+::\+Matrix$<$float\+\_\+t,Eigen\+::\+Dynamic,Eigen\+::\+Dynamic$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+type alias for linear algebra stuff (dimension of the state $^\wedge$2) \mbox{\Hypertarget{classLWFilterFutureSimulator_a865b6b2aceb2e42528d1de018e9bfa10}\label{classLWFilterFutureSimulator_a865b6b2aceb2e42528d1de018e9bfa10}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!obsSamples@{obsSamples}}
+\index{obsSamples@{obsSamples}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{obsSamples}{obsSamples}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilterFutureSimulator_a865b6b2aceb2e42528d1de018e9bfa10}{obs\+Samples}} =  std\+::vector$<$std\+::array$<$\mbox{\hyperlink{classLWFilterFutureSimulator_af0cce5daa027dd6ef7ec6d7a116e0ffe}{osv}}, nparts$>$ $>$\hspace{0.3cm}{\ttfamily [private]}}
+
+future observation samples--indexed by time then state \mbox{\Hypertarget{classLWFilterFutureSimulator_af0cce5daa027dd6ef7ec6d7a116e0ffe}\label{classLWFilterFutureSimulator_af0cce5daa027dd6ef7ec6d7a116e0ffe}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!osv@{osv}}
+\index{osv@{osv}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{osv}{osv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilterFutureSimulator_af0cce5daa027dd6ef7ec6d7a116e0ffe}{osv}} =  Eigen\+::\+Matrix$<$float\+\_\+t,dimy,1$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+\char`\"{}observation size vector\char`\"{} type alias for linear algebra stuff \mbox{\Hypertarget{classLWFilterFutureSimulator_a2894fee37a350c172639b7ea2b3ba3bd}\label{classLWFilterFutureSimulator_a2894fee37a350c172639b7ea2b3ba3bd}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!psm@{psm}}
+\index{psm@{psm}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{psm}{psm}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilterFutureSimulator_a2894fee37a350c172639b7ea2b3ba3bd}{psm}} =  Eigen\+::\+Matrix$<$float\+\_\+t,dimparam,dimparam$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+\char`\"{}parameter sized matrix\char`\"{} \mbox{\Hypertarget{classLWFilterFutureSimulator_a5676c3f12adb04a485af8ea78268ff31}\label{classLWFilterFutureSimulator_a5676c3f12adb04a485af8ea78268ff31}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!psv@{psv}}
+\index{psv@{psv}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{psv}{psv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilterFutureSimulator_a5676c3f12adb04a485af8ea78268ff31}{psv}} =  Eigen\+::\+Matrix$<$float\+\_\+t, dimparam,1$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+\char`\"{}param sized vector\char`\"{} type alias for linear algebra stuff \mbox{\Hypertarget{classLWFilterFutureSimulator_af5f420de892c446fb9f39df6374cddcb}\label{classLWFilterFutureSimulator_af5f420de892c446fb9f39df6374cddcb}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!ssv@{ssv}}
+\index{ssv@{ssv}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{ssv}{ssv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilterFutureSimulator_af5f420de892c446fb9f39df6374cddcb}{ssv}} =  Eigen\+::\+Matrix$<$float\+\_\+t,dimx,1$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+\char`\"{}state size vector\char`\"{} type alias for linear algebra stuff \mbox{\Hypertarget{classLWFilterFutureSimulator_a18ebc77a3fdee767bfb33ea6eab950cb}\label{classLWFilterFutureSimulator_a18ebc77a3fdee767bfb33ea6eab950cb}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!stateParamFunc@{stateParamFunc}}
+\index{stateParamFunc@{stateParamFunc}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{stateParamFunc}{stateParamFunc}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilterFutureSimulator_a18ebc77a3fdee767bfb33ea6eab950cb}{state\+Param\+Func}} =  std\+::function$<$const \mbox{\hyperlink{classLWFilterFutureSimulator_a6c037336f3a76aebf1c0c089182f8c09}{Mat}}(const \mbox{\hyperlink{classLWFilterFutureSimulator_af5f420de892c446fb9f39df6374cddcb}{ssv}}\&, const \mbox{\hyperlink{classLWFilterFutureSimulator_a5676c3f12adb04a485af8ea78268ff31}{psv}}\&)$>$\hspace{0.3cm}{\ttfamily [private]}}
+
+function type that takes in parameter and state and returns dynamically sized matrix ~\newline
+ 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classLWFilterFutureSimulator_ac5b082d07c63040814d0270fd7f15b9d}\label{classLWFilterFutureSimulator_ac5b082d07c63040814d0270fd7f15b9d}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!gSamp@{gSamp}}
+\index{gSamp@{gSamp}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{gSamp()}{gSamp()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+virtual \mbox{\hyperlink{classLWFilterFutureSimulator_af0cce5daa027dd6ef7ec6d7a116e0ffe}{osv}} \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::g\+Samp (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classLWFilterFutureSimulator_af5f420de892c446fb9f39df6374cddcb}{ssv}} \&}]{xt,  }\item[{const \mbox{\hyperlink{classLWFilterFutureSimulator_a5676c3f12adb04a485af8ea78268ff31}{psv}} \&}]{untrans\+\_\+new\+\_\+param }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Sample y\+\_\+t$\vert$ x\+\_\+t, theta\+\_\+t. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em xt} & the current state \\
+\hline
+{\em untrans\+\_\+new\+\_\+param} & the current parameter sample \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classLWFilterFutureSimulator_aed3b61d943e6e541e3e9b2e51b603d5d}\label{classLWFilterFutureSimulator_aed3b61d943e6e541e3e9b2e51b603d5d}} 
+\index{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}!sim\_future\_obs@{sim\_future\_obs}}
+\index{sim\_future\_obs@{sim\_future\_obs}!LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$@{LWFilterFutureSimulator$<$ nparts, dimx, dimy, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{sim\_future\_obs()}{sim\_future\_obs()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimparam, typename float\+\_\+t , bool debug$>$ \\
+auto \mbox{\hyperlink{classLWFilterFutureSimulator}{L\+W\+Filter\+Future\+Simulator}}$<$ nparts, dimx, dimy, dimparam, float\+\_\+t, debug $>$\+::sim\+\_\+future\+\_\+obs (\begin{DoxyParamCaption}\item[{unsigned}]{num\+\_\+steps }\end{DoxyParamCaption})}
+
+
+
+sample future observations. Note that this changes m\+\_\+mvn\+\_\+gen Note\+: this algorithm is not provided in the paper. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num\+\_\+steps} & the number of steps into the future \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+some samples of the observations 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ssme/\mbox{\hyperlink{liu__west__filter_8h}{liu\+\_\+west\+\_\+filter.\+h}}\end{DoxyCompactItemize}

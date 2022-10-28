@@ -1,0 +1,7 @@
+<map id="param::transform&lt; float_t &gt;" name="param::transform&lt; float_t &gt;">
+<area shape="rect" id="node1" title="a pure virtual base class. cts params only." alt="" coords="5,97,212,124"/>
+<area shape="rect" id="node2" href="$classparam_1_1log__trans.html" title="trans_p = log(orig_p)." alt="" coords="260,5,463,32"/>
+<area shape="rect" id="node3" href="$classparam_1_1logit__trans.html" title="trans_p = logit(orig_p)." alt="" coords="291,57,432,98"/>
+<area shape="rect" id="node4" href="$classparam_1_1null__trans.html" title="trans_p = orig_p." alt="" coords="288,122,435,163"/>
+<area shape="rect" id="node5" href="$classparam_1_1twice__fisher__trans.html" title="trans_p = log(1+orig_p) &#45; log(1&#45;orig_p) = logit((orig_p+1)/2)." alt="" coords="286,187,437,229"/>
+</map>

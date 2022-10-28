@@ -1,19 +1,30 @@
-\hypertarget{classada__pmmh__mvn}{}\section{ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts, float\+\_\+t $>$ Class Template Reference}
-\label{classada__pmmh__mvn}\index{ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts, float\+\_\+t $>$@{ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts, float\+\_\+t $>$}}
+\hypertarget{classada__pmmh__mvn}{}\doxysection{ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts, float\+\_\+t $>$ Class Template Reference}
+\label{classada__pmmh__mvn}\index{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$@{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$}}
 
 
 {\ttfamily \#include $<$ada\+\_\+pmmh\+\_\+mvn.\+h$>$}
 
 
 
-Inheritance diagram for ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts, float\+\_\+t $>$\+:\nopagebreak
+Inheritance diagram for ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts, float\+\_\+t $>$\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=232pt]{classada__pmmh__mvn__inherit__graph}
+\includegraphics[width=251pt]{classada__pmmh__mvn__inherit__graph}
 \end{center}
 \end{figure}
-\subsection*{Public Types}
+
+
+Collaboration diagram for ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts, float\+\_\+t $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classada__pmmh__mvn__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classada__pmmh__mvn_af036f732a29ede6fee08cdaacc9bbaaa}\label{classada__pmmh__mvn_af036f732a29ede6fee08cdaacc9bbaaa}} 
@@ -24,44 +35,62 @@ using {\bfseries psv} = Eigen\+::\+Matrix$<$ float\+\_\+t, numparams, 1 $>$
 \item 
 \mbox{\Hypertarget{classada__pmmh__mvn_a1cb69e6998319cbe2733965a177dc8d1}\label{classada__pmmh__mvn_a1cb69e6998319cbe2733965a177dc8d1}} 
 using {\bfseries psm} = Eigen\+::\+Matrix$<$ float\+\_\+t, numparams, numparams $>$
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_a49dd6f158687b02d8ea624f45a881f2e}\label{classada__pmmh__mvn_a49dd6f158687b02d8ea624f45a881f2e}} 
+using {\bfseries dyn\+\_\+data\+\_\+t} = \mbox{\hyperlink{classparam_1_1pack}{param\+::pack}}$<$ float\+\_\+t, numparams $>$
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_a0d8268928270a7f5d148d57655b250d1}\label{classada__pmmh__mvn_a0d8268928270a7f5d148d57655b250d1}} 
+using {\bfseries static\+\_\+data\+\_\+t} = std\+::vector$<$ osv $>$
 \end{DoxyCompactItemize}
-\subsection*{Public Member Functions}
+\doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classada__pmmh__mvn_a749d2c42d1c5741edeb55b641dca9625}{ada\+\_\+pmmh\+\_\+mvn} (const psv \&start\+\_\+trans\+\_\+theta, const std\+::vector$<$ \hyperlink{param__transforms_8h_acee593b112f4fc85f850631b9c6aaae9}{Trans\+Type} $>$ \&tts, const unsigned int \&num\+\_\+mcmc\+\_\+iters, const std\+::string \&data\+\_\+file, const std\+::string \&sample\+\_\+file\+\_\+base\+\_\+name, const std\+::string \&message\+\_\+file\+\_\+base\+\_\+name, const bool \&mc, const unsigned int \&t0, const unsigned int \&t1, const psm \&C0, bool print\+\_\+to\+\_\+console, unsigned int print\+\_\+every\+\_\+k)
-\begin{DoxyCompactList}\small\item\em The constructor. \end{DoxyCompactList}\item 
-psm \hyperlink{classada__pmmh__mvn_a06930a79f4d2a62aa0cf24528c77e5a7}{get\+\_\+ct} () const
+\mbox{\hyperlink{classada__pmmh__mvn_a0caebfbc6ff008ac1fcca2a09c06d4a5}{ada\+\_\+pmmh\+\_\+mvn}} (const psv \&start\+\_\+trans\+\_\+theta, std\+::vector$<$ std\+::string $>$ tts, const unsigned int \&num\+\_\+mcmc\+\_\+iters, const unsigned int \&num\+\_\+pfilters, const std\+::string \&data\+\_\+file, const std\+::string \&sample\+\_\+file\+\_\+base\+\_\+name, const std\+::string \&message\+\_\+file\+\_\+base\+\_\+name, const bool \&mc, const unsigned int \&t0, const unsigned int \&t1, const psm \&C0, bool print\+\_\+to\+\_\+console, unsigned int print\+\_\+every\+\_\+k)
+\begin{DoxyCompactList}\small\item\em Constructs algorithm object. \end{DoxyCompactList}\item 
+psm \mbox{\hyperlink{classada__pmmh__mvn_a06930a79f4d2a62aa0cf24528c77e5a7}{get\+\_\+ct}} () const
 \begin{DoxyCompactList}\small\item\em Get the current proposal distribution\textquotesingle{}s covariance matrix. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classada__pmmh__mvn_a891d79acc39485cdd9104bdf120bec7a}\label{classada__pmmh__mvn_a891d79acc39485cdd9104bdf120bec7a}} 
-void \hyperlink{classada__pmmh__mvn_a891d79acc39485cdd9104bdf120bec7a}{commence\+Sampling} ()
+\mbox{\Hypertarget{classada__pmmh__mvn_a60ddc5d58cb45d40aa455b6fe7aaa55e}\label{classada__pmmh__mvn_a60ddc5d58cb45d40aa455b6fe7aaa55e}} 
+void \mbox{\hyperlink{classada__pmmh__mvn_a60ddc5d58cb45d40aa455b6fe7aaa55e}{commence\+\_\+sampling}} ()
 \begin{DoxyCompactList}\small\item\em starts the sampling \end{DoxyCompactList}\item 
-virtual float\+\_\+t \hyperlink{classada__pmmh__mvn_af946eae70a63045515ed7830c35106dc}{log\+Prior\+Evaluate} (const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&theta)=0
-\begin{DoxyCompactList}\small\item\em Evaluates the log of the model\textquotesingle{}s prior distribution assuming the original/nontransformed/contrained parameterization. \end{DoxyCompactList}\item 
-virtual float\+\_\+t \hyperlink{classada__pmmh__mvn_a82d43085173fd0ed33ee42de9be48b77}{log\+Like\+Evaluate} (const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&theta, const std\+::vector$<$ osv $>$ \&data)=0
+virtual float\+\_\+t \mbox{\hyperlink{classada__pmmh__mvn_a328bdc11578fac9397b4a2ee6cec5da2}{log\+\_\+prior\+\_\+eval}} (const \mbox{\hyperlink{classparam_1_1pack}{param\+::pack}}$<$ float\+\_\+t, numparams $>$ \&theta)=0
+\begin{DoxyCompactList}\small\item\em Evaluates the log of the model\textquotesingle{}s prior. \end{DoxyCompactList}\item 
+virtual float\+\_\+t \mbox{\hyperlink{classada__pmmh__mvn_a3f447b26c5adcbff9c7d2dfe46f5f59e}{log\+\_\+like\+\_\+eval}} (const \mbox{\hyperlink{classparam_1_1pack}{param\+::pack}}$<$ float\+\_\+t, numparams $>$ \&theta, const std\+::vector$<$ osv $>$ \&data)=0
 \begin{DoxyCompactList}\small\item\em Evaluates (approximates) the log-\/likelihood with a particle filter. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\subsection*{Private Member Functions}
+\doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classada__pmmh__mvn_ac02d38688740c1379a852f2d07a8ea0a}\label{classada__pmmh__mvn_ac02d38688740c1379a852f2d07a8ea0a}} 
-void {\bfseries update\+\_\+moments\+\_\+and\+\_\+\+Ct} (const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&new\+Theta)
+\mbox{\Hypertarget{classada__pmmh__mvn_a5d2c0b95de487592cbd3a37a0d492a95}\label{classada__pmmh__mvn_a5d2c0b95de487592cbd3a37a0d492a95}} 
+void {\bfseries update\+\_\+moments\+\_\+and\+\_\+\+Ct} (const \mbox{\hyperlink{classparam_1_1pack}{dyn\+\_\+data\+\_\+t}} \&new\+\_\+theta)
 \item 
-\mbox{\Hypertarget{classada__pmmh__mvn_a8ffbe9f38347905cd2549778a04d5ddf}\label{classada__pmmh__mvn_a8ffbe9f38347905cd2549778a04d5ddf}} 
-psv {\bfseries q\+Sample} (const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&old\+Theta)
+\mbox{\Hypertarget{classada__pmmh__mvn_a7feb6dc99c0be41e98291566b3e8beca}\label{classada__pmmh__mvn_a7feb6dc99c0be41e98291566b3e8beca}} 
+psv {\bfseries q\+\_\+samp} (const \mbox{\hyperlink{classparam_1_1pack}{dyn\+\_\+data\+\_\+t}} \&old\+\_\+theta)
 \item 
-\mbox{\Hypertarget{classada__pmmh__mvn_a2fb402251d938f5ec20754a84029bad2}\label{classada__pmmh__mvn_a2fb402251d938f5ec20754a84029bad2}} 
-float\+\_\+t {\bfseries log\+Q\+Evaluate} (const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&old\+Params, const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&new\+Params)
-\end{DoxyCompactItemize}
-\subsection*{Private Attributes}
+\mbox{\Hypertarget{classada__pmmh__mvn_a897aa2613645acffd64ffcfc920bc7cd}\label{classada__pmmh__mvn_a897aa2613645acffd64ffcfc920bc7cd}} 
+float\+\_\+t {\bfseries log\+\_\+q\+\_\+eval} (const \mbox{\hyperlink{classparam_1_1pack}{dyn\+\_\+data\+\_\+t}} \&old\+Params, const \mbox{\hyperlink{classparam_1_1pack}{dyn\+\_\+data\+\_\+t}} \&new\+\_\+params)
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_acc264e0934413d7d57be3cd0f22bb4c6}\label{classada__pmmh__mvn_acc264e0934413d7d57be3cd0f22bb4c6}} 
+void {\bfseries record\+\_\+params} ()
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_a40213871b135a68e35f0bc3536796f1f}\label{classada__pmmh__mvn_a40213871b135a68e35f0bc3536796f1f}} 
+void {\bfseries record\+\_\+iter\+\_\+num} ()
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_abc411ba7288980b0dbafc97b7286a62e}\label{classada__pmmh__mvn_abc411ba7288980b0dbafc97b7286a62e}} 
+void {\bfseries record\+\_\+messages} ()
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_a9a2fd1ae3f4a6c08b1ac54764c24d73e}\label{classada__pmmh__mvn_a9a2fd1ae3f4a6c08b1ac54764c24d73e}} 
+float\+\_\+t {\bfseries pool\+\_\+func} (\mbox{\hyperlink{classparam_1_1pack}{dyn\+\_\+data\+\_\+t}} param, static\+\_\+data\+\_\+t obs\+\_\+data)
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_afd3009731c19e2d634041c0a97bcaecb}\label{classada__pmmh__mvn_afd3009731c19e2d634041c0a97bcaecb}} 
+std\+::string \mbox{\hyperlink{classada__pmmh__mvn_afd3009731c19e2d634041c0a97bcaecb}{gen\+\_\+string\+\_\+with\+\_\+time}} (const std\+::string \&str)
+\begin{DoxyCompactList}\small\item\em return string with format is Y\+Y\+Y\+Y-\/\+M\+M-\/\+D\+D.\+HH\+:mm\+:ss \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classada__pmmh__mvn_a5088adab431640298be526751ca2fa94}\label{classada__pmmh__mvn_a5088adab431640298be526751ca2fa94}} 
-std\+::vector$<$ osv $>$ {\bfseries m\+\_\+data}
+\mbox{\Hypertarget{classada__pmmh__mvn_a963f9dac96b9c1f14cbc5bca91f629eb}\label{classada__pmmh__mvn_a963f9dac96b9c1f14cbc5bca91f629eb}} 
+\mbox{\hyperlink{classparam_1_1pack}{dyn\+\_\+data\+\_\+t}} {\bfseries m\+\_\+current\+\_\+theta}
 \item 
-\mbox{\Hypertarget{classada__pmmh__mvn_a2d33f16a15e709862cbe4ca13249c7a1}\label{classada__pmmh__mvn_a2d33f16a15e709862cbe4ca13249c7a1}} 
-\hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ {\bfseries m\+\_\+current\+\_\+theta}
-\item 
-\mbox{\Hypertarget{classada__pmmh__mvn_ab003f4ee2c98ac1a22cd0a504830aef5}\label{classada__pmmh__mvn_ab003f4ee2c98ac1a22cd0a504830aef5}} 
-std\+::vector$<$ \hyperlink{param__transforms_8h_acee593b112f4fc85f850631b9c6aaae9}{Trans\+Type} $>$ {\bfseries m\+\_\+tts}
+\mbox{\Hypertarget{classada__pmmh__mvn_a53ea30078083dcbe435ece00c7f5bc6e}\label{classada__pmmh__mvn_a53ea30078083dcbe435ece00c7f5bc6e}} 
+std\+::vector$<$ std\+::string $>$ {\bfseries m\+\_\+tts}
 \item 
 \mbox{\Hypertarget{classada__pmmh__mvn_afff9cd2d50bb0577aa861f30df27d4eb}\label{classada__pmmh__mvn_afff9cd2d50bb0577aa861f30df27d4eb}} 
 psm {\bfseries m\+\_\+sigma\+\_\+hat}
@@ -93,12 +122,6 @@ std\+::ofstream {\bfseries m\+\_\+message\+\_\+stream}
 \mbox{\Hypertarget{classada__pmmh__mvn_a653603682a96d0f30c82f5f5bd83503e}\label{classada__pmmh__mvn_a653603682a96d0f30c82f5f5bd83503e}} 
 unsigned int {\bfseries m\+\_\+num\+\_\+mcmc\+\_\+iters}
 \item 
-\mbox{\Hypertarget{classada__pmmh__mvn_a508a228e3effb586bbf2fdc38c5dfaf9}\label{classada__pmmh__mvn_a508a228e3effb586bbf2fdc38c5dfaf9}} 
-unsigned int {\bfseries m\+\_\+num\+\_\+extra\+\_\+threads}
-\item 
-\mbox{\Hypertarget{classada__pmmh__mvn_ae5afb1ceaa3f6173f3b12c2d492105ad}\label{classada__pmmh__mvn_ae5afb1ceaa3f6173f3b12c2d492105ad}} 
-bool {\bfseries m\+\_\+multicore}
-\item 
 \mbox{\Hypertarget{classada__pmmh__mvn_a06b5eed1ebb523262ec69e46bc70393d}\label{classada__pmmh__mvn_a06b5eed1ebb523262ec69e46bc70393d}} 
 unsigned int {\bfseries m\+\_\+iter}
 \item 
@@ -113,32 +136,50 @@ bool {\bfseries m\+\_\+print\+\_\+to\+\_\+console}
 \item 
 \mbox{\Hypertarget{classada__pmmh__mvn_ab1eb75f119d61924cdbfa9b00c07d795}\label{classada__pmmh__mvn_ab1eb75f119d61924cdbfa9b00c07d795}} 
 unsigned int {\bfseries m\+\_\+print\+\_\+every\+\_\+k}
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_a61d44e7e37a40c78fe93731a5f85e36a}\label{classada__pmmh__mvn_a61d44e7e37a40c78fe93731a5f85e36a}} 
+\mbox{\hyperlink{classthread__pool}{thread\+\_\+pool}}$<$ \mbox{\hyperlink{classparam_1_1pack}{dyn\+\_\+data\+\_\+t}}, static\+\_\+data\+\_\+t, float\+\_\+t $>$ {\bfseries m\+\_\+pool}
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_aef282ba683044bc137b97fb5b77938eb}\label{classada__pmmh__mvn_aef282ba683044bc137b97fb5b77938eb}} 
+float\+\_\+t {\bfseries m\+\_\+old\+\_\+log\+\_\+like}
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_a7efb1aa460765803a0b1655e5513e5b5}\label{classada__pmmh__mvn_a7efb1aa460765803a0b1655e5513e5b5}} 
+float\+\_\+t {\bfseries m\+\_\+new\+\_\+log\+\_\+like}
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_add751ce82e67547ad92762b613894da3}\label{classada__pmmh__mvn_add751ce82e67547ad92762b613894da3}} 
+float\+\_\+t {\bfseries m\+\_\+old\+\_\+log\+\_\+prior}
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_a64d5bec4b3083b64e592bd14fb56d3f1}\label{classada__pmmh__mvn_a64d5bec4b3083b64e592bd14fb56d3f1}} 
+float\+\_\+t {\bfseries m\+\_\+new\+\_\+log\+\_\+prior}
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_a9f5e52f06042c58757d87cb8745e6bf3}\label{classada__pmmh__mvn_a9f5e52f06042c58757d87cb8745e6bf3}} 
+float\+\_\+t {\bfseries m\+\_\+log\+\_\+accept\+\_\+prob}
+\item 
+\mbox{\Hypertarget{classada__pmmh__mvn_a526172f6b05745044b469f669aa26660}\label{classada__pmmh__mvn_a526172f6b05745044b469f669aa26660}} 
+bool {\bfseries m\+\_\+accepted}
 \end{DoxyCompactItemize}
 
 
-\subsection{Detailed Description}
+\doxysubsection{Detailed Description}
 \subsubsection*{template$<$size\+\_\+t numparams, size\+\_\+t dimobs, size\+\_\+t numparts, typename float\+\_\+t$>$\newline
 class ada\+\_\+pmmh\+\_\+mvn$<$ numparams, dimobs, numparts, float\+\_\+t $>$}
 
 \begin{DoxyAuthor}{Author}
-t 
+Taylor 
 \end{DoxyAuthor}
-\begin{DoxyDate}{Date}
-24/05/18 
-\end{DoxyDate}
 
 
-\subsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classada__pmmh__mvn_a749d2c42d1c5741edeb55b641dca9625}\label{classada__pmmh__mvn_a749d2c42d1c5741edeb55b641dca9625}} 
-\index{ada\+\_\+pmmh\+\_\+mvn@{ada\+\_\+pmmh\+\_\+mvn}!ada\+\_\+pmmh\+\_\+mvn@{ada\+\_\+pmmh\+\_\+mvn}}
-\index{ada\+\_\+pmmh\+\_\+mvn@{ada\+\_\+pmmh\+\_\+mvn}!ada\+\_\+pmmh\+\_\+mvn@{ada\+\_\+pmmh\+\_\+mvn}}
-\subsubsection{\texorpdfstring{ada\+\_\+pmmh\+\_\+mvn()}{ada\_pmmh\_mvn()}}
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classada__pmmh__mvn_a0caebfbc6ff008ac1fcca2a09c06d4a5}\label{classada__pmmh__mvn_a0caebfbc6ff008ac1fcca2a09c06d4a5}} 
+\index{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$@{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$}!ada\_pmmh\_mvn@{ada\_pmmh\_mvn}}
+\index{ada\_pmmh\_mvn@{ada\_pmmh\_mvn}!ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$@{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{ada\_pmmh\_mvn()}{ada\_pmmh\_mvn()}}
 {\footnotesize\ttfamily template$<$size\+\_\+t numparams, size\+\_\+t dimobs, size\+\_\+t numparts, typename float\+\_\+t $>$ \\
-\hyperlink{classada__pmmh__mvn}{ada\+\_\+pmmh\+\_\+mvn}$<$ numparams, dimobs, numparts, float\+\_\+t $>$\+::\hyperlink{classada__pmmh__mvn}{ada\+\_\+pmmh\+\_\+mvn} (\begin{DoxyParamCaption}\item[{const psv \&}]{start\+\_\+trans\+\_\+theta,  }\item[{const std\+::vector$<$ \hyperlink{param__transforms_8h_acee593b112f4fc85f850631b9c6aaae9}{Trans\+Type} $>$ \&}]{tts,  }\item[{const unsigned int \&}]{num\+\_\+mcmc\+\_\+iters,  }\item[{const std\+::string \&}]{data\+\_\+file,  }\item[{const std\+::string \&}]{sample\+\_\+file\+\_\+base\+\_\+name,  }\item[{const std\+::string \&}]{message\+\_\+file\+\_\+base\+\_\+name,  }\item[{const bool \&}]{mc,  }\item[{const unsigned int \&}]{t0,  }\item[{const unsigned int \&}]{t1,  }\item[{const psm \&}]{C0,  }\item[{bool}]{print\+\_\+to\+\_\+console,  }\item[{unsigned int}]{print\+\_\+every\+\_\+k }\end{DoxyParamCaption})}
+\mbox{\hyperlink{classada__pmmh__mvn}{ada\+\_\+pmmh\+\_\+mvn}}$<$ numparams, dimobs, numparts, float\+\_\+t $>$\+::\mbox{\hyperlink{classada__pmmh__mvn}{ada\+\_\+pmmh\+\_\+mvn}} (\begin{DoxyParamCaption}\item[{const psv \&}]{start\+\_\+trans\+\_\+theta,  }\item[{std\+::vector$<$ std\+::string $>$}]{tts,  }\item[{const unsigned int \&}]{num\+\_\+mcmc\+\_\+iters,  }\item[{const unsigned int \&}]{num\+\_\+pfilters,  }\item[{const std\+::string \&}]{data\+\_\+file,  }\item[{const std\+::string \&}]{sample\+\_\+file\+\_\+base\+\_\+name,  }\item[{const std\+::string \&}]{message\+\_\+file\+\_\+base\+\_\+name,  }\item[{const bool \&}]{mc,  }\item[{const unsigned int \&}]{t0,  }\item[{const unsigned int \&}]{t1,  }\item[{const psm \&}]{C0,  }\item[{bool}]{print\+\_\+to\+\_\+console,  }\item[{unsigned int}]{print\+\_\+every\+\_\+k }\end{DoxyParamCaption})}
 
 
 
-The constructor. 
+Constructs algorithm object. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -154,9 +195,9 @@ The constructor.
 \hline
 {\em mc} & stands for multicore. true or false if you want to use extra cores. \\
 \hline
-{\em t0} & time you start adapting \\
+{\em t0} & iteration you start adapting \\
 \hline
-{\em t1} & time you stop adapting \\
+{\em t1} & iteration you stop adapting \\
 \hline
 {\em C0} & initial covariance matrix for proposal distribution. \\
 \hline
@@ -167,13 +208,13 @@ The constructor.
 \end{DoxyParams}
 
 
-\subsection{Member Function Documentation}
+\doxysubsection{Member Function Documentation}
 \mbox{\Hypertarget{classada__pmmh__mvn_a06930a79f4d2a62aa0cf24528c77e5a7}\label{classada__pmmh__mvn_a06930a79f4d2a62aa0cf24528c77e5a7}} 
-\index{ada\+\_\+pmmh\+\_\+mvn@{ada\+\_\+pmmh\+\_\+mvn}!get\+\_\+ct@{get\+\_\+ct}}
-\index{get\+\_\+ct@{get\+\_\+ct}!ada\+\_\+pmmh\+\_\+mvn@{ada\+\_\+pmmh\+\_\+mvn}}
-\subsubsection{\texorpdfstring{get\+\_\+ct()}{get\_ct()}}
+\index{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$@{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$}!get\_ct@{get\_ct}}
+\index{get\_ct@{get\_ct}!ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$@{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{get\_ct()}{get\_ct()}}
 {\footnotesize\ttfamily template$<$size\+\_\+t numparams, size\+\_\+t dimobs, size\+\_\+t numparts, typename float\+\_\+t $>$ \\
-auto \hyperlink{classada__pmmh__mvn}{ada\+\_\+pmmh\+\_\+mvn}$<$ numparams, dimobs, numparts, float\+\_\+t $>$\+::get\+\_\+ct (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+auto \mbox{\hyperlink{classada__pmmh__mvn}{ada\+\_\+pmmh\+\_\+mvn}}$<$ numparams, dimobs, numparts, float\+\_\+t $>$\+::get\+\_\+ct}
 
 
 
@@ -182,12 +223,12 @@ Get the current proposal distribution\textquotesingle{}s covariance matrix.
 \begin{DoxyReturn}{Returns}
 the covariance matrix of q(theta\textquotesingle{} $\vert$ theta) 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classada__pmmh__mvn_a82d43085173fd0ed33ee42de9be48b77}\label{classada__pmmh__mvn_a82d43085173fd0ed33ee42de9be48b77}} 
-\index{ada\+\_\+pmmh\+\_\+mvn@{ada\+\_\+pmmh\+\_\+mvn}!log\+Like\+Evaluate@{log\+Like\+Evaluate}}
-\index{log\+Like\+Evaluate@{log\+Like\+Evaluate}!ada\+\_\+pmmh\+\_\+mvn@{ada\+\_\+pmmh\+\_\+mvn}}
-\subsubsection{\texorpdfstring{log\+Like\+Evaluate()}{logLikeEvaluate()}}
-{\footnotesize\ttfamily template$<$size\+\_\+t numparams, size\+\_\+t dimobs, size\+\_\+t numparts, typename float\+\_\+t$>$ \\
-virtual float\+\_\+t \hyperlink{classada__pmmh__mvn}{ada\+\_\+pmmh\+\_\+mvn}$<$ numparams, dimobs, numparts, float\+\_\+t $>$\+::log\+Like\+Evaluate (\begin{DoxyParamCaption}\item[{const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&}]{theta,  }\item[{const std\+::vector$<$ osv $>$ \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+\mbox{\Hypertarget{classada__pmmh__mvn_a3f447b26c5adcbff9c7d2dfe46f5f59e}\label{classada__pmmh__mvn_a3f447b26c5adcbff9c7d2dfe46f5f59e}} 
+\index{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$@{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$}!log\_like\_eval@{log\_like\_eval}}
+\index{log\_like\_eval@{log\_like\_eval}!ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$@{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{log\_like\_eval()}{log\_like\_eval()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t numparams, size\+\_\+t dimobs, size\+\_\+t numparts, typename float\+\_\+t $>$ \\
+virtual float\+\_\+t \mbox{\hyperlink{classada__pmmh__mvn}{ada\+\_\+pmmh\+\_\+mvn}}$<$ numparams, dimobs, numparts, float\+\_\+t $>$\+::log\+\_\+like\+\_\+eval (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classparam_1_1pack}{param\+::pack}}$<$ float\+\_\+t, numparams $>$ \&}]{theta,  }\item[{const std\+::vector$<$ osv $>$ \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
 
 
@@ -195,43 +236,35 @@ Evaluates (approximates) the log-\/likelihood with a particle filter.
 
 
 \begin{DoxyParams}{Parameters}
-{\em theta} & the parameters with which to run the particle filter. \\
+{\em theta} & the parameters with which to run the particle filter \\
 \hline
-{\em data} & the observed data with which to run the particle filter. \\
+{\em data} & the observed data with which to run the particle filter \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-the evaluation (as a float\+\_\+t) of the log likelihood approximation. 
+the evaluation of the approx. log likelihood 
 \end{DoxyReturn}
-
-
-Implemented in \hyperlink{classuniv__svol__estimator_a1223321e7875a4d40f9c4817753a2e01}{univ\+\_\+svol\+\_\+estimator$<$ numparams, dimstate, dimobs, numparts, float\+\_\+t $>$}.
-
-\mbox{\Hypertarget{classada__pmmh__mvn_af946eae70a63045515ed7830c35106dc}\label{classada__pmmh__mvn_af946eae70a63045515ed7830c35106dc}} 
-\index{ada\+\_\+pmmh\+\_\+mvn@{ada\+\_\+pmmh\+\_\+mvn}!log\+Prior\+Evaluate@{log\+Prior\+Evaluate}}
-\index{log\+Prior\+Evaluate@{log\+Prior\+Evaluate}!ada\+\_\+pmmh\+\_\+mvn@{ada\+\_\+pmmh\+\_\+mvn}}
-\subsubsection{\texorpdfstring{log\+Prior\+Evaluate()}{logPriorEvaluate()}}
-{\footnotesize\ttfamily template$<$size\+\_\+t numparams, size\+\_\+t dimobs, size\+\_\+t numparts, typename float\+\_\+t$>$ \\
-virtual float\+\_\+t \hyperlink{classada__pmmh__mvn}{ada\+\_\+pmmh\+\_\+mvn}$<$ numparams, dimobs, numparts, float\+\_\+t $>$\+::log\+Prior\+Evaluate (\begin{DoxyParamCaption}\item[{const \hyperlink{classparamPack}{param\+Pack}$<$ float\+\_\+t $>$ \&}]{theta }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+\mbox{\Hypertarget{classada__pmmh__mvn_a328bdc11578fac9397b4a2ee6cec5da2}\label{classada__pmmh__mvn_a328bdc11578fac9397b4a2ee6cec5da2}} 
+\index{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$@{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$}!log\_prior\_eval@{log\_prior\_eval}}
+\index{log\_prior\_eval@{log\_prior\_eval}!ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$@{ada\_pmmh\_mvn$<$ numparams, dimobs, numparts, float\_t $>$}}
+\doxysubsubsection{\texorpdfstring{log\_prior\_eval()}{log\_prior\_eval()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t numparams, size\+\_\+t dimobs, size\+\_\+t numparts, typename float\+\_\+t $>$ \\
+virtual float\+\_\+t \mbox{\hyperlink{classada__pmmh__mvn}{ada\+\_\+pmmh\+\_\+mvn}}$<$ numparams, dimobs, numparts, float\+\_\+t $>$\+::log\+\_\+prior\+\_\+eval (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classparam_1_1pack}{param\+::pack}}$<$ float\+\_\+t, numparams $>$ \&}]{theta }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
 
 
 
-Evaluates the log of the model\textquotesingle{}s prior distribution assuming the original/nontransformed/contrained parameterization. 
+Evaluates the log of the model\textquotesingle{}s prior. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em theta} & the parameters argument (nontransformed/constrained parameterization). \\
+{\em theta} & the parameters argument \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-the log of the prior density. 
+the log of the prior density 
 \end{DoxyReturn}
-
-
-Implemented in \hyperlink{classuniv__svol__estimator_a2e0e55bf061ca8f59fa5d42ae6495fdd}{univ\+\_\+svol\+\_\+estimator$<$ numparams, dimstate, dimobs, numparts, float\+\_\+t $>$}.
-
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-include/\hyperlink{ada__pmmh__mvn_8h}{ada\+\_\+pmmh\+\_\+mvn.\+h}\end{DoxyCompactItemize}
+include/ssme/\mbox{\hyperlink{ada__pmmh__mvn_8h}{ada\+\_\+pmmh\+\_\+mvn.\+h}}\end{DoxyCompactItemize}

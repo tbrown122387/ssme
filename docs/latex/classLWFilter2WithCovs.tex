@@ -1,0 +1,442 @@
+\hypertarget{classLWFilter2WithCovs}{}\doxysection{L\+W\+Filter2\+With\+Covs$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$ Class Template Reference}
+\label{classLWFilter2WithCovs}\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+
+
+A base class for a modified version of the Liu-\/\+West Filter. Unlike the above class, it allows the state transition to depend on covariates.  
+
+
+
+
+{\ttfamily \#include $<$liu\+\_\+west\+\_\+filter.\+h$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimx, 1 $>$
+\item 
+using \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimy, 1 $>$
+\item 
+using \mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimcov, 1 $>$
+\item 
+using \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimparam, 1 $>$
+\item 
+using \mbox{\hyperlink{classLWFilter2WithCovs_a43764fdc891dad4161ac2831b3117e00}{psm}} = Eigen\+::\+Matrix$<$ float\+\_\+t, dimparam, dimparam $>$
+\item 
+using \mbox{\hyperlink{classLWFilter2WithCovs_af575f46f3f4ffd6bbbc2356f8864743a}{Mat}} = Eigen\+::\+Matrix$<$ float\+\_\+t, Eigen\+::\+Dynamic, Eigen\+::\+Dynamic $>$
+\item 
+using \mbox{\hyperlink{classLWFilter2WithCovs_a10e4e7bab3d56299810d0ddaa92ed0a4}{array\+States}} = std\+::array$<$ \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}}, nparts $>$
+\item 
+using \mbox{\hyperlink{classLWFilter2WithCovs_ac56073e2e3deee9711865e3a1408faec}{array\+Params}} = std\+::array$<$ \mbox{\hyperlink{classparam_1_1pack}{param\+::pack}}$<$ float\+\_\+t, dimparam $>$, nparts $>$
+\item 
+using \mbox{\hyperlink{classLWFilter2WithCovs_ad2322cde20a4eec4ef9c09a5d88eb28a}{array\+Floats}} = std\+::array$<$ float\+\_\+t, nparts $>$
+\item 
+using \mbox{\hyperlink{classLWFilter2WithCovs_a65d0374b5cf7b7eade0368cb70de4c3a}{state\+Cov\+Param\+Func}} = std\+::function$<$ const \mbox{\hyperlink{classLWFilter2WithCovs_af575f46f3f4ffd6bbbc2356f8864743a}{Mat}}(const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&, const \mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}} \&, const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&)$>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classLWFilter2WithCovs_ad0d0449085f13b5275f2a19925f1f5b7}{L\+W\+Filter2\+With\+Covs}} (std\+::vector$<$ std\+::string $>$ transforms, float\+\_\+t delta, const unsigned int \&rs=1)
+\begin{DoxyCompactList}\small\item\em constructs the Liu-\/\+West filter \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a7204260f0e4e786c94afc9e4e2465bff}\label{classLWFilter2WithCovs_a7204260f0e4e786c94afc9e4e2465bff}} 
+\mbox{\hyperlink{classLWFilter2WithCovs_a7204260f0e4e786c94afc9e4e2465bff}{$\sim$\+L\+W\+Filter2\+With\+Covs}} ()
+\begin{DoxyCompactList}\small\item\em destructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a5ffb115da4e9318a12f23e387647605b}\label{classLWFilter2WithCovs_a5ffb115da4e9318a12f23e387647605b}} 
+float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs_a5ffb115da4e9318a12f23e387647605b}{get\+Log\+Cond\+Like}} () const
+\begin{DoxyCompactList}\small\item\em returns log p(y\+\_\+t \textbackslash{}mid y\+\_\+\{1\+:t-\/1\}) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a6f3f399b01f222d942af99503dee0ff1}\label{classLWFilter2WithCovs_a6f3f399b01f222d942af99503dee0ff1}} 
+\mbox{\hyperlink{classLWFilter2WithCovs_ac56073e2e3deee9711865e3a1408faec}{array\+Params}} \mbox{\hyperlink{classLWFilter2WithCovs_a6f3f399b01f222d942af99503dee0ff1}{get\+Param\+Samples}} () const
+\begin{DoxyCompactList}\small\item\em returns latest posterior samples \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{classLWFilter2WithCovs_af575f46f3f4ffd6bbbc2356f8864743a}{Mat}} $>$ \mbox{\hyperlink{classLWFilter2WithCovs_a6026f9db822fd2a3a9e05fc0bf9d19cf}{get\+Expectations}} () const
+\begin{DoxyCompactList}\small\item\em return all stored expectations (taken with respect to \$p(x\+\_\+t,theta$\vert$y\+\_\+\{1\+:t\})\$ \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classLWFilter2WithCovs_adf3f07bcf4f7b3e4837f9f25c1dcd8d7}{filter}} (const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&obs\+\_\+data, const \mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}} \&cov\+\_\+data, const std\+::vector$<$ \mbox{\hyperlink{classLWFilter2WithCovs_a65d0374b5cf7b7eade0368cb70de4c3a}{state\+Cov\+Param\+Func}} $>$ \&fs=std\+::vector$<$ \mbox{\hyperlink{classLWFilter2WithCovs_a65d0374b5cf7b7eade0368cb70de4c3a}{state\+Cov\+Param\+Func}} $>$())
+\begin{DoxyCompactList}\small\item\em updates filtering distribution on a new datapoint. Optionally stores expectations of functionals. \end{DoxyCompactList}\item 
+virtual float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs_a080bd5fc85a1218a9432e52211c6f126}{log\+Mu\+Ev}} (const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&x1, const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&untrans\+\_\+p1)=0
+\begin{DoxyCompactList}\small\item\em Calculate mu\+Ev or logmu\+Ev. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \mbox{\hyperlink{classLWFilter2WithCovs_a880b5d0a652494cfe034d13fd59bbae6}{q1\+Samp}} (const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&y1, const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&untrans\+\_\+p1)=0
+\begin{DoxyCompactList}\small\item\em Samples from time 1 proposal. \end{DoxyCompactList}\item 
+virtual float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs_ae3a32e77ef7883c7a1dbbe1a4eeb975b}{log\+Q1\+Ev}} (const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&x1, const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&y1, const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&untrans\+\_\+p1)=0
+\begin{DoxyCompactList}\small\item\em Calculate q1\+Ev or log q1\+Ev. \end{DoxyCompactList}\item 
+virtual float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs_ac533e6a028d84db866f724f0f3aa7900}{log\+G\+Ev}} (const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&yt, const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&xt, const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&untrans\+\_\+pt)=0
+\begin{DoxyCompactList}\small\item\em Calculate g\+Ev or log\+G\+Ev. \end{DoxyCompactList}\item 
+virtual float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs_a504442388f48321ba43c246e98d72fb3}{log\+F\+Ev}} (const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&xt, const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&xtm1, const \mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}} \&cov\+\_\+data, const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&untrans\+\_\+pt)=0
+\begin{DoxyCompactList}\small\item\em Evaluates the state transition density. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \mbox{\hyperlink{classLWFilter2WithCovs_ad34be751c7f626fe4910a349ea11d4ca}{q\+Samp}} (const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&xtm1, const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&yt, const \mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}} \&cov\+\_\+data, const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&untrans\+\_\+pt)=0
+\begin{DoxyCompactList}\small\item\em Samples from the proposal/instrumental/importance density at time t. \end{DoxyCompactList}\item 
+virtual float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs_ae77e03bb34b227d1b99fb7e1101495ad}{log\+Q\+Ev}} (const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&xt, const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&xtm1, const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&yt, const \mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}} \&cov\+\_\+data, const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&untrans\+\_\+pt)=0
+\begin{DoxyCompactList}\small\item\em Evaluates the proposal/instrumental/importance density/pmf. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a403fc350e9c86f10287fbda08f30a46d}\label{classLWFilter2WithCovs_a403fc350e9c86f10287fbda08f30a46d}} 
+virtual \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \mbox{\hyperlink{classLWFilter2WithCovs_a403fc350e9c86f10287fbda08f30a46d}{param\+Prior\+Samp}} ()=0
+\begin{DoxyCompactList}\small\item\em sample a non-\/transformed parameter vector from the prior \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classLWFilter2WithCovs_ac8fdd04e2b0491e70634f61d78146cfe}{update\+\_\+parameter\+\_\+proposal\+\_\+components}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a0738374c179b7f2f8167a51c2801321a}\label{classLWFilter2WithCovs_a0738374c179b7f2f8167a51c2801321a}} 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{classLWFilter2WithCovs_a0738374c179b7f2f8167a51c2801321a}{m\+\_\+transforms}}
+\begin{DoxyCompactList}\small\item\em parameter transforms \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a396d68a4e48dfdb5fd3ceff0097ca788}\label{classLWFilter2WithCovs_a396d68a4e48dfdb5fd3ceff0097ca788}} 
+\mbox{\hyperlink{classLWFilter2WithCovs_a10e4e7bab3d56299810d0ddaa92ed0a4}{array\+States}} \mbox{\hyperlink{classLWFilter2WithCovs_a396d68a4e48dfdb5fd3ceff0097ca788}{m\+\_\+state\+\_\+particles}}
+\begin{DoxyCompactList}\small\item\em state samples \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a10f65ab9cf5f59ac06680e3eb33547e3}\label{classLWFilter2WithCovs_a10f65ab9cf5f59ac06680e3eb33547e3}} 
+\mbox{\hyperlink{classLWFilter2WithCovs_ac56073e2e3deee9711865e3a1408faec}{array\+Params}} \mbox{\hyperlink{classLWFilter2WithCovs_a10f65ab9cf5f59ac06680e3eb33547e3}{m\+\_\+param\+\_\+particles}}
+\begin{DoxyCompactList}\small\item\em param samples \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_af3b6fa3bbfe02390454ad5067e0e2a22}\label{classLWFilter2WithCovs_af3b6fa3bbfe02390454ad5067e0e2a22}} 
+\mbox{\hyperlink{classLWFilter2WithCovs_ad2322cde20a4eec4ef9c09a5d88eb28a}{array\+Floats}} \mbox{\hyperlink{classLWFilter2WithCovs_af3b6fa3bbfe02390454ad5067e0e2a22}{m\+\_\+log\+Un\+Norm\+Weights}}
+\begin{DoxyCompactList}\small\item\em particle weights \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a485e30415718531ce89980c1dee485f0}\label{classLWFilter2WithCovs_a485e30415718531ce89980c1dee485f0}} 
+unsigned int \mbox{\hyperlink{classLWFilter2WithCovs_a485e30415718531ce89980c1dee485f0}{m\+\_\+now}}
+\begin{DoxyCompactList}\small\item\em current time point \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a3a08556cf7e73b97d99323026ee4f5a1}\label{classLWFilter2WithCovs_a3a08556cf7e73b97d99323026ee4f5a1}} 
+float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs_a3a08556cf7e73b97d99323026ee4f5a1}{m\+\_\+log\+Last\+Cond\+Like}}
+\begin{DoxyCompactList}\small\item\em an approximation to log p(y\+\_\+t \textbackslash{}mid y\+\_\+\{1\+:t-\/1\}) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a028c2a84f22810a62a02e03430a3829d}\label{classLWFilter2WithCovs_a028c2a84f22810a62a02e03430a3829d}} 
+\mbox{\hyperlink{classmn__resamp__states__and__params}{mn\+\_\+resamp\+\_\+states\+\_\+and\+\_\+params}}$<$ nparts, dimx, dimparam, float\+\_\+t $>$ \mbox{\hyperlink{classLWFilter2WithCovs_a028c2a84f22810a62a02e03430a3829d}{m\+\_\+resampler}}
+\begin{DoxyCompactList}\small\item\em resampling object \end{DoxyCompactList}\item 
+pf\+::rvsamp\+::\+M\+V\+N\+Sampler$<$ dimparam, float\+\_\+t $>$ \mbox{\hyperlink{classLWFilter2WithCovs_a4a4711e3b58033e177cac5d970324d75}{m\+\_\+mvn\+\_\+gen}}
+\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a79170abb7377a89efc631cb6deec8986}\label{classLWFilter2WithCovs_a79170abb7377a89efc631cb6deec8986}} 
+std\+::vector$<$ \mbox{\hyperlink{classLWFilter2WithCovs_af575f46f3f4ffd6bbbc2356f8864743a}{Mat}} $>$ \mbox{\hyperlink{classLWFilter2WithCovs_a79170abb7377a89efc631cb6deec8986}{m\+\_\+expectations}}
+\begin{DoxyCompactList}\small\item\em expectations E\mbox{[}h(x\+\_\+t) $\vert$ y\+\_\+\{1\+:t\}\mbox{]} for user defined \char`\"{}h\char`\"{}s \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_ad344773922abf3a296308dc12b244fc8}\label{classLWFilter2WithCovs_ad344773922abf3a296308dc12b244fc8}} 
+unsigned int \mbox{\hyperlink{classLWFilter2WithCovs_ad344773922abf3a296308dc12b244fc8}{m\+\_\+resamp\+Sched}}
+\begin{DoxyCompactList}\small\item\em resampling schedule (e.\+g. resample every \+\_\+\+\_\+ time points) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classLWFilter2WithCovs_a1261dabbd5332506a1ed4154f6535d17}\label{classLWFilter2WithCovs_a1261dabbd5332506a1ed4154f6535d17}} 
+float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs_a1261dabbd5332506a1ed4154f6535d17}{m\+\_\+a}}
+\begin{DoxyCompactList}\small\item\em the shrinkage factor \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \mbox{\hyperlink{classLWFilter2WithCovs_a140a24bfc5fb966d31e5d5d05ad873a3}{m\+\_\+theta\+Bar}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t, bool debug = false$>$\newline
+class L\+W\+Filter2\+With\+Covs$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$}
+
+A base class for a modified version of the Liu-\/\+West Filter. Unlike the above class, it allows the state transition to depend on covariates. 
+
+\begin{DoxyAuthor}{Author}
+taylor 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classLWFilter2WithCovs_ad2322cde20a4eec4ef9c09a5d88eb28a}\label{classLWFilter2WithCovs_ad2322cde20a4eec4ef9c09a5d88eb28a}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!arrayFloats@{arrayFloats}}
+\index{arrayFloats@{arrayFloats}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{arrayFloats}{arrayFloats}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilter2WithCovs_ad2322cde20a4eec4ef9c09a5d88eb28a}{array\+Floats}} =  std\+::array$<$float\+\_\+t, nparts$>$}
+
+type alias for array of float\+\_\+ts \mbox{\Hypertarget{classLWFilter2WithCovs_ac56073e2e3deee9711865e3a1408faec}\label{classLWFilter2WithCovs_ac56073e2e3deee9711865e3a1408faec}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!arrayParams@{arrayParams}}
+\index{arrayParams@{arrayParams}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{arrayParams}{arrayParams}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilter2WithCovs_ac56073e2e3deee9711865e3a1408faec}{array\+Params}} =  std\+::array$<$\mbox{\hyperlink{classparam_1_1pack}{param\+::pack}}$<$float\+\_\+t,dimparam$>$, nparts$>$}
+
+type alias for parameter samples \mbox{\Hypertarget{classLWFilter2WithCovs_a10e4e7bab3d56299810d0ddaa92ed0a4}\label{classLWFilter2WithCovs_a10e4e7bab3d56299810d0ddaa92ed0a4}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!arrayStates@{arrayStates}}
+\index{arrayStates@{arrayStates}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{arrayStates}{arrayStates}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilter2WithCovs_a10e4e7bab3d56299810d0ddaa92ed0a4}{array\+States}} =  std\+::array$<$\mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}}, nparts$>$}
+
+type alias for linear algebra stuff \mbox{\Hypertarget{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}\label{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!csv@{csv}}
+\index{csv@{csv}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{csv}{csv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}} =  Eigen\+::\+Matrix$<$float\+\_\+t, dimcov, 1$>$}
+
+\char`\"{}covariate size vector\char`\"{} type alias for linear algebra stuff \mbox{\Hypertarget{classLWFilter2WithCovs_af575f46f3f4ffd6bbbc2356f8864743a}\label{classLWFilter2WithCovs_af575f46f3f4ffd6bbbc2356f8864743a}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!Mat@{Mat}}
+\index{Mat@{Mat}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{Mat}{Mat}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilter2WithCovs_af575f46f3f4ffd6bbbc2356f8864743a}{Mat}} =  Eigen\+::\+Matrix$<$float\+\_\+t,Eigen\+::\+Dynamic,Eigen\+::\+Dynamic$>$}
+
+type alias for linear algebra stuff \mbox{\Hypertarget{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}\label{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!osv@{osv}}
+\index{osv@{osv}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{osv}{osv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} =  Eigen\+::\+Matrix$<$float\+\_\+t, dimy, 1$>$}
+
+\char`\"{}obs size vector\char`\"{} type alias for linear algebra stuff \mbox{\Hypertarget{classLWFilter2WithCovs_a43764fdc891dad4161ac2831b3117e00}\label{classLWFilter2WithCovs_a43764fdc891dad4161ac2831b3117e00}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!psm@{psm}}
+\index{psm@{psm}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{psm}{psm}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilter2WithCovs_a43764fdc891dad4161ac2831b3117e00}{psm}} =  Eigen\+::\+Matrix$<$float\+\_\+t, dimparam,dimparam$>$}
+
+\char`\"{}param sized matrix\char`\"{} type alias for linear algebra stuff \mbox{\Hypertarget{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}\label{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!psv@{psv}}
+\index{psv@{psv}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{psv}{psv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} =  Eigen\+::\+Matrix$<$float\+\_\+t, dimparam,1$>$}
+
+\char`\"{}param sized vector\char`\"{} type alias for linear algebra stuff \mbox{\Hypertarget{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}\label{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!ssv@{ssv}}
+\index{ssv@{ssv}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{ssv}{ssv}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} =  Eigen\+::\+Matrix$<$float\+\_\+t, dimx, 1$>$}
+
+\char`\"{}state size vector\char`\"{} type alias for linear algebra stuff \mbox{\Hypertarget{classLWFilter2WithCovs_a65d0374b5cf7b7eade0368cb70de4c3a}\label{classLWFilter2WithCovs_a65d0374b5cf7b7eade0368cb70de4c3a}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!stateCovParamFunc@{stateCovParamFunc}}
+\index{stateCovParamFunc@{stateCovParamFunc}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{stateCovParamFunc}{stateCovParamFunc}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+using \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilter2WithCovs_a65d0374b5cf7b7eade0368cb70de4c3a}{state\+Cov\+Param\+Func}} =  std\+::function$<$const \mbox{\hyperlink{classLWFilter2WithCovs_af575f46f3f4ffd6bbbc2356f8864743a}{Mat}}(const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}}\&, const \mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}}\&, const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}}\&)$>$}
+
+function type that takes in parameter and state and returns dynamically sized matrix ~\newline
+ 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classLWFilter2WithCovs_ad0d0449085f13b5275f2a19925f1f5b7}\label{classLWFilter2WithCovs_ad0d0449085f13b5275f2a19925f1f5b7}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!LWFilter2WithCovs@{LWFilter2WithCovs}}
+\index{LWFilter2WithCovs@{LWFilter2WithCovs}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{LWFilter2WithCovs()}{LWFilter2WithCovs()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug$>$ \\
+\mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::\mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}} (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::string $>$}]{transforms,  }\item[{float\+\_\+t}]{delta,  }\item[{const unsigned int \&}]{rs = {\ttfamily 1} }\end{DoxyParamCaption})}
+
+
+
+constructs the Liu-\/\+West filter 
+
+
+\begin{DoxyParams}{Parameters}
+{\em transforms} & that describe how to transform parameters so they are unconstrained \\
+\hline
+{\em delta} & adaptation rate (e.\+g. .95 or .9 or .99) \\
+\hline
+{\em rs} & the resampling schedule \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classLWFilter2WithCovs_adf3f07bcf4f7b3e4837f9f25c1dcd8d7}\label{classLWFilter2WithCovs_adf3f07bcf4f7b3e4837f9f25c1dcd8d7}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!filter@{filter}}
+\index{filter@{filter}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{filter()}{filter()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug$>$ \\
+void \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::filter (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&}]{obs\+\_\+data,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}} \&}]{cov\+\_\+data,  }\item[{const std\+::vector$<$ \mbox{\hyperlink{classLWFilter2WithCovs_a65d0374b5cf7b7eade0368cb70de4c3a}{state\+Cov\+Param\+Func}} $>$ \&}]{fs = {\ttfamily std\+:\+:vector$<$\mbox{\hyperlink{classLWFilter2WithCovs_a65d0374b5cf7b7eade0368cb70de4c3a}{state\+Cov\+Param\+Func}}$>$()} }\end{DoxyParamCaption})}
+
+
+
+updates filtering distribution on a new datapoint. Optionally stores expectations of functionals. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & the most recent data point \\
+\hline
+{\em fs} & a vector of functions if you want to calculate expectations. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classLWFilter2WithCovs_a6026f9db822fd2a3a9e05fc0bf9d19cf}\label{classLWFilter2WithCovs_a6026f9db822fd2a3a9e05fc0bf9d19cf}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!getExpectations@{getExpectations}}
+\index{getExpectations@{getExpectations}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{getExpectations()}{getExpectations()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug$>$ \\
+auto \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::get\+Expectations}
+
+
+
+return all stored expectations (taken with respect to \$p(x\+\_\+t,theta$\vert$y\+\_\+\{1\+:t\})\$ 
+
+\begin{DoxyReturn}{Returns}
+return a std\+::vector$<$\+Mat$>$ of expectations. How many depends on how many callbacks you gave to 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classLWFilter2WithCovs_a504442388f48321ba43c246e98d72fb3}\label{classLWFilter2WithCovs_a504442388f48321ba43c246e98d72fb3}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!logFEv@{logFEv}}
+\index{logFEv@{logFEv}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{logFEv()}{logFEv()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+virtual float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::log\+F\+Ev (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&}]{xt,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&}]{xtm1,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}} \&}]{cov\+\_\+data,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&}]{untrans\+\_\+pt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Evaluates the state transition density. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em xt} & the current state \\
+\hline
+{\em xtm1} & the previous state \\
+\hline
+{\em untrans\+\_\+pt} & is the parameter \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a float\+\_\+t evaluaton of the log density/pmf 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classLWFilter2WithCovs_ac533e6a028d84db866f724f0f3aa7900}\label{classLWFilter2WithCovs_ac533e6a028d84db866f724f0f3aa7900}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!logGEv@{logGEv}}
+\index{logGEv@{logGEv}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{logGEv()}{logGEv()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+virtual float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::log\+G\+Ev (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&}]{yt,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&}]{xt,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&}]{untrans\+\_\+pt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Calculate g\+Ev or log\+G\+Ev. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em yt} & is a const Vec\& describing the time t datum \\
+\hline
+{\em xt} & is a const Vec\& describing the time t state \\
+\hline
+{\em untrans\+\_\+pt} & is the parameter \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the density or log-\/density evaluation as a float\+\_\+t 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classLWFilter2WithCovs_a080bd5fc85a1218a9432e52211c6f126}\label{classLWFilter2WithCovs_a080bd5fc85a1218a9432e52211c6f126}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!logMuEv@{logMuEv}}
+\index{logMuEv@{logMuEv}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{logMuEv()}{logMuEv()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+virtual float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::log\+Mu\+Ev (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&}]{x1,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&}]{untrans\+\_\+p1 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Calculate mu\+Ev or logmu\+Ev. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x1} & is a const Vec\& describing the state sample \\
+\hline
+{\em untrans\+\_\+p1} & the (not transformed) parameter \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the density or log-\/density evaluation as a float\+\_\+t 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classLWFilter2WithCovs_ae3a32e77ef7883c7a1dbbe1a4eeb975b}\label{classLWFilter2WithCovs_ae3a32e77ef7883c7a1dbbe1a4eeb975b}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!logQ1Ev@{logQ1Ev}}
+\index{logQ1Ev@{logQ1Ev}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{logQ1Ev()}{logQ1Ev()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+virtual float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::log\+Q1\+Ev (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&}]{x1,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&}]{y1,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&}]{untrans\+\_\+p1 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Calculate q1\+Ev or log q1\+Ev. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x1} & is a const Vec\& describing the time 1 state sample \\
+\hline
+{\em y1} & is a const Vec\& describing the time 1 datum \\
+\hline
+{\em untrans\+\_\+p1} & is the parameter sampled from the parameter prior \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the density or log-\/density evaluation as a float\+\_\+t 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classLWFilter2WithCovs_ae77e03bb34b227d1b99fb7e1101495ad}\label{classLWFilter2WithCovs_ae77e03bb34b227d1b99fb7e1101495ad}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!logQEv@{logQEv}}
+\index{logQEv@{logQEv}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{logQEv()}{logQEv()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+virtual float\+\_\+t \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::log\+Q\+Ev (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&}]{xt,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&}]{xtm1,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&}]{yt,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}} \&}]{cov\+\_\+data,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&}]{untrans\+\_\+pt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Evaluates the proposal/instrumental/importance density/pmf. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em xt} & current state \\
+\hline
+{\em xtm1} & previous state \\
+\hline
+{\em yt} & current observation \\
+\hline
+{\em untrans\+\_\+pt} & is the parameter \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a float\+\_\+t evaluation of the log density/pmf 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classLWFilter2WithCovs_a880b5d0a652494cfe034d13fd59bbae6}\label{classLWFilter2WithCovs_a880b5d0a652494cfe034d13fd59bbae6}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!q1Samp@{q1Samp}}
+\index{q1Samp@{q1Samp}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{q1Samp()}{q1Samp()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+virtual \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::q1\+Samp (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&}]{y1,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&}]{untrans\+\_\+p1 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Samples from time 1 proposal. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em y1} & is a const Vec\& representing the first observed datum \\
+\hline
+{\em untrans\+\_\+p1} & is the parameter value sampled from the parameter prior \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the sample as a Vec 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classLWFilter2WithCovs_ad34be751c7f626fe4910a349ea11d4ca}\label{classLWFilter2WithCovs_ad34be751c7f626fe4910a349ea11d4ca}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!qSamp@{qSamp}}
+\index{qSamp@{qSamp}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{qSamp()}{qSamp()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+virtual \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::q\+Samp (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_addf1f2cfbdc1973e817fdc4738307f62}{ssv}} \&}]{xtm1,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_aa57399405a166faf841cfdf0399aa35d}{osv}} \&}]{yt,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_a3c5069affb000224cc3ae3abba49dcb7}{csv}} \&}]{cov\+\_\+data,  }\item[{const \mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \&}]{untrans\+\_\+pt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Samples from the proposal/instrumental/importance density at time t. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em xtm1} & the previous state sample \\
+\hline
+{\em yt} & the current observation \\
+\hline
+{\em untrans\+\_\+pt} & is the parameter \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a state sample for the current time xt 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classLWFilter2WithCovs_ac8fdd04e2b0491e70634f61d78146cfe}\label{classLWFilter2WithCovs_ac8fdd04e2b0491e70634f61d78146cfe}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!update\_parameter\_proposal\_components@{update\_parameter\_proposal\_components}}
+\index{update\_parameter\_proposal\_components@{update\_parameter\_proposal\_components}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{update\_parameter\_proposal\_components()}{update\_parameter\_proposal\_components()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug$>$ \\
+void \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::update\+\_\+parameter\+\_\+proposal\+\_\+components\hspace{0.3cm}{\ttfamily [protected]}}
+
+updates some state (m\+\_\+theta\+Bar and m\+\_\+mvn\+\_\+gen) so that sampling parameters can be done quickly 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classLWFilter2WithCovs_a4a4711e3b58033e177cac5d970324d75}\label{classLWFilter2WithCovs_a4a4711e3b58033e177cac5d970324d75}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!m\_mvn\_gen@{m\_mvn\_gen}}
+\index{m\_mvn\_gen@{m\_mvn\_gen}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{m\_mvn\_gen}{m\_mvn\_gen}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+pf\+::rvsamp\+::\+M\+V\+N\+Sampler$<$dimparam,float\+\_\+t$>$ \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::m\+\_\+mvn\+\_\+gen\hspace{0.3cm}{\ttfamily [protected]}}
+
+a multivariate normal sampler for the parameter transitions \mbox{\Hypertarget{classLWFilter2WithCovs_a140a24bfc5fb966d31e5d5d05ad873a3}\label{classLWFilter2WithCovs_a140a24bfc5fb966d31e5d5d05ad873a3}} 
+\index{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}!m\_thetaBar@{m\_thetaBar}}
+\index{m\_thetaBar@{m\_thetaBar}!LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$@{LWFilter2WithCovs$<$ nparts, dimx, dimy, dimcov, dimparam, float\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{m\_thetaBar}{m\_thetaBar}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nparts, size\+\_\+t dimx, size\+\_\+t dimy, size\+\_\+t dimcov, size\+\_\+t dimparam, typename float\+\_\+t , bool debug = false$>$ \\
+\mbox{\hyperlink{classLWFilter2WithCovs_a0264841c8416af3dbbb232a6ca849624}{psv}} \mbox{\hyperlink{classLWFilter2WithCovs}{L\+W\+Filter2\+With\+Covs}}$<$ nparts, dimx, dimy, dimcov, dimparam, float\+\_\+t, debug $>$\+::m\+\_\+theta\+Bar\hspace{0.3cm}{\ttfamily [protected]}}
+
+average of current parameter samples 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ssme/\mbox{\hyperlink{liu__west__filter_8h}{liu\+\_\+west\+\_\+filter.\+h}}\end{DoxyCompactItemize}

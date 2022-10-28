@@ -1,0 +1,214 @@
+\hypertarget{classSwarm}{}\doxysection{Swarm$<$ Mod\+Type, n\+\_\+filt\+\_\+funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$ Class Template Reference}
+\label{classSwarm}\index{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$@{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}}
+
+
+object that implements a \char`\"{}particle swarm filter\char`\"{} (see \href{https://arxiv.org/abs/2006.15396}{\texttt{ https\+://arxiv.\+org/abs/2006.\+15396}}) This class will draw parameters from samp\+\_\+untrans\+\_\+param (a pure virtual function). This function will usually draw from some distribution that closely approximates an old posterior, and it can even draw from posterior samples in another file.  
+
+
+
+
+{\ttfamily \#include $<$pswarm\+\_\+filter.\+h$>$}
+
+
+
+Collaboration diagram for Swarm$<$ Mod\+Type, n\+\_\+filt\+\_\+funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=265pt]{classSwarm__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classSwarm_a066a205586c81dfa1947c795c9f74e63}\label{classSwarm_a066a205586c81dfa1947c795c9f74e63}} 
+using {\bfseries float\+\_\+type} = typename Mod\+Type\+::float\+\_\+type
+\item 
+\mbox{\Hypertarget{classSwarm_ad2336f676183df8686e0151f22b35012}\label{classSwarm_ad2336f676183df8686e0151f22b35012}} 
+using {\bfseries osv} = Eigen\+::\+Matrix$<$ float\+\_\+type, dimy, 1 $>$
+\item 
+\mbox{\Hypertarget{classSwarm_ae3cc250e4d01d64f4841f937f170d73d}\label{classSwarm_ae3cc250e4d01d64f4841f937f170d73d}} 
+using {\bfseries ssv} = Eigen\+::\+Matrix$<$ float\+\_\+type, dimx, 1 $>$
+\item 
+using \mbox{\hyperlink{classSwarm_a3ef0ac393afaa6090d6d8dff52bfebab}{psv}} = Eigen\+::\+Matrix$<$ float\+\_\+type, dimparam, 1 $>$
+\item 
+\mbox{\Hypertarget{classSwarm_af3ed9c43bbe1c0811cbd0cda8e9589e2}\label{classSwarm_af3ed9c43bbe1c0811cbd0cda8e9589e2}} 
+using {\bfseries Dyn\+Mat} = typename Mod\+Type\+::dynamic\+\_\+matrix
+\item 
+\mbox{\Hypertarget{classSwarm_ad38d322dce45fc564780e54a6a81d5c5}\label{classSwarm_ad38d322dce45fc564780e54a6a81d5c5}} 
+using {\bfseries filt\+\_\+func} = typename Mod\+Type\+::func
+\item 
+\mbox{\Hypertarget{classSwarm_a10fe3a28178b1980916de89eec013411}\label{classSwarm_a10fe3a28178b1980916de89eec013411}} 
+using {\bfseries state\+\_\+parm\+\_\+func} = std\+::function$<$ const Dyn\+Mat(const ssv \&, const \mbox{\hyperlink{classSwarm_a3ef0ac393afaa6090d6d8dff52bfebab}{psv}} \&)$>$
+\item 
+\mbox{\Hypertarget{classSwarm_ae952ec7b36f223b42ecab92f55f506fa}\label{classSwarm_ae952ec7b36f223b42ecab92f55f506fa}} 
+using {\bfseries obs\+Samples} = std\+::array$<$ std\+::vector$<$ std\+::array$<$ osv, nstateparts $>$ $>$, nparamparts $>$
+\item 
+\mbox{\Hypertarget{classSwarm_a13d077e271057c6899860e10887eb043}\label{classSwarm_a13d077e271057c6899860e10887eb043}} 
+using {\bfseries mod\+\_\+funcs\+\_\+pair} = std\+::pair$<$ Mod\+Type, std\+::vector$<$ filt\+\_\+func $>$ $>$
+\item 
+\mbox{\Hypertarget{classSwarm_a094a0c89a26e38463be150d8772d50b9}\label{classSwarm_a094a0c89a26e38463be150d8772d50b9}} 
+using {\bfseries mats\+\_\+and\+\_\+loglike} = std\+::pair$<$ std\+::vector$<$ Dyn\+Mat $>$, float\+\_\+type $>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classSwarm_a3e216dcccd1a034efb383d3d093784df}\label{classSwarm_a3e216dcccd1a034efb383d3d093784df}} 
+\mbox{\hyperlink{classSwarm_a3e216dcccd1a034efb383d3d093784df}{Swarm}} (const std\+::vector$<$ state\+\_\+parm\+\_\+func $>$ \&fs, bool parallel=true, unsigned num\+\_\+threads=0)
+\begin{DoxyCompactList}\small\item\em ctor T\+O\+DO\+: right now there is no way to get the size of each expectation in the vector. Because we are calling the default constructor on each element, they are 0x0 before any data is seen. Perhaps you can back out the dimension earlier to de-\/complicate thigns Recall that hte particle filter classes\textquotesingle{} filter() gets passed a vector not an array \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classSwarm_a60978bf6eeb3d1a69f7bab69810f34a6}\label{classSwarm_a60978bf6eeb3d1a69f7bab69810f34a6}} 
+virtual \mbox{\hyperlink{classSwarm_a3ef0ac393afaa6090d6d8dff52bfebab}{psv}} \mbox{\hyperlink{classSwarm_a60978bf6eeb3d1a69f7bab69810f34a6}{samp\+\_\+untrans\+\_\+params}} ()=0
+\begin{DoxyCompactList}\small\item\em sample an un-\/transformed parameter vector from the prior \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classSwarm_aaf9ba820f693299095115104b36fbfe8}\label{classSwarm_aaf9ba820f693299095115104b36fbfe8}} 
+virtual Mod\+Type \mbox{\hyperlink{classSwarm_aaf9ba820f693299095115104b36fbfe8}{instantiate\+\_\+mod}} (const \mbox{\hyperlink{classSwarm_a3ef0ac393afaa6090d6d8dff52bfebab}{psv}} \&untrans\+\_\+params)=0
+\begin{DoxyCompactList}\small\item\em instantiate a model with an untransformed parameter at the moment, it is up to the user to make sure that the correct ordering of the parameters is used \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSwarm_a640cd2c50f9a78a9750c5767168781d4}{update}} (const osv \&yt)
+\begin{DoxyCompactList}\small\item\em update the model on a new time point\textquotesingle{}s observation \end{DoxyCompactList}\item 
+obs\+Samples \mbox{\hyperlink{classSwarm_ab547dcb44a84dfbac5575dda3b1b5a67}{sim\+Future\+Obs}} (unsigned int num\+\_\+future\+\_\+steps) const
+\begin{DoxyCompactList}\small\item\em simulates future observation paths. The index ordering is param,time,particle \end{DoxyCompactList}\item 
+float\+\_\+type \mbox{\hyperlink{classSwarm_aac788a8065aebc02bdec645e2a136c1b}{get\+Log\+Cond\+Like}} () const
+\begin{DoxyCompactList}\small\item\em get the log of the approx. to the conditional \char`\"{}evidence\char`\"{} log p(y\+\_\+t+1 $\vert$ y\+\_\+0\+:t, M) \end{DoxyCompactList}\item 
+std\+::vector$<$ Dyn\+Mat $>$ \mbox{\hyperlink{classSwarm_a4346e7f61ff3f17e61e9cde52cab19cc}{get\+Expectations}} () const
+\begin{DoxyCompactList}\small\item\em get the current expectation approx.\+s E\mbox{[}h(x\+\_\+t)$\vert$y\+\_\+\{1\+:t\}\mbox{]} \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classSwarm_a5751f1cd2224bc67ba6356c23e38d631}\label{classSwarm_a5751f1cd2224bc67ba6356c23e38d631}} 
+filt\+\_\+func {\bfseries gen\+\_\+filt\+\_\+func} (const state\+\_\+parm\+\_\+func \&in\+\_\+f, const \mbox{\hyperlink{classSwarm_a3ef0ac393afaa6090d6d8dff52bfebab}{psv}} \&this\+\_\+models\+\_\+params)
+\item 
+\mbox{\Hypertarget{classSwarm_a3477f00c2b8be0d9e557c234bef5dd62}\label{classSwarm_a3477f00c2b8be0d9e557c234bef5dd62}} 
+void {\bfseries finish\+\_\+construction} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classSwarm_ad8780569e14f2767e34ef34137907734}\label{classSwarm_ad8780569e14f2767e34ef34137907734}} 
+static mats\+\_\+and\+\_\+loglike {\bfseries comp\+\_\+func} (const osv \&yt, mod\+\_\+funcs\+\_\+pair \&pf\+\_\+funcs)
+\item 
+\mbox{\Hypertarget{classSwarm_a37c612a8654b9cb32317d63843c60c6b}\label{classSwarm_a37c612a8654b9cb32317d63843c60c6b}} 
+static mats\+\_\+and\+\_\+loglike {\bfseries inter\+\_\+agg\+\_\+func} (const mats\+\_\+and\+\_\+loglike \&agg, const mats\+\_\+and\+\_\+loglike \&vec\+\_\+mats\+\_\+and\+\_\+like, unsigned num\+\_\+threads, \mbox{[}\mbox{[}maybe\+\_\+unused\mbox{]}\mbox{]} unsigned num\+\_\+terms\+\_\+in\+\_\+thread)
+\item 
+\mbox{\Hypertarget{classSwarm_acbe2f25e7f572d4d682855a509c56107}\label{classSwarm_acbe2f25e7f572d4d682855a509c56107}} 
+static mats\+\_\+and\+\_\+loglike {\bfseries intra\+\_\+agg\+\_\+func} (const mats\+\_\+and\+\_\+loglike \&agg, const mats\+\_\+and\+\_\+loglike \&vec\+\_\+mats\+\_\+and\+\_\+like, unsigned num\+\_\+terms\+\_\+in\+\_\+thread)
+\item 
+\mbox{\Hypertarget{classSwarm_a8f29a40ba2bab6940cd7cd27bcb9eedc}\label{classSwarm_a8f29a40ba2bab6940cd7cd27bcb9eedc}} 
+static mats\+\_\+and\+\_\+loglike {\bfseries reset\+\_\+func} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classSwarm_a79a1498ec6faacc04baa0e0a4517f72a}\label{classSwarm_a79a1498ec6faacc04baa0e0a4517f72a}} 
+bool {\bfseries m\+\_\+models\+\_\+are\+\_\+not\+\_\+instantiated}
+\item 
+\mbox{\Hypertarget{classSwarm_a8de64bcd72cd8ee2e64990317676d03f}\label{classSwarm_a8de64bcd72cd8ee2e64990317676d03f}} 
+std\+::vector$<$ state\+\_\+parm\+\_\+func $>$ {\bfseries m\+\_\+proto\+\_\+funcs}
+\item 
+\mbox{\Hypertarget{classSwarm_aaca0c38259efe625fcb2653be1271947}\label{classSwarm_aaca0c38259efe625fcb2653be1271947}} 
+std\+::array$<$ mod\+\_\+funcs\+\_\+pair, nparamparts $>$ {\bfseries m\+\_\+mods\+\_\+and\+\_\+funcs}
+\item 
+\mbox{\Hypertarget{classSwarm_adc0022aaccc6df233b05668fc0b007e6}\label{classSwarm_adc0022aaccc6df233b05668fc0b007e6}} 
+float\+\_\+type {\bfseries m\+\_\+log\+\_\+cond\+\_\+like}
+\item 
+\mbox{\Hypertarget{classSwarm_a70c5db5c5c02d69326dd1fe769a34ea3}\label{classSwarm_a70c5db5c5c02d69326dd1fe769a34ea3}} 
+std\+::vector$<$ Dyn\+Mat $>$ {\bfseries m\+\_\+expectations}
+\item 
+\mbox{\Hypertarget{classSwarm_a56224e6e9c869a6509a6522a6963ace8}\label{classSwarm_a56224e6e9c869a6509a6522a6963ace8}} 
+unsigned int {\bfseries m\+\_\+num\+\_\+obs}
+\item 
+\mbox{\Hypertarget{classSwarm_a6dbc89415b639025df4e801f29f100b5}\label{classSwarm_a6dbc89415b639025df4e801f29f100b5}} 
+\mbox{\hyperlink{classsplit__data__thread__pool}{split\+\_\+data\+\_\+thread\+\_\+pool}}$<$ osv, mod\+\_\+funcs\+\_\+pair, mats\+\_\+and\+\_\+loglike, nparamparts $>$ {\bfseries m\+\_\+tp}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename Mod\+Type, size\+\_\+t n\+\_\+filt\+\_\+funcs, size\+\_\+t nstateparts, size\+\_\+t nparamparts, size\+\_\+t dimy, size\+\_\+t dimx, size\+\_\+t dimparam$>$\newline
+class Swarm$<$ Mod\+Type, n\+\_\+filt\+\_\+funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}
+
+object that implements a \char`\"{}particle swarm filter\char`\"{} (see \href{https://arxiv.org/abs/2006.15396}{\texttt{ https\+://arxiv.\+org/abs/2006.\+15396}}) This class will draw parameters from samp\+\_\+untrans\+\_\+param (a pure virtual function). This function will usually draw from some distribution that closely approximates an old posterior, and it can even draw from posterior samples in another file. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em represents} & a specific parametric model that has inherited from a pf base class template. \\
+\hline
+{\em number} & of functions we want to filter. Each filter func represents the h in E\mbox{[}h(xt)$\vert$y\+\_\+1\+:t\mbox{]}. \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classSwarm_a3ef0ac393afaa6090d6d8dff52bfebab}\label{classSwarm_a3ef0ac393afaa6090d6d8dff52bfebab}} 
+\index{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$@{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}!psv@{psv}}
+\index{psv@{psv}!Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$@{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}}
+\doxysubsubsection{\texorpdfstring{psv}{psv}}
+{\footnotesize\ttfamily template$<$typename Mod\+Type , size\+\_\+t n\+\_\+filt\+\_\+funcs, size\+\_\+t nstateparts, size\+\_\+t nparamparts, size\+\_\+t dimy, size\+\_\+t dimx, size\+\_\+t dimparam$>$ \\
+using \mbox{\hyperlink{classSwarm}{Swarm}}$<$ Mod\+Type, n\+\_\+filt\+\_\+funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$\+::\mbox{\hyperlink{classSwarm_a3ef0ac393afaa6090d6d8dff52bfebab}{psv}} =  Eigen\+::\+Matrix$<$float\+\_\+type, dimparam,1$>$}
+
+\char`\"{}param sized vector\char`\"{} type alias for linear algebra stuff 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classSwarm_a4346e7f61ff3f17e61e9cde52cab19cc}\label{classSwarm_a4346e7f61ff3f17e61e9cde52cab19cc}} 
+\index{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$@{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}!getExpectations@{getExpectations}}
+\index{getExpectations@{getExpectations}!Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$@{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}}
+\doxysubsubsection{\texorpdfstring{getExpectations()}{getExpectations()}}
+{\footnotesize\ttfamily template$<$typename Mod\+Type , size\+\_\+t n\+\_\+filt\+\_\+funcs, size\+\_\+t nstateparts, size\+\_\+t nparamparts, size\+\_\+t dimy, size\+\_\+t dimx, size\+\_\+t dimparam$>$ \\
+std\+::vector$<$Dyn\+Mat$>$ \mbox{\hyperlink{classSwarm}{Swarm}}$<$ Mod\+Type, n\+\_\+filt\+\_\+funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$\+::get\+Expectations (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+get the current expectation approx.\+s E\mbox{[}h(x\+\_\+t)$\vert$y\+\_\+\{1\+:t\}\mbox{]} 
+
+\begin{DoxyReturn}{Returns}
+a vector of Eigen\+::\+Mats 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classSwarm_aac788a8065aebc02bdec645e2a136c1b}\label{classSwarm_aac788a8065aebc02bdec645e2a136c1b}} 
+\index{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$@{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}!getLogCondLike@{getLogCondLike}}
+\index{getLogCondLike@{getLogCondLike}!Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$@{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}}
+\doxysubsubsection{\texorpdfstring{getLogCondLike()}{getLogCondLike()}}
+{\footnotesize\ttfamily template$<$typename Mod\+Type , size\+\_\+t n\+\_\+filt\+\_\+funcs, size\+\_\+t nstateparts, size\+\_\+t nparamparts, size\+\_\+t dimy, size\+\_\+t dimx, size\+\_\+t dimparam$>$ \\
+float\+\_\+type \mbox{\hyperlink{classSwarm}{Swarm}}$<$ Mod\+Type, n\+\_\+filt\+\_\+funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$\+::get\+Log\+Cond\+Like (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+get the log of the approx. to the conditional \char`\"{}evidence\char`\"{} log p(y\+\_\+t+1 $\vert$ y\+\_\+0\+:t, M) 
+
+\begin{DoxyReturn}{Returns}
+the floating point number 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classSwarm_ab547dcb44a84dfbac5575dda3b1b5a67}\label{classSwarm_ab547dcb44a84dfbac5575dda3b1b5a67}} 
+\index{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$@{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}!simFutureObs@{simFutureObs}}
+\index{simFutureObs@{simFutureObs}!Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$@{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}}
+\doxysubsubsection{\texorpdfstring{simFutureObs()}{simFutureObs()}}
+{\footnotesize\ttfamily template$<$typename Mod\+Type , size\+\_\+t n\+\_\+filt\+\_\+funcs, size\+\_\+t nstateparts, size\+\_\+t nparamparts, size\+\_\+t dimy, size\+\_\+t dimx, size\+\_\+t dimparam$>$ \\
+obs\+Samples \mbox{\hyperlink{classSwarm}{Swarm}}$<$ Mod\+Type, n\+\_\+filt\+\_\+funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$\+::sim\+Future\+Obs (\begin{DoxyParamCaption}\item[{unsigned int}]{num\+\_\+future\+\_\+steps }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+simulates future observation paths. The index ordering is param,time,particle 
+
+
+\begin{DoxyParams}{Parameters}
+{\em the} & number of steps into the future you want to simulate observations \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classSwarm_a640cd2c50f9a78a9750c5767168781d4}\label{classSwarm_a640cd2c50f9a78a9750c5767168781d4}} 
+\index{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$@{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}!update@{update}}
+\index{update@{update}!Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$@{Swarm$<$ ModType, n\_filt\_funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily template$<$typename Mod\+Type , size\+\_\+t n\+\_\+filt\+\_\+funcs, size\+\_\+t nstateparts, size\+\_\+t nparamparts, size\+\_\+t dimy, size\+\_\+t dimx, size\+\_\+t dimparam$>$ \\
+void \mbox{\hyperlink{classSwarm}{Swarm}}$<$ Mod\+Type, n\+\_\+filt\+\_\+funcs, nstateparts, nparamparts, dimy, dimx, dimparam $>$\+::update (\begin{DoxyParamCaption}\item[{const osv \&}]{yt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+update the model on a new time point\textquotesingle{}s observation 
+
+
+\begin{DoxyParams}{Parameters}
+{\em the} & most recent observation \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ssme/pswarm\+\_\+filter.\+h\end{DoxyCompactItemize}

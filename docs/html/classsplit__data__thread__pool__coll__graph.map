@@ -1,0 +1,4 @@
+<map id="split_data_thread_pool&lt; dyn_in_t, static_in_elem_t, out_t, num_static_elems, debug &gt;" name="split_data_thread_pool&lt; dyn_in_t, static_in_elem_t, out_t, num_static_elems, debug &gt;">
+<area shape="rect" id="node1" title="split data thread pool Unlike the above thread pool, this pre&#45;allocates work across the nodes...." alt="" coords="5,95,200,165"/>
+<area shape="rect" id="node2" href="$classjoin__threads.html" title="RAII thread killer." alt="" coords="51,5,154,32"/>
+</map>

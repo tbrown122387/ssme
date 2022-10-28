@@ -1,3 +1,7 @@
 <map id="univ_svol_estimator&lt; numparams, dimstate, dimobs, numparts, float_t &gt;" name="univ_svol_estimator&lt; numparams, dimstate, dimobs, numparts, float_t &gt;">
-<area shape="rect" id="node2" href="$classada__pmmh__mvn.html" title="ada_pmmh_mvn\&lt; numparams,\l dimobs, numparts, float_t \&gt;" alt="" coords="5,5,208,47"/>
+<area shape="rect" id="node1" title=" " alt="" coords="839,53,1047,109"/>
+<area shape="rect" id="node2" href="$classada__pmmh__mvn.html" title=" " alt="" coords="561,61,789,102"/>
+<area shape="rect" id="node3" href="$classthread__pool.html" title=" " alt="" coords="267,13,460,69"/>
+<area shape="rect" id="node4" href="$classjoin__threads.html" title="RAII thread killer." alt="" coords="27,5,130,32"/>
+<area shape="rect" id="node5" href="$classparam_1_1pack.html" title=" " alt="" coords="5,71,152,113"/>
 </map>

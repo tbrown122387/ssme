@@ -1,0 +1,44 @@
+\hypertarget{namespaceparam}{}\doxysection{param Namespace Reference}
+\label{namespaceparam}\index{param@{param}}
+
+
+for parameter-\/related things such as transforming parameters and collecting them.  
+
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classparam_1_1log__trans}{log\+\_\+trans}}
+\begin{DoxyCompactList}\small\item\em trans\+\_\+p = log(orig\+\_\+p). \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classparam_1_1logit__trans}{logit\+\_\+trans}}
+\begin{DoxyCompactList}\small\item\em trans\+\_\+p = logit(orig\+\_\+p). \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classparam_1_1null__trans}{null\+\_\+trans}}
+\begin{DoxyCompactList}\small\item\em trans\+\_\+p = orig\+\_\+p. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classparam_1_1pack}{pack}}
+\begin{DoxyCompactList}\small\item\em Stores transformed parameters, as well as the functions that can change them to the untransformed parameters and back. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classparam_1_1transform}{transform}}
+\begin{DoxyCompactList}\small\item\em a pure virtual base class. cts params only. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classparam_1_1twice__fisher__trans}{twice\+\_\+fisher\+\_\+trans}}
+\begin{DoxyCompactList}\small\item\em trans\+\_\+p = log(1+orig\+\_\+p) -\/ log(1-\/orig\+\_\+p) = logit((orig\+\_\+p+1)/2). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{namespaceparam_a9552a4029e9dccf81d194d0764e58b44}{trans\+\_\+type}} \{ {\bfseries T\+T\+\_\+null}, 
+{\bfseries T\+T\+\_\+twice\+\_\+fisher}, 
+{\bfseries T\+T\+\_\+logit}, 
+{\bfseries T\+T\+\_\+log}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+for parameter-\/related things such as transforming parameters and collecting them. 
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{namespaceparam_a9552a4029e9dccf81d194d0764e58b44}\label{namespaceparam_a9552a4029e9dccf81d194d0764e58b44}} 
+\index{param@{param}!trans\_type@{trans\_type}}
+\index{trans\_type@{trans\_type}!param@{param}}
+\doxysubsubsection{\texorpdfstring{trans\_type}{trans\_type}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespaceparam_a9552a4029e9dccf81d194d0764e58b44}{param\+::trans\+\_\+type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+enum class for different types of transformations 

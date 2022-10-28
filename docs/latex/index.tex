@@ -1,21 +1,21 @@
-\href{https://zenodo.org/badge/latestdoi/154373836}{\tt }
+\href{https://zenodo.org/badge/latestdoi/154373836}{\texttt{ }}
 
-The current availability includes\+:
-
-
-\begin{DoxyEnumerate}
-\item particle marginal Metropolis-\/\+Hastings with generic parameter proposal distributions.
-\item particle marginal Metropolis-\/\+Hastings with multivariate normal random-\/walk proposals.
-\end{DoxyEnumerate}
-
-Also included is the {\ttfamily \hyperlink{classparamPack}{param\+Pack}} container class that holds onto parameters. Because it is quite common to transform the parameters, this class has the ability to return transformed and untransformed parameters vectors, as well as automatically compute and return (log-\/ )jacobians (which comes in handy when working with evaluating the parameter proposal distribution).
-
-\subsection*{example\+:}
-
-For an example, navigate to the {\ttfamily ssme/example} directory, type {\ttfamily make}, and then something like
+The current availability includes particle marginal Metropolis-\/\+Hastings with a multivariate normal parameter proposals. Also included is the {\ttfamily pack} container class template that holds onto parameters. Because it is quite common to transform the parameters, this class has the ability to return transformed and untransformed parameters vectors, as well as automatically compute and return (log-\/ )jacobians (which comes in handy when working with evaluating the parameter proposal distribution).\hypertarget{index_autotoc_md1}{}\doxysection{Installation}\label{index_autotoc_md1}
+{\ttfamily cd} into the location where you want the code saved and then type the following \begin{DoxyVerb}git clone https://github.com/tbrown122387/ssme.git
+cd ssme
+mkdir build && cd build/
+cmake .. -DCMAKE_INSTALL_PREFIX:PATH=/usr/local
+sudo cmake --build . --config Release --target install --parallel
+\end{DoxyVerb}
+\hypertarget{index_autotoc_md2}{}\doxysection{example\+:}\label{index_autotoc_md2}
+For an example, navigate to the {\ttfamily ssme/example} directory, and type the following
 
 
-\begin{DoxyCode}
-./main spy\_returns.csv univ\_svol\_pmmh\_samples univ\_svol\_pmmh\_messages 1000
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir build \&\& cd build}
+\DoxyCodeLine{cmake ..}
+\DoxyCodeLine{make}
+\DoxyCodeLine{cd ..}
+\DoxyCodeLine{./build/ssme\_example spy\_returns.csv univ\_svol\_pmmh\_samples univ\_svol\_pmmh\_messages 100 100}
 \end{DoxyCode}
  

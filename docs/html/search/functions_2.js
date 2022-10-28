@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['get_5fct',['get_ct',['../classada__pmmh.html#a1d496162b69f71e22a02ce7781a34228',1,'ada_pmmh::get_ct()'],['../classada__pmmh__mvn.html#a06930a79f4d2a62aa0cf24528c77e5a7',1,'ada_pmmh_mvn::get_ct()'],['../classada__rwmh.html#a72d5898fe897cba162456f269f385ade',1,'ada_rwmh::get_ct()']]],
-  ['getlogjacobian',['getLogJacobian',['../classparamPack.html#a0febeb3a640212940e0ef351dae5a599',1,'paramPack']]],
-  ['getnumparams',['getNumParams',['../classparamPack.html#ad9df1725f12d795a3abeddfca0485cda',1,'paramPack']]],
-  ['gettransparams',['getTransParams',['../classparamPack.html#ae389cdb81dea521ebe21d170c4c855f8',1,'paramPack::getTransParams() const -&gt; eig_dyn_vec'],['../classparamPack.html#a078ccf2804e0cb8e0e02cfda73118c37',1,'paramPack::getTransParams(const unsigned int &amp;start, const unsigned int &amp;end) const -&gt; eig_dyn_vec']]],
-  ['getuntransparams',['getUnTransParams',['../classparamPack.html#ad655cb6e6fea5c5f7d2e3c158467e7db',1,'paramPack::getUnTransParams() const -&gt; eig_dyn_vec'],['../classparamPack.html#abe83b3043897bf62b6026f6c461942c6',1,'paramPack::getUnTransParams(const unsigned int &amp;start, const unsigned int &amp;end) const -&gt; eig_dyn_vec']]]
+  ['filter_169',['filter',['../classLWFilter.html#af4cab5fb1fd91c0e8dabd7ee6e26a5e9',1,'LWFilter::filter()'],['../classLWFilterWithCovs.html#a5004f97988edcac1c0863141c23dc3c8',1,'LWFilterWithCovs::filter()'],['../classLWFilter2.html#a7b30a72619b7bce6277f4c9e5b97f753',1,'LWFilter2::filter()'],['../classLWFilter2WithCovs.html#adf3f07bcf4f7b3e4837f9f25c1dcd8d7',1,'LWFilter2WithCovs::filter()']]],
+  ['fsamp_170',['fSamp',['../classLWFilter.html#aa8f8096485947be0c8be41dca130a5f0',1,'LWFilter::fSamp()'],['../classLWFilterWithCovs.html#a357e778613cfd922fb66a9d14b772d7a',1,'LWFilterWithCovs::fSamp()']]]
 ];

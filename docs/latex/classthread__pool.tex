@@ -1,0 +1,177 @@
+\hypertarget{classthread__pool}{}\doxysection{thread\+\_\+pool$<$ dyn\+\_\+data\+\_\+t, static\+\_\+data\+\_\+t, func\+\_\+output\+\_\+t, debug $>$ Class Template Reference}
+\label{classthread__pool}\index{thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$@{thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$}}
+
+
+Here we have many concurrent parameter readers, but only a single parameter writer. This thread pool owns one function that returns one (random) floating point number. The pool sits ready to perform calculations on any new parameter value. Once a new parameter value is received, this pool calls its function a fixed number of times, and all of the function output is averaged in a thread-\/safe way. Actually, these function evals are expected to be in the log space, and the log-\/mean-\/exp is calculated using the log-\/sum-\/exp trick. For our particular applications, this function will also depend on observed data that doesn\textquotesingle{}t change once the thread pool has been initialized.  
+
+
+
+
+{\ttfamily \#include $<$thread\+\_\+pool.\+h$>$}
+
+
+
+Collaboration diagram for thread\+\_\+pool$<$ dyn\+\_\+data\+\_\+t, static\+\_\+data\+\_\+t, func\+\_\+output\+\_\+t, debug $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=211pt]{classthread__pool__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classthread__pool_a36deb6a8ad610b5aecd39458531ac9a0}\label{classthread__pool_a36deb6a8ad610b5aecd39458531ac9a0}} 
+using {\bfseries F} = std\+::function$<$ func\+\_\+output\+\_\+t(dyn\+\_\+data\+\_\+t, static\+\_\+data\+\_\+t)$>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classthread__pool_a9ab679edce77b6b4fd80552b3422c49a}{thread\+\_\+pool}} (F f, unsigned num\+\_\+comps, bool mt=true, unsigned num\+\_\+threads=0)
+\begin{DoxyCompactList}\small\item\em The ctor spawns the working threads and gets ready to start doing work. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classthread__pool_af6c86f3e100615bced94b6294e03e403}{add\+\_\+observed\+\_\+data}} (const static\+\_\+data\+\_\+t \&obs\+\_\+data)
+\begin{DoxyCompactList}\small\item\em add observed data once before any calculations are performed \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classthread__pool_a4e290de415151d0ea8c154909fe2011c}\label{classthread__pool_a4e290de415151d0ea8c154909fe2011c}} 
+\mbox{\hyperlink{classthread__pool_a4e290de415151d0ea8c154909fe2011c}{$\sim$thread\+\_\+pool}} ()
+\begin{DoxyCompactList}\small\item\em destructor \end{DoxyCompactList}\item 
+func\+\_\+output\+\_\+t \mbox{\hyperlink{classthread__pool_a38ae2dfde5726b0e226ab42e8ecdbeff}{work}} (dyn\+\_\+data\+\_\+t new\+\_\+param)
+\begin{DoxyCompactList}\small\item\em changes the shared data member, then resets some variables, then starts all the work and returns the average. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classthread__pool_adcd7b94810f5bd99abe638a6cefcb11e}\label{classthread__pool_adcd7b94810f5bd99abe638a6cefcb11e}} 
+void \mbox{\hyperlink{classthread__pool_adcd7b94810f5bd99abe638a6cefcb11e}{worker\+\_\+thread}} ()
+\begin{DoxyCompactList}\small\item\em This function runs on all threads, and continuously waits for work to do. When a new parameter comes, calculations begin to be performed, and all their outputs are averaged together. When work is finished, threads idle. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classthread__pool_ae5b2469e1d765df3460a19eaf11874e7}\label{classthread__pool_ae5b2469e1d765df3460a19eaf11874e7}} 
+std\+::shared\+\_\+mutex {\bfseries m\+\_\+input\+\_\+mut}
+\item 
+\mbox{\Hypertarget{classthread__pool_a30c1313e9116bab76506a3de7a9ea052}\label{classthread__pool_a30c1313e9116bab76506a3de7a9ea052}} 
+std\+::mutex {\bfseries m\+\_\+output\+\_\+mut}
+\item 
+\mbox{\Hypertarget{classthread__pool_a767489dd9eed6b35382653cfb284f670}\label{classthread__pool_a767489dd9eed6b35382653cfb284f670}} 
+unsigned {\bfseries m\+\_\+num\+\_\+threads}
+\item 
+\mbox{\Hypertarget{classthread__pool_a5dd2844af71ff63ba7396cf7a6a6779c}\label{classthread__pool_a5dd2844af71ff63ba7396cf7a6a6779c}} 
+std\+::atomic$<$ unsigned $>$ {\bfseries m\+\_\+count}
+\item 
+\mbox{\Hypertarget{classthread__pool_a7f4a9a30e27f1bd8be5dcebca9ad8ead}\label{classthread__pool_a7f4a9a30e27f1bd8be5dcebca9ad8ead}} 
+std\+::atomic\+\_\+bool {\bfseries m\+\_\+done}
+\item 
+\mbox{\Hypertarget{classthread__pool_ac0473d34121b9970fdaf331c69992631}\label{classthread__pool_ac0473d34121b9970fdaf331c69992631}} 
+const unsigned {\bfseries m\+\_\+total\+\_\+calcs}
+\item 
+\mbox{\Hypertarget{classthread__pool_a98a719b618e3cdfebd7e5f285fe82b25}\label{classthread__pool_a98a719b618e3cdfebd7e5f285fe82b25}} 
+std\+::vector$<$ func\+\_\+output\+\_\+t $>$ {\bfseries m\+\_\+all\+\_\+calcs}
+\item 
+\mbox{\Hypertarget{classthread__pool_aa1db5f60b6f46e62fcd05b27beaa1969}\label{classthread__pool_aa1db5f60b6f46e62fcd05b27beaa1969}} 
+std\+::promise$<$ func\+\_\+output\+\_\+t $>$ {\bfseries m\+\_\+out}
+\item 
+\mbox{\Hypertarget{classthread__pool_a06ab05fe24966203d97c631ddcf3951a}\label{classthread__pool_a06ab05fe24966203d97c631ddcf3951a}} 
+F {\bfseries m\+\_\+f}
+\item 
+\mbox{\Hypertarget{classthread__pool_a58e17bec9875779a4d6cb42bfdfd8393}\label{classthread__pool_a58e17bec9875779a4d6cb42bfdfd8393}} 
+dyn\+\_\+data\+\_\+t {\bfseries m\+\_\+param}
+\item 
+\mbox{\Hypertarget{classthread__pool_a6f16178c6ddbaed0a5188324e4145a20}\label{classthread__pool_a6f16178c6ddbaed0a5188324e4145a20}} 
+static\+\_\+data\+\_\+t {\bfseries m\+\_\+observed\+\_\+data}
+\item 
+\mbox{\Hypertarget{classthread__pool_ace2f353af332bd27fb13ed454f79c8c1}\label{classthread__pool_ace2f353af332bd27fb13ed454f79c8c1}} 
+bool {\bfseries m\+\_\+no\+\_\+data\+\_\+yet}
+\item 
+\mbox{\Hypertarget{classthread__pool_a4960534c668a3656b92adc5feaa5abed}\label{classthread__pool_a4960534c668a3656b92adc5feaa5abed}} 
+std\+::vector$<$ std\+::thread $>$ {\bfseries m\+\_\+threads}
+\item 
+\mbox{\Hypertarget{classthread__pool_a9f3d5a97dcf6ba715038770ff3d9d493}\label{classthread__pool_a9f3d5a97dcf6ba715038770ff3d9d493}} 
+\mbox{\hyperlink{classjoin__threads}{join\+\_\+threads}} {\bfseries m\+\_\+joiner}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename dyn\+\_\+data\+\_\+t, typename static\+\_\+data\+\_\+t, typename func\+\_\+output\+\_\+t, bool debug = false$>$\newline
+class thread\+\_\+pool$<$ dyn\+\_\+data\+\_\+t, static\+\_\+data\+\_\+t, func\+\_\+output\+\_\+t, debug $>$}
+
+Here we have many concurrent parameter readers, but only a single parameter writer. This thread pool owns one function that returns one (random) floating point number. The pool sits ready to perform calculations on any new parameter value. Once a new parameter value is received, this pool calls its function a fixed number of times, and all of the function output is averaged in a thread-\/safe way. Actually, these function evals are expected to be in the log space, and the log-\/mean-\/exp is calculated using the log-\/sum-\/exp trick. For our particular applications, this function will also depend on observed data that doesn\textquotesingle{}t change once the thread pool has been initialized. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em dyn\+\_\+data\+\_\+t} & dynamic data type. The type of input that gets changed repeatedly. \\
+\hline
+{\em static\+\_\+data\+\_\+t} & the type of input that only gets set once \\
+\hline
+{\em func\+\_\+output\+\_\+t} & type of function output \\
+\hline
+{\em debug} & do you want debug printing messages? \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classthread__pool_a9ab679edce77b6b4fd80552b3422c49a}\label{classthread__pool_a9ab679edce77b6b4fd80552b3422c49a}} 
+\index{thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$@{thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$}!thread\_pool@{thread\_pool}}
+\index{thread\_pool@{thread\_pool}!thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$@{thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{thread\_pool()}{thread\_pool()}}
+{\footnotesize\ttfamily template$<$typename dyn\+\_\+data\+\_\+t , typename static\+\_\+data\+\_\+t , typename func\+\_\+output\+\_\+t , bool debug = false$>$ \\
+\mbox{\hyperlink{classthread__pool}{thread\+\_\+pool}}$<$ dyn\+\_\+data\+\_\+t, static\+\_\+data\+\_\+t, func\+\_\+output\+\_\+t, debug $>$\+::\mbox{\hyperlink{classthread__pool}{thread\+\_\+pool}} (\begin{DoxyParamCaption}\item[{F}]{f,  }\item[{unsigned}]{num\+\_\+comps,  }\item[{bool}]{mt = {\ttfamily true},  }\item[{unsigned}]{num\+\_\+threads = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The ctor spawns the working threads and gets ready to start doing work. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em f} & the function that gets called a bunch of times. \\
+\hline
+{\em num\+\_\+comps} & the number of times to call f with each new parameter input. \\
+\hline
+{\em mt} & do you want multiple threads? \\
+\hline
+{\em num\+\_\+threads} & the number of threads you want or 0 which decides what\textquotesingle{}s available for you \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classthread__pool_af6c86f3e100615bced94b6294e03e403}\label{classthread__pool_af6c86f3e100615bced94b6294e03e403}} 
+\index{thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$@{thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$}!add\_observed\_data@{add\_observed\_data}}
+\index{add\_observed\_data@{add\_observed\_data}!thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$@{thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{add\_observed\_data()}{add\_observed\_data()}}
+{\footnotesize\ttfamily template$<$typename dyn\+\_\+data\+\_\+t , typename static\+\_\+data\+\_\+t , typename func\+\_\+output\+\_\+t , bool debug = false$>$ \\
+void \mbox{\hyperlink{classthread__pool}{thread\+\_\+pool}}$<$ dyn\+\_\+data\+\_\+t, static\+\_\+data\+\_\+t, func\+\_\+output\+\_\+t, debug $>$\+::add\+\_\+observed\+\_\+data (\begin{DoxyParamCaption}\item[{const static\+\_\+data\+\_\+t \&}]{obs\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+add observed data once before any calculations are performed 
+
+
+\begin{DoxyParams}{Parameters}
+{\em obs\+\_\+data} & the entire collection of observed data \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classthread__pool_a38ae2dfde5726b0e226ab42e8ecdbeff}\label{classthread__pool_a38ae2dfde5726b0e226ab42e8ecdbeff}} 
+\index{thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$@{thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$}!work@{work}}
+\index{work@{work}!thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$@{thread\_pool$<$ dyn\_data\_t, static\_data\_t, func\_output\_t, debug $>$}}
+\doxysubsubsection{\texorpdfstring{work()}{work()}}
+{\footnotesize\ttfamily template$<$typename dyn\+\_\+data\+\_\+t , typename static\+\_\+data\+\_\+t , typename func\+\_\+output\+\_\+t , bool debug = false$>$ \\
+func\+\_\+output\+\_\+t \mbox{\hyperlink{classthread__pool}{thread\+\_\+pool}}$<$ dyn\+\_\+data\+\_\+t, static\+\_\+data\+\_\+t, func\+\_\+output\+\_\+t, debug $>$\+::work (\begin{DoxyParamCaption}\item[{dyn\+\_\+data\+\_\+t}]{new\+\_\+param }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+changes the shared data member, then resets some variables, then starts all the work and returns the average. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em the} & new parameter input \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a floating point average 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ssme/thread\+\_\+pool.\+h\end{DoxyCompactItemize}

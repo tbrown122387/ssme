@@ -1,0 +1,4 @@
+<map id="param::logit_trans&lt; float_t &gt;" name="param::logit_trans&lt; float_t &gt;">
+<area shape="rect" id="node1" title="trans_p = logit(orig_p)." alt="" coords="38,80,179,121"/>
+<area shape="rect" id="node2" href="$classparam_1_1transform.html" title="a pure virtual base class. cts params only." alt="" coords="5,5,212,32"/>
+</map>

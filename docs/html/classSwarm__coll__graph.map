@@ -1,0 +1,5 @@
+<map id="Swarm&lt; ModType, n_filt_funcs, nstateparts, nparamparts, dimy, dimx, dimparam &gt;" name="Swarm&lt; ModType, n_filt_funcs, nstateparts, nparamparts, dimy, dimx, dimparam &gt;">
+<area shape="rect" id="node1" title="object that implements a &quot;particle swarm filter&quot; (see https://arxiv.org/abs/2006.15396) This class wi..." alt="" coords="8,213,249,269"/>
+<area shape="rect" id="node2" href="$classsplit__data__thread__pool.html" title=" " alt="" coords="5,95,252,151"/>
+<area shape="rect" id="node3" href="$classjoin__threads.html" title="RAII thread killer." alt="" coords="77,5,180,32"/>
+</map>

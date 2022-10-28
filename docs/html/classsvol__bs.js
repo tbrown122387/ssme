@@ -3,7 +3,7 @@ var classsvol__bs =
     [ "osv", "classsvol__bs.html#a90e38a1fae511361b0ac017b0c5c80a0", null ],
     [ "ssv", "classsvol__bs.html#a8ef6370aa347e276147b393786a7ecd5", null ],
     [ "svol_bs", "classsvol__bs.html#a36902082260b8fb13251722ac8b527a8", null ],
-    [ "svol_bs", "classsvol__bs.html#ae881f2825f480976227f46922c47679f", null ],
+    [ "svol_bs", "classsvol__bs.html#a805744b065f42b9099a29890f8f029dc", null ],
     [ "fSamp", "classsvol__bs.html#a59120c1870072f1d63a3057d9ba614cf", null ],
     [ "logGEv", "classsvol__bs.html#a460a24a129edaf68650aeec9d28fedf8", null ],
     [ "logMuEv", "classsvol__bs.html#a067870660bf0d60b032411df7fe32546", null ],

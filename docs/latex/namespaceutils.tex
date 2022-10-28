@@ -1,0 +1,42 @@
+\hypertarget{namespaceutils}{}\doxysection{utils Namespace Reference}
+\label{namespaceutils}\index{utils@{utils}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classutils_1_1csv__param__sampler}{csv\+\_\+param\+\_\+sampler}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$size\+\_\+t nc, typename float\+\_\+t $>$ }\\std\+::vector$<$ Eigen\+::\+Matrix$<$ float\+\_\+t, nc, 1 $>$ $>$ \mbox{\hyperlink{namespaceutils_abf386a12d05c40b823612cf5613dcf36}{read\+\_\+data}} (const std\+::string \&file\+\_\+loc)
+\begin{DoxyCompactList}\small\item\em reads in data in a csv file with no header and separated by commas. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+@namesapce utils 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespaceutils_abf386a12d05c40b823612cf5613dcf36}\label{namespaceutils_abf386a12d05c40b823612cf5613dcf36}} 
+\index{utils@{utils}!read\_data@{read\_data}}
+\index{read\_data@{read\_data}!utils@{utils}}
+\doxysubsubsection{\texorpdfstring{read\_data()}{read\_data()}}
+{\footnotesize\ttfamily template$<$size\+\_\+t nc, typename float\+\_\+t $>$ \\
+std\+::vector$<$Eigen\+::\+Matrix$<$float\+\_\+t,nc,1$>$ $>$ utils\+::read\+\_\+data (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+\_\+loc }\end{DoxyParamCaption})}
+
+
+
+reads in data in a csv file with no header and separated by commas. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em nc} & the number of columns. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em file\+\_\+loc} & the string filepath of the file. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a std\+::vector of your data. Each elemenet is a row in Eigen\+::\+Vector form. 
+\end{DoxyReturn}

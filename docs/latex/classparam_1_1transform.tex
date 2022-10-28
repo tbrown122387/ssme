@@ -1,0 +1,64 @@
+\hypertarget{classparam_1_1transform}{}\doxysection{param\+::transform$<$ float\+\_\+t $>$ Class Template Reference}
+\label{classparam_1_1transform}\index{param::transform$<$ float\_t $>$@{param::transform$<$ float\_t $>$}}
+
+
+a pure virtual base class. cts params only.  
+
+
+
+
+{\ttfamily \#include $<$parameters.\+h$>$}
+
+
+
+Inheritance diagram for param\+::transform$<$ float\+\_\+t $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classparam_1_1transform__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classparam_1_1transform_a9c0c52d2b5b875379b3a36d8f3a79b1b}\label{classparam_1_1transform_a9c0c52d2b5b875379b3a36d8f3a79b1b}} 
+virtual \mbox{\hyperlink{classparam_1_1transform_a9c0c52d2b5b875379b3a36d8f3a79b1b}{$\sim$transform}} ()=default
+\begin{DoxyCompactList}\small\item\em a virtual destructor \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparam_1_1transform_ad53902d4f6f6602197de38d128f4489a}\label{classparam_1_1transform_ad53902d4f6f6602197de38d128f4489a}} 
+virtual float\+\_\+t \mbox{\hyperlink{classparam_1_1transform_ad53902d4f6f6602197de38d128f4489a}{trans}} (const float\+\_\+t \&p)=0
+\begin{DoxyCompactList}\small\item\em from the constrained/nontransformed to the transformed/unconstrained space \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparam_1_1transform_a06d8d29fdc03f153f46b6c0182e460c1}\label{classparam_1_1transform_a06d8d29fdc03f153f46b6c0182e460c1}} 
+virtual float\+\_\+t \mbox{\hyperlink{classparam_1_1transform_a06d8d29fdc03f153f46b6c0182e460c1}{inv\+\_\+trans}} (const float\+\_\+t \&trans\+\_\+p)=0
+\begin{DoxyCompactList}\small\item\em from the unconstrained/transformed to the constrained/untransformed space; \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparam_1_1transform_a0ab6f5bc19a83e89a3814c6cc4f5d02b}\label{classparam_1_1transform_a0ab6f5bc19a83e89a3814c6cc4f5d02b}} 
+virtual float\+\_\+t \mbox{\hyperlink{classparam_1_1transform_a0ab6f5bc19a83e89a3814c6cc4f5d02b}{log\+\_\+jacobian}} (const float\+\_\+t \&p)=0
+\begin{DoxyCompactList}\small\item\em get the log jacobian (from untransformed to transformed). For use with adjusting priors to the transformed space. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparam_1_1transform_ad531786ca227f7292d39a874a8cc205b}\label{classparam_1_1transform_ad531786ca227f7292d39a874a8cc205b}} 
+virtual std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classparam_1_1transform}{transform}}$<$ float\+\_\+t $>$ $>$ \mbox{\hyperlink{classparam_1_1transform_ad531786ca227f7292d39a874a8cc205b}{clone}} () const =0
+\begin{DoxyCompactList}\small\item\em a clone method that helps with deep-\/copying transforms \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classparam_1_1transform_aac4908d92a00be3787800a59f8b246f9}\label{classparam_1_1transform_aac4908d92a00be3787800a59f8b246f9}} 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classparam_1_1transform}{transform}}$<$ float\+\_\+t $>$ $>$ \mbox{\hyperlink{classparam_1_1transform_aac4908d92a00be3787800a59f8b246f9}{create}} (\mbox{\hyperlink{namespaceparam_a9552a4029e9dccf81d194d0764e58b44}{trans\+\_\+type}} tt)
+\begin{DoxyCompactList}\small\item\em a static method to create unique pointers \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparam_1_1transform_a805e12073f8c42f6cb1cc5538457ddba}\label{classparam_1_1transform_a805e12073f8c42f6cb1cc5538457ddba}} 
+static std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classparam_1_1transform}{transform}}$<$ float\+\_\+t $>$ $>$ \mbox{\hyperlink{classparam_1_1transform_a805e12073f8c42f6cb1cc5538457ddba}{create}} (const std\+::string \&tt)
+\begin{DoxyCompactList}\small\item\em a static method to create unique pointers \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename float\+\_\+t$>$\newline
+class param\+::transform$<$ float\+\_\+t $>$}
+
+a pure virtual base class. cts params only. 
+
+\begin{DoxyAuthor}{Author}
+Taylor 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ssme/\mbox{\hyperlink{parameters_8h}{parameters.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,63 @@
+\hypertarget{classparam_1_1log__trans}{}\doxysection{param\+::log\+\_\+trans$<$ float\+\_\+t $>$ Class Template Reference}
+\label{classparam_1_1log__trans}\index{param::log\_trans$<$ float\_t $>$@{param::log\_trans$<$ float\_t $>$}}
+
+
+trans\+\_\+p = log(orig\+\_\+p).  
+
+
+
+
+{\ttfamily \#include $<$parameters.\+h$>$}
+
+
+
+Inheritance diagram for param\+::log\+\_\+trans$<$ float\+\_\+t $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{classparam_1_1log__trans__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for param\+::log\+\_\+trans$<$ float\+\_\+t $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{classparam_1_1log__trans__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classparam_1_1log__trans_a4f2e70a66a5e6ecb7dd7f45b132a0661}\label{classparam_1_1log__trans_a4f2e70a66a5e6ecb7dd7f45b132a0661}} 
+float\+\_\+t \mbox{\hyperlink{classparam_1_1log__trans_a4f2e70a66a5e6ecb7dd7f45b132a0661}{trans}} (const float\+\_\+t \&p) override
+\begin{DoxyCompactList}\small\item\em from the constrained/nontransformed to the transformed/unconstrained space \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparam_1_1log__trans_a422427517de48df84c0dae6084566b74}\label{classparam_1_1log__trans_a422427517de48df84c0dae6084566b74}} 
+float\+\_\+t \mbox{\hyperlink{classparam_1_1log__trans_a422427517de48df84c0dae6084566b74}{inv\+\_\+trans}} (const float\+\_\+t \&trans\+\_\+p) override
+\begin{DoxyCompactList}\small\item\em from the unconstrained/transformed to the constrained/untransformed space; \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparam_1_1log__trans_a7f6187a7339465c9451064b23f4b08b4}\label{classparam_1_1log__trans_a7f6187a7339465c9451064b23f4b08b4}} 
+float\+\_\+t \mbox{\hyperlink{classparam_1_1log__trans_a7f6187a7339465c9451064b23f4b08b4}{log\+\_\+jacobian}} (const float\+\_\+t \&p) override
+\begin{DoxyCompactList}\small\item\em get the log jacobian (from untransformed to transformed). For use with adjusting priors to the transformed space. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classparam_1_1log__trans_a66c9e7c22db622167da4173ddc774065}\label{classparam_1_1log__trans_a66c9e7c22db622167da4173ddc774065}} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classparam_1_1transform}{transform}}$<$ float\+\_\+t $>$ $>$ \mbox{\hyperlink{classparam_1_1log__trans_a66c9e7c22db622167da4173ddc774065}{clone}} () const override
+\begin{DoxyCompactList}\small\item\em a clone method that helps with deep-\/copying transforms \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename float\+\_\+t$>$\newline
+class param\+::log\+\_\+trans$<$ float\+\_\+t $>$}
+
+trans\+\_\+p = log(orig\+\_\+p). 
+
+\begin{DoxyAuthor}{Author}
+Taylor 
+\end{DoxyAuthor}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/ssme/\mbox{\hyperlink{parameters_8h}{parameters.\+h}}\end{DoxyCompactItemize}
