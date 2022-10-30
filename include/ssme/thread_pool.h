@@ -130,7 +130,7 @@ public:
         if ( m_num_threads == 0 ) {
             if( mt ) {
                 unsigned nt  = std::thread::hardware_concurrency();
-                m_num_threads = (nt > 0) ? nt : 1;
+                m_num_threads = (nt > 1) ? nt : 1;
             }else {
                 m_num_threads = 1;
             }
@@ -142,6 +142,9 @@ public:
         }else if( mt && (m_num_threads == 1)) {
             throw std::runtime_error("requested multiple threads but only one is available");
         }
+
+        if constexpr(debug)
+            std::cout << "launching " << m_num_threads << " threads\n";
 
         // launch all threads
         try {
@@ -200,7 +203,7 @@ public:
         {
             std::unique_lock<std::shared_mutex> param_lk(m_input_mut);
             if constexpr(debug)
-                std::cout << "setting first input to " << new_param[0] << "\n";
+                std::cout << "resetting work input now \n";
             m_param = new_param;
         }
         m_work_done_count = 0;

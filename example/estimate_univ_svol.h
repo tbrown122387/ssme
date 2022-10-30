@@ -36,7 +36,8 @@ public:
             const unsigned int &t1,
             const psm &C0,
             bool print_to_console,
-            unsigned int print_every_k);
+            unsigned int print_every_k,
+            unsigned int num_threads);
         
     float_t log_prior_eval(const param::pack<float_t,3>& theta);
 
@@ -58,7 +59,8 @@ univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::univ_svol_estim
                                                     const unsigned int &t1,
                                                     const psm &C0,
                                                     bool print_to_console,
-                                                    unsigned int print_every_k) 
+                                                    unsigned int print_every_k,
+                                                    unsigned int num_threads) 
     : ada_pmmh_mvn<numparams,dimobs,numparts,float_t>(start_trans_theta, 
                                                       tts, 
                                                       num_mcmc_iters, 
@@ -71,7 +73,8 @@ univ_svol_estimator<numparams,dimstate,dimobs,numparts,float_t>::univ_svol_estim
                                                       t1, 
                                                       C0, 
                                                       print_to_console,
-                                                      print_every_k)
+                                                      print_every_k,
+                                                      num_threads)
 {
 }
 
@@ -168,7 +171,8 @@ void do_ada_pmmh_univ_svol(const std::string &datafile,
                                                     	t1,
                                                     	C0,
                                                     	false, // print console
-                                                        1);
+                                                        1,
+                                                        0); // 0 threads means it figures out how many are available
     mcmcobj.commence_sampling();
 
 }

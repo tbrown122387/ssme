@@ -27,7 +27,7 @@ using namespace pf;
  * kind of Jacobian--just specify a prior on the familiar space, and a function that 
  * approximates log-likelihoods.
  */
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t, bool debug = false>
 class ada_pmmh_mvn{
 public:
 
@@ -120,7 +120,7 @@ private:
     unsigned int m_print_every_k;    
     
     /* thread pool (its function can only take one parameter) */
-    thread_pool<dyn_data_t, static_data_t, float_t> m_pool; 
+    thread_pool<dyn_data_t, static_data_t, float_t, debug> m_pool; 
 
     /* changing MCMC state variables */
     float_t m_old_log_like;
@@ -157,8 +157,8 @@ private:
 };
 
 
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t,bool debug>
+ada_pmmh_mvn<numparams,dimobs,numparts,float_t,debug>::ada_pmmh_mvn(
                                             const psv &start_trans_theta, 
                                             std::vector<std::string> tts,
                                             const unsigned int &num_mcmc_iters,
@@ -186,7 +186,7 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
  , m_eps(.01)
  , m_print_to_console(print_to_console)
  , m_print_every_k(print_every_k)
- , m_pool(std::bind(&ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::pool_func, 
+ , m_pool(std::bind(&ada_pmmh_mvn<numparams,dimobs,numparts,float_t,debug>::pool_func, 
                     this, 
                     std::placeholders::_1,
                     std::placeholders::_2),
@@ -209,8 +209,8 @@ ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::ada_pmmh_mvn(
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::update_moments_and_Ct(const param::pack<float_t,numparams>& new_theta)  
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t,bool debug>
+void ada_pmmh_mvn<numparams,dimobs,numparts,float_t,debug>::update_moments_and_Ct(const param::pack<float_t,numparams>& new_theta)  
 {
     // if m_iter = 1, that means we're on iteration 2, 
     // but we're calling this based on the previous iteration, 
@@ -250,15 +250,15 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::update_moments_and_Ct(cons
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-auto ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::get_ct() const -> psm
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t,bool debug>
+auto ada_pmmh_mvn<numparams,dimobs,numparts,float_t,debug>::get_ct() const -> psm
 {
     return m_Ct;
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-auto ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::q_samp(const param::pack<float_t,numparams>& old_params) -> psv
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t,bool debug>
+auto ada_pmmh_mvn<numparams,dimobs,numparts,float_t,debug>::q_samp(const param::pack<float_t,numparams>& old_params) -> psv
 {
     // assumes that Ct has already been updated
     // recall that we are sampling on the transformed/unconstrained space    
@@ -269,8 +269,8 @@ auto ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::q_samp(const param::pack<f
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_params() 
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t,bool debug>
+void ada_pmmh_mvn<numparams,dimobs,numparts,float_t,debug>::record_params() 
 {
     if( m_iter % m_print_every_k == 0){
         if(m_samples_file_stream.is_open()){
@@ -291,8 +291,8 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_params()
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_iter_num() 
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t,bool debug>
+void ada_pmmh_mvn<numparams,dimobs,numparts,float_t,debug>::record_iter_num() 
 {
     if(m_iter % m_print_every_k == 0){
         m_message_stream << "Iter number: " << m_iter + 1 << "\n";
@@ -302,8 +302,8 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_iter_num()
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_messages()
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t,bool debug>
+void ada_pmmh_mvn<numparams,dimobs,numparts,float_t,debug>::record_messages()
 {
     if(m_iter == 0){
 	m_message_stream << "iter number, accept rate, old_ll, new_ll, old_lprior, new_lprior, accept prob, outcome\n";
@@ -322,8 +322,8 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::record_messages()
 }
 
 
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t,bool debug>
+void ada_pmmh_mvn<numparams,dimobs,numparts,float_t,debug>::commence_sampling()
 {
 
     // random number stuff to decide on whether to accept or reject
@@ -371,9 +371,8 @@ void ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::commence_sampling()
     } 
 }
     
-
-template<size_t numparams, size_t dimobs, size_t numparts, typename float_t>
-std::string ada_pmmh_mvn<numparams,dimobs,numparts,float_t>::gen_string_with_time(const std::string& str) {
+template<size_t numparams, size_t dimobs, size_t numparts, typename float_t,bool debug>
+std::string ada_pmmh_mvn<numparams,dimobs,numparts,float_t,debug>::gen_string_with_time(const std::string& str) {
 
     time_t     now = time(0);
     struct tm  tstruct;
