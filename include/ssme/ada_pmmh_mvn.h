@@ -63,7 +63,8 @@ public:
                  const unsigned int &t1,
                  const psm &C0,
                  bool print_to_console,
-                 unsigned int print_every_k);
+                 unsigned int print_every_k,
+                 unsigned int num_threads);
             
 
     // TODO: describe formatting rules (e.g. column orders, column names, etc.
