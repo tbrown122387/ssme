@@ -16,7 +16,7 @@
 #define DIMY 1
 #define DIMCOV 1
 #define DIMPARAM 4
-#define SVOLSWARMDEBUG false
+#define SVOLSWARMDEBUG true
 
 using FLOATTYPE = double;
 using namespace pf;
@@ -190,8 +190,8 @@ public:
 
     // ctor
     svol_swarm_1(const std::vector<state_cov_parm_func>& fs, float_t phi_l, float_t phi_u, float_t mu_l, float_t mu_u,
-                 float_t sig_l, float_t sig_u, float_t rho_l, float_t rho_u, unsigned int dte)
-        : SwarmBase(fs)
+                 float_t sig_l, float_t sig_u, float_t rho_l, float_t rho_u, unsigned int dte, bool parallel, unsigned num_threads)
+        : SwarmBase(fs,parallel,num_threads)
         , m_phi_sampler(phi_l, phi_u) 
         , m_mu_sampler(mu_l, mu_u)
         , m_sigma_sampler(sig_l, sig_u)      
@@ -241,7 +241,7 @@ TEST_CASE("test filter with funcs for pswarm filter with covariates instantiated
         ans(0) = 42.0; 
         return ans; };
     fs.push_back(sillyLambda);
-    svol_swarm_1<NPARTS,NPARTS,FLOATTYPE> mod(fs, .8, .99, -.1, .1, .01, .1, -.5, -.01, 10);
+    svol_swarm_1<NPARTS,NPARTS,FLOATTYPE> mod(fs, .8, .99, -.1, .1, .01, .1, -.5, -.01, 10, true, 2);
 
     // filter once
     ssv y1;
@@ -294,8 +294,8 @@ public:
 
     // ctor
     // make sure parameter samples in csv are for phi,mu,sigma,rho
-    svol_swarm_2(const std::string &param_csv_filename, const std::vector<state_cov_parm_func>& fs, unsigned int dte)
-        : SwarmBase(fs)
+    svol_swarm_2(const std::string &param_csv_filename, const std::vector<state_cov_parm_func>& fs, unsigned int dte, bool parallel, unsigned num_threads)
+        : SwarmBase(fs,parallel,num_threads)
     	, m_param_sampler(param_csv_filename)
         , m_dte(dte)
     {
@@ -336,14 +336,14 @@ TEST_CASE("test filter without funcs for pswarm filter with covariates instantia
         ans(0) = 42.0; 
         return ans; };
     fs.push_back(sillyLambda);
-    svol_swarm_2<NPARTS,NPARTS,FLOATTYPE> mod("test_svol_leverage_samples.csv", fs, 10);
+    svol_swarm_2<NPARTS,NPARTS,FLOATTYPE> mod("test_svol_leverage_samples.csv", fs, 10, true, 2);
 
     ssv y1;
     csv z1;
     mod.update(y1,z1);
     REQUIRE(std::pow(mod.getLogCondLike(),2) > 0.0);
     REQUIRE(std::abs(mod.getExpectations()[0](0,0) - 42.0) < PREC);
-    std::cout << "expectation...." << mod.getExpectations()[0](0,0) << "\n";
+//    std::cout << "expectation...." << mod.getExpectations()[0](0,0) << "\n";
     // check some output TODO more!
 }
 

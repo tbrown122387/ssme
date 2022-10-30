@@ -62,13 +62,16 @@ private:
     mutable std::shared_mutex m_input_mut; 
 
     /* locks the average and count of comps */
-    mutable std::mutex m_output_mut;
+    mutable std::shared_mutex m_output_mut;
 
     /* number of threads in pool */
     unsigned m_num_threads;
  
-    /* the number of calls that have been completed so far. also signals new work when it's zero */
-    std::atomic<unsigned> m_count;
+    /* the number of calls that have been completed so far. less than full count signals to continue working */
+    std::atomic_uint m_work_start_count;
+
+    /* flag to signal that finalization is in order */
+    std::atomic_uint m_work_done_count;
 
     /* flag for if pool is operational */
     std::atomic_bool m_done;
@@ -113,7 +116,8 @@ public:
      */  
     thread_pool(F f, unsigned num_comps, bool mt = true, unsigned num_threads = 0)
         : m_num_threads(num_threads)
-        , m_count(num_comps+1) // threads spin until m_count <= num_comps
+        , m_work_start_count(num_comps+1) 
+        , m_work_done_count(0)
         , m_done(false)
         , m_total_calcs(num_comps) 
         , m_f(f)
@@ -185,9 +189,10 @@ public:
 
         // reset output sum 
         {
-            std::unique_lock<std::mutex> output_lock(m_output_mut);
+            std::unique_lock<std::shared_mutex> output_lock(m_output_mut);
             if constexpr(debug)
                 std::cout << "cleraing output\n";
+            m_out = std::promise<func_output_t>();
             m_all_calcs.clear();
         }
 
@@ -198,10 +203,10 @@ public:
                 std::cout << "setting first input to " << new_param[0] << "\n";
             m_param = new_param;
         }
-        m_count = 0; 
+        m_work_done_count = 0;
+        m_work_start_count = 0; 
 
         // wait for work to come back and then return it
-        m_out = std::promise<func_output_t>();
         return m_out.get_future().get();
     }
 
@@ -223,28 +228,10 @@ private:
 
             
             // get number of times work has been done
-            unsigned calc_count = m_count;
+            unsigned calc_count = m_work_start_count++;
                 
             // either finalize the average, perform difficult work, or spin
-            if ( calc_count == m_total_calcs ) {
-    
-                // lock mutex and finalize log-mean-exp value
-                std::lock_guard<std::mutex> out_lock{m_output_mut};
-                func_output_t m = *max_element(m_all_calcs.begin(), m_all_calcs.end());
-                func_output_t sum_exp = 0;
-                for(unsigned i = 0; i < m_total_calcs; ++i){
-                    sum_exp += std::exp(m_all_calcs[i] - m);
-                }
-                func_output_t final_val = m + std::log(sum_exp) - std::log(m_total_calcs);
-
-                if constexpr(debug)
-                    std::cout << "finalizing " << final_val << "\n";
-                m_out.set_value(final_val);
-
-                // keep going until work is exhausted
-                m_count++;
-
-            } else if (calc_count < m_total_calcs) {
+            if (calc_count < m_total_calcs) {
     
                 // call the expensive function that returns an approximate log-likelihood
                 func_output_t val;
@@ -255,16 +242,34 @@ private:
 
                 // store all calcs
                 {
-                    std::lock_guard<std::mutex> out_lock{m_output_mut};
+                    std::unique_lock<std::shared_mutex> out_lock{m_output_mut};
                     if constexpr(debug)
                         std::cout << "writing out a " << val <<  "in space " << calc_count << "\n";
                     m_all_calcs.push_back(val);
                 }
+                m_work_done_count++;
 
-                // keep going until work is exhausted
-                m_count++;
             } else {
-                std::this_thread::yield();
+               
+                // test and increment so it only does thi sonce
+                unsigned expected = m_total_calcs; 
+                bool need_finalization = m_work_done_count.compare_exchange_strong(expected,0);
+                if(need_finalization){
+                
+                    func_output_t m = *max_element(m_all_calcs.begin(), m_all_calcs.end());
+                    func_output_t sum_exp = 0;
+                    for(unsigned i = 0; i < m_total_calcs; ++i){
+                        sum_exp += std::exp(m_all_calcs[i] - m);
+                    }
+                    func_output_t final_val = m + std::log(sum_exp) - std::log(m_total_calcs);
+    
+                    if constexpr(debug)
+                        std::cout << "finalizing " << final_val << "\n";
+                    m_out.set_value(final_val);
+    
+                }else{
+                    std::this_thread::yield();
+                }
             }
         }
     }
@@ -308,7 +313,7 @@ private:
     /* flag for if pool is operational */
     std::atomic_bool m_done;
 
-    /* flag for if there is a new input */
+    /* flag for if there is a new input...signals a thread to start working on new input*/
     std::map<std::thread::id, std::atomic_bool> m_has_new_dyn_input;
     
     /* the accumulated variable (working average) */
@@ -347,8 +352,8 @@ private:
     /* key: thread id; val: a vector if indexes to iterate over to get work */ 
     std::map<std::thread::id, std::vector<unsigned>> m_work_schedule;
 
-    /* atomic counter for how many pieces of work have been done */
-    std::atomic_int m_num_thread_aves_done;
+    /* atomic counter for how many pieces of work have been done...full count signals finalization is ready */
+    std::atomic_uint m_num_thread_aves_done;
 
 public:
   
@@ -382,7 +387,8 @@ public:
         , m_final_f(final_f)
         , m_static_input(static_container)
         , m_joiner(m_threads)
-        , m_num_thread_aves_done(0) {
+        , m_num_thread_aves_done(0)
+    {
 
 
         // assign work load and start threads, getting them ready to work
@@ -401,6 +407,10 @@ public:
         }else if( mt && (m_num_threads == 1)) {
             throw std::runtime_error("requested multiple threads but only one is available");
         }
+
+        if constexpr(debug)
+            std::cout << "launching " << m_num_threads << " threads\n";
+
 
         // launch threads
         try {
@@ -426,7 +436,7 @@ public:
                             thread_id, false));
             }
 
-            for(size_t i = 0; i < num_static_elems; ++i){
+            for(unsigned i = 0; i < num_static_elems; ++i){
                 unsigned thread_idx = i % m_num_threads;
                 thread_id = m_threads[thread_idx].get_id();
                 m_work_schedule.at(thread_id).push_back((unsigned)i);
@@ -435,7 +445,7 @@ public:
 
         if constexpr(debug){
             std::unique_lock<std::mutex> param_lock(m_output_mut);
-            std::cout << "DEBUG: split_data_thread_pool() initiate threads, assign work, and reset m_working_agg\n";
+            std::cout << "DEBUG: split_data_thread_pool() initiate threads, assign work sched\n";
         }
 
     }
@@ -455,15 +465,16 @@ public:
      * @return a floating point average 
      */
     out_t work(dyn_in_t new_input) {
-
+       
         // refresh the output quantity (probably setting it to 0)
         {
             std::unique_lock<std::mutex> output_lock(m_output_mut);
+            m_out = std::promise<out_t>();
             m_working_agg = m_reset_f();
-            m_num_thread_aves_done = 0;
         }
-
+        
         // set the input for all the threads
+        m_num_thread_aves_done = 0;
         {
             std::unique_lock<std::shared_mutex> input_lock(m_input_mut);
             m_dynamic_input = new_input;
@@ -477,7 +488,6 @@ public:
         }
 
         // wait for work to finish and then return result
-        m_out = std::promise<out_t>();
         return m_out.get_future().get();
     }
 
@@ -498,32 +508,35 @@ private:
 
         while (!m_done) {
 
+
+
             // create some variables used to decide what to do
-            bool time_to_finalize_output = (m_num_thread_aves_done == m_num_threads); 
-            bool is_designated_finisher_thread = false;
             bool this_thread_has_work = false; 
             {
                 std::shared_lock<std::shared_mutex> read_input_lock(m_input_mut);
-                if(!m_work_schedule.empty())
-                    is_designated_finisher_thread = std::this_thread::get_id() == std::prev(m_work_schedule.end())->first; 
                 auto iter = m_has_new_dyn_input.find(std::this_thread::get_id());
                 this_thread_has_work = (iter != m_has_new_dyn_input.end()) && (iter->second);
+            }
+ 
+            // make it impossible for this same thread to redo work
+            // thread safe because each map element corresponds with unique thread
+            if(this_thread_has_work){
+                m_has_new_dyn_input.at(std::this_thread::get_id()) = false;
             }
 
             if constexpr(debug) {
                 std::unique_lock<std::mutex> param_lock(m_output_mut);
-                std::cout << "DEBUG:  this_thread_has_work: " << this_thread_has_work << ", num aves done: " << m_num_thread_aves_done << ", is_designated: " << is_designated_finisher_thread << "\n";
+                std::cout << "DEBUG:  this_thread_has_work: " << this_thread_has_work << "\n";
             }
 
 
             // either do computations, finalize intra-thread average, or spin
-            if (this_thread_has_work) {
+            if ( this_thread_has_work ) { 
 
                 // **intra-thread**
                 // call the work function on each element of the static/stable with the dynamic input shared across all calls
                 std::vector<unsigned> work_indexes = m_work_schedule.at(std::this_thread::get_id());
                 out_t this_threads_ave = m_reset_f();
-
                 for (const auto &idx: work_indexes) {
                     this_threads_ave = m_intra_agg_f(
                             this_threads_ave,
@@ -532,35 +545,41 @@ private:
                     if constexpr(debug) {
                         std::unique_lock<std::mutex> param_lock(m_output_mut);
                         std::cout << "DEBUG: thread " << std::this_thread::get_id() << "'s average is updated to: "
-                                  << this_threads_ave.second << "\n";
+                            << this_threads_ave.second << "\n";
                     }
-
                 }
-
-                // **inter-thread** averaging
+                
                 {
                     std::lock_guard<std::mutex> output_lock{m_output_mut};
                     m_working_agg = m_inter_agg_f(m_working_agg,
-                                                  this_threads_ave,
-                                                  m_num_threads,
-                                                  work_indexes.size());
-                    m_num_thread_aves_done++;
+                            this_threads_ave,
+                            m_num_threads,
+                            work_indexes.size());
                 }
 
-                // signal that this thread should go back to waiting
-                // thread safe because each map element corresponds with unique thread
-                m_has_new_dyn_input.at(std::this_thread::get_id()) = false;
+                // help signal that finalization is ready
+                m_num_thread_aves_done++;
 
+            } else { // no work so we check if we can finalize, and if not, we idle
 
-            } else if (time_to_finalize_output && is_designated_finisher_thread) {
+                // test if we can finalize
+                // if it does, need to increment num_thread_aves_done immediately so other threads don't try to do the same!
+                unsigned int num_threads = m_num_threads; // need a copy because it'll get modified
+                bool time_to_finalize_output = m_num_thread_aves_done.compare_exchange_strong(num_threads, num_threads+1);
 
-                std::lock_guard<std::mutex> output_lock{m_output_mut};
-                m_working_agg = m_final_f(m_working_agg);
-                m_out.set_value(m_working_agg);
-                m_num_thread_aves_done++; // increase it so you won't jump in this block over and over
+                if constexpr(debug) {
+                    std::unique_lock<std::mutex> param_lock(m_output_mut);
+                    std::cout << "DEBUG: thread " << std::this_thread::get_id() << " is attempting to set the final value to the future: " << time_to_finalize_output << "\n";
+                }
 
-            } else {
-                std::this_thread::yield();
+                if( time_to_finalize_output){                
+                    //std::lock_guard<std::mutex> output_lock{m_output_mut};
+                    //don't need lock becuase threads have to be done with m_working_agg in order to increment count
+                    m_working_agg = m_final_f(m_working_agg);
+                    m_out.set_value(m_working_agg);
+                }else{
+                    std::this_thread::yield();
+                }
             }
         }
     }
