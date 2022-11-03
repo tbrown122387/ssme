@@ -39,7 +39,8 @@ public:
  * on any new parameter value. Once a new parameter value is received, this pool calls its function a fixed number of times, 
  * and all of the function output is averaged in a thread-safe way. Actually, these function evals are expected to be in the log
  * space, and the log-mean-exp is calculated using the log-sum-exp trick. For our particular applications, this function will also depend
- * on observed data that doesn't change once the thread pool has been initialized.
+ * on observed data that doesn't change once the thread pool has been initialized. Finally, note that this function is assumed not to 
+ * allocate memory on the heap. 
  * @tparam dyn_data_t dynamic data type. The type of input that gets changed repeatedly.
  * @tparam static_data_t the type of input that only gets set once
  * @tparam func_output_t type of function output
@@ -284,7 +285,7 @@ private:
  * Unlike the above thread pool, this pre-allocates work across the nodes. 
  * "work" is initiated when there is a new object of type dyn_in_t, which is shared across all threads. 
  * Work is performed for every element of the array of static_in_elem_t. The same function 
- * is applied to every pair.
+ * is applied to every pair. Keep in mind that this function should not allocate memory on the heap!
  * @tparam dyn_in_t the type of input that changes every call to work() (e.g. an Eigen::Matrix of a time series observation)
  * @tparam static_in_elem_t (e.g. a particle filter model type)
  * @tparam out_t (e.g. a vector of Eigen::MatrixXd)
